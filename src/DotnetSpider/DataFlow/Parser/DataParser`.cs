@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 namespace DotnetSpider.DataFlow.Parser
 {
 	/// <summary>
-	/// 实体解析器
+	/// Entity resolver
 	/// </summary>
 	/// <typeparam name="TEntity"></typeparam>
 	public class DataParser<TEntity> : DataParser where TEntity : EntityBase<TEntity>, new()
@@ -151,7 +151,7 @@ namespace DotnetSpider.DataFlow.Parser
 						}
 						else
 						{
-							Logger.LogWarning($"解析到空数据，类型: {Model.TypeName}");
+							Logger.LogWarning($"Parsed to empty data, type: {Model.TypeName}");
 						}
 
 						index++;
@@ -167,7 +167,7 @@ namespace DotnetSpider.DataFlow.Parser
 				}
 				else
 				{
-					Logger.LogWarning($"解析到空数据，类型: {Model.TypeName}");
+					Logger.LogWarning($"Parsed to empty data, type: {Model.TypeName}");
 				}
 			}
 
@@ -212,7 +212,7 @@ namespace DotnetSpider.DataFlow.Parser
 							}
 							catch (Exception e)
 							{
-								Logger.LogError($"数据格式化失败: {e}");
+								Logger.LogError($"Data formatting failed: {e}");
 							}
 #endif
 						}

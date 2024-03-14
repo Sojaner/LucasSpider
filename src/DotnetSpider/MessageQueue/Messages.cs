@@ -12,22 +12,22 @@ namespace DotnetSpider.MessageQueue
 			public class Heartbeat : Message
 			{
 				/// <summary>
-				/// 标识
+				/// Logo
 				/// </summary>
 				public string AgentId { get; set; }
 
 				/// <summary>
-				/// 名称
+				/// Name
 				/// </summary>
 				public string AgentName { get; set; }
 
 				/// <summary>
-				/// 空闲内存
+				/// Free memory
 				/// </summary>
 				public long AvailableMemory { get; set; }
 
 				/// <summary>
-				/// CPU 负载
+				/// CPU load
 				/// </summary>
 				public int CpuLoad { get; set; }
 			}
@@ -35,22 +35,22 @@ namespace DotnetSpider.MessageQueue
 			public class Register : Message
 			{
 				/// <summary>
-				/// 标识
+				/// Logo
 				/// </summary>
 				public string AgentId { get; set; }
 
 				/// <summary>
-				/// 名称
+				/// Name
 				/// </summary>
 				public string AgentName { get; set; }
 
 				/// <summary>
-				/// CPU 核心数
+				/// Number of CPU cores
 				/// </summary>
 				public int ProcessorCount { get; set; }
 
 				/// <summary>
-				/// 总内存
+				/// Total memory
 				/// </summary>
 				public long Memory { get; set; }
 			}

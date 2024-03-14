@@ -23,10 +23,10 @@ namespace DotnetSpider.Downloader
 		                        !string.IsNullOrWhiteSpace(_options.Interface);
 
 		/// <summary>
-		/// 异步拨号，直接先返回结果，爬虫会重试发到别的代理器上
-		/// 拨号也不需要等待其它下载完成，除非先下线节点，再等待所有下载完成
-		/// 再拨号，拨号成功后再重新订阅，怎么个逻辑太复杂。
-		/// ADSL 本身就不可能非常快，因此直接拨号触发重试即可，只要节点够多，完全可以接受
+		/// Asynchronous dialing, the result is returned directly first, and the crawler will retry and send to other agents.
+		/// There is no need to wait for other downloads to complete when dialing, unless the node is offline first, and then wait for all downloads to complete.
+		/// Dial again and resubscribe after successful dialing. The logic is too complicated.
+		/// ADSL itself cannot be very fast, so just dial up and trigger a retry. As long as there are enough nodes, it is completely acceptable.
 		/// </summary>
 		/// <param name="request"></param>
 		/// <param name="response"></param>

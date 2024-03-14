@@ -5,14 +5,14 @@ using Microsoft.Extensions.Logging;
 namespace DotnetSpider.DataFlow
 {
 	/// <summary>
-	/// 数据流处理器基类
+	/// Data stream processor base class
 	/// </summary>
 	public abstract class DataFlowBase : IDataFlow
 	{
 		protected ILogger Logger { get; private set; }
 
 		/// <summary>
-		/// 初始化
+		/// Initialization
 		/// </summary>
 		/// <returns></returns>
 		public abstract Task InitializeAsync();
@@ -24,14 +24,14 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 流处理
+		/// Stream processing
 		/// </summary>
-		/// <param name="context">处理上下文</param>
+		/// <param name="context">Processing context</param>
 		/// <returns></returns>
 		public abstract Task HandleAsync(DataFlowContext context);
 
 		/// <summary>
-		/// 是否为空
+		/// Is it empty
 		/// </summary>
 		/// <param name="context"></param>
 		/// <returns></returns>
@@ -41,7 +41,7 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 释放
+		/// Freed
 		/// </summary>
 		public virtual void Dispose()
 		{

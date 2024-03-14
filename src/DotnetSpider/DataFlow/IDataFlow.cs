@@ -5,26 +5,26 @@ using Microsoft.Extensions.Logging;
 namespace DotnetSpider.DataFlow
 {
     /// <summary>
-    /// 数据流处理器
+    /// Data flow processor
     /// </summary>
     public interface IDataFlow : IDisposable
     {
         /// <summary>
-        /// 初始化
+        /// Initialization
         /// </summary>
         /// <returns></returns>
         Task InitializeAsync();
 
         /// <summary>
-        /// 设置日志
+        /// Setup log
         /// </summary>
         /// <param name="logger"></param>
         void SetLogger(ILogger logger);
 
         /// <summary>
-        /// 流处理
+        /// Stream processing
         /// </summary>
-        /// <param name="context">处理上下文</param>
+        /// <param name="context">Processing context</param>
         /// <returns></returns>
         Task HandleAsync(DataFlowContext context);
     }

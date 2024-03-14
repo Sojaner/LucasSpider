@@ -91,7 +91,7 @@ namespace DotnetSpider.Downloader
 				var proxy = await _proxyService.GetAsync(request.Timeout);
 				if (proxy == null)
 				{
-					throw new SpiderException("获取代理失败");
+					throw new SpiderException("Failed to get proxy");
 				}
 
 				name = $"{Const.ProxyPrefix}{proxy}";

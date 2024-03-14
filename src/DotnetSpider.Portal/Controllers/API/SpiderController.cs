@@ -158,7 +158,7 @@ namespace DotnetSpider.Portal.Controllers.API
 			}
 			catch (Exception e)
 			{
-				_logger.LogError($"启动失败: {e}");
+				_logger.LogError($"Startup failed: {e}");
 				return false;
 			}
 		}
@@ -193,7 +193,7 @@ namespace DotnetSpider.Portal.Controllers.API
 			}
 			catch (Exception e)
 			{
-				_logger.LogError($"禁用失败: {e}");
+				_logger.LogError($"Disable failed: {e}");
 				return false;
 			}
 		}
@@ -215,7 +215,7 @@ namespace DotnetSpider.Portal.Controllers.API
 			}
 			catch (Exception e)
 			{
-				_logger.LogError($"启用失败: {e}");
+				_logger.LogError($"Activation failed: {e}");
 				return false;
 			}
 		}

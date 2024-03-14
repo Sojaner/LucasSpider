@@ -42,46 +42,46 @@ namespace DotnetSpider.Tests
                 Assert.Equal("Pattern should not be null or empty", se.Message);
             }
 
-            var formatter1 = new RegexFormatter {False = "F", Default = "Y", Pattern = "很抱歉", True = "Y"};
+            var formatter1 = new RegexFormatter {False = "F", Default = "Y", Pattern = "Terribly sorry", True = "Y"};
             var str1 = "";
             Assert.Equal("F", formatter1.Format(str1));
 
-            var formatter2 = new RegexFormatter {False = "F", Default = "F", Pattern = "很抱歉", True = "Y"};
+            var formatter2 = new RegexFormatter {False = "F", Default = "F", Pattern = "Terribly sorry", True = "Y"};
             Assert.Equal("F", formatter2.Format(str1));
 
             var str2 = "ABCD";
             Assert.Equal("F", formatter2.Format(str2));
             Assert.Equal("F", formatter1.Format(str2));
 
-            var str3 = "ABCD很抱歉";
+            var str3 = "ABCD I'm sorry";
             Assert.Equal("Y", formatter2.Format(str3));
             Assert.Equal("Y", formatter1.Format(str3));
 
-            var str4 = "很抱歉ABCD";
+            var str4 = "SorryABCD";
             Assert.Equal("Y", formatter2.Format(str4));
             Assert.Equal("Y", formatter1.Format(str4));
 
-            var str5 = "ABCD很抱歉ABCD";
+            var str5 = "ABCD I'm sorryABCD";
             Assert.Equal("Y", formatter2.Format(str5));
             Assert.Equal("Y", formatter1.Format(str5));
 
-            var str6 = "       很抱歉ABCD";
+            var str6 = "       SorryABCD";
             Assert.Equal("Y", formatter2.Format(str6));
             Assert.Equal("Y", formatter1.Format(str6));
 
-            var formatter3 = new RegexFormatter {Pattern = "很抱歉", True = "Y"};
+            var formatter3 = new RegexFormatter {Pattern = "Terribly sorry", True = "Y"};
             Assert.Equal("", formatter3.Format(str2));
             Assert.Equal("Y", formatter3.Format(str3));
 
-            var formatter4 = new RegexFormatter {Pattern = "很抱歉", False = "N"};
+            var formatter4 = new RegexFormatter {Pattern = "Terribly sorry", False = "N"};
             Assert.Equal("N", formatter4.Format(str2));
-            Assert.Equal("很抱歉", formatter4.Format(str3));
+            Assert.Equal("Terribly sorry", formatter4.Format(str3));
 
-            var str7 = "收货100人啊啊";
-            var formatter5 = new RegexFormatter {Pattern = @"收货[\d]+人"};
+            var str7 = "100 people received the goods";
+            var formatter5 = new RegexFormatter {Pattern = @"Receipt[\d]+person"};
             Assert.Equal("", formatter5.Format(str2));
             Assert.Equal("", formatter5.Format(str3));
-            Assert.Equal("收货100人", formatter5.Format(str7));
+            Assert.Equal("100 people receive goods", formatter5.Format(str7));
         }
 
         [Fact]

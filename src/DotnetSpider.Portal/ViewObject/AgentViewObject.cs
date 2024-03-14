@@ -3,37 +3,37 @@ namespace DotnetSpider.Portal.ViewObject
 	public class AgentViewObject
 	{
 		/// <summary>
-		/// 标识
+		/// Logo
 		/// </summary>
 		public virtual string Id { get; set; }
 
 		/// <summary>
-		/// 名称
+		/// Name
 		/// </summary>
 		public string Name { get; set; }
 
 		/// <summary>
-		/// CPU 核心数
+		/// Number of CPU cores
 		/// </summary>
 		public int ProcessorCount { get; set; }
 
 		/// <summary>
-		/// 总内存
+		/// Total memory
 		/// </summary>
 		public int TotalMemory { get; set; }
 
 		/// <summary>
-		/// 上一次更新时间
+		/// Last updated
 		/// </summary>
 		public string LastModificationTime { get; set; }
 
 		/// <summary>
-		/// 是否已经标记删除
+		/// Has it been marked for deletion?
 		/// </summary>
 		public bool IsDeleted { get; set; }
 
 		/// <summary>
-		/// 创建时间
+		/// Creation time
 		/// </summary>
 		public string CreationTime { get; set; }
 

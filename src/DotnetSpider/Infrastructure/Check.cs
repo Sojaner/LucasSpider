@@ -3,51 +3,51 @@ using System;
 namespace DotnetSpider.Infrastructure
 {
     /// <summary>
-    /// 参数合法性检查类
+    /// Parameter legality check class
     /// </summary>
     public static class Check
     {
         /// <summary>
-        /// 检查参数不能为空引用，否则抛出<see cref="ArgumentNullException"/>异常。
+        /// Check that the parameter cannot be a null reference, otherwise a <see cref="ArgumentNullException"/> exception will be thrown.
         /// </summary>
         /// <param name="value"></param>
-        /// <param name="paramName">参数名称</param>
+        /// <param name="paramName">Parameter name</param>
         public static void NotNull<T>(this T value, string paramName)
         {
-            Require<ArgumentException>(value != null, $"参数 {paramName} 不能为空引用");
+            Require<ArgumentException>(value != null, $"Parameter {paramName} cannot be a null reference");
         }
 
         public static void NotNullOrDefault<T>(this T value, string paramName)
         {
             if (value == null)
             {
-                throw new ArgumentException($"参数 {paramName} 不能为空引用");
+                throw new ArgumentException($"Parameter {paramName} cannot be a null reference");
             }
 
             var defaultValue = default(T);
-            Require<ArgumentException>(!value.Equals(defaultValue), $"参数 {paramName} 不能为默认值 {defaultValue}");
+            Require<ArgumentException>(!value.Equals(defaultValue), $"Parameter {paramName} cannot be the default value {defaultValue}");
         }
 
         /// <summary>
-        /// 检查参数不能为空引用，否则抛出<see cref="ArgumentNullException"/>异常。
+        /// Check that the parameter cannot be a null reference, otherwise a <see cref="ArgumentNullException"/> exception will be thrown.
         /// </summary>
         /// <param name="value"></param>
-        /// <param name="paramName">参数名称</param>
+        /// <param name="paramName">Parameter name</param>
         /// <exception cref="ArgumentNullException"></exception>
         public static void NotNullOrWhiteSpace(this string value, string paramName)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                throw new ArgumentException($"参数 {paramName} 不能为空或空字符串");
+                throw new ArgumentException($"Parameter {paramName} cannot be empty or empty string");
             }
         }
 
         /// <summary>
-        /// 验证指定值的断言<paramref name="assertion"/>是否为真，如果不为真，抛出指定消息<paramref name="message"/>的指定类型<typeparamref name="TException"/>异常
+        /// Verify whether the assertion <paramref name="assertion"/> of the specified value is true. If not, throw an exception of the specified type <typeparamref name="TException"/> of the specified message <paramref name="message"/>
         /// </summary>
-        /// <typeparam name="TException">异常类型</typeparam>
-        /// <param name="assertion">要验证的断言。</param>
-        /// <param name="message">异常消息。</param>
+        /// <typeparam name="TException">Exception type</typeparam>
+        /// <param name="assertion">The assertion to be verified. 
+        /// <param name="message">Exception message. 
         private static void Require<TException>(bool assertion, string message)
             where TException : Exception
         {

@@ -9,43 +9,43 @@ namespace DotnetSpider.AgentCenter.Store
 	public class AgentInfo
 	{
 		/// <summary>
-		/// 标识
+		/// Logo
 		/// </summary>
 		[StringLength(36)]
 		public virtual string Id { get; private set; }
 
 		/// <summary>
-		/// 名称
+		/// Name
 		/// </summary>
 		[StringLength(255)]
 		public string Name { get; private set; }
 
 		/// <summary>
-		/// CPU 核心数
+		/// Number of CPU cores
 		/// </summary>
 		[Column("processor_count")]
 		public int ProcessorCount { get; private set; }
 
 		/// <summary>
-		/// 总内存
+		/// Total memory
 		/// </summary>
 		[Column("total_memory")]
 		public long TotalMemory { get; private set; }
 
 		/// <summary>
-		/// 上一次更新时间
+		/// Last updated
 		/// </summary>
 		[Column("last_modification_time")]
 		public DateTimeOffset LastModificationTime { get; private set; }
 
 		/// <summary>
-		/// 是否已经标记删除
+		/// Has it been marked for deletion?
 		/// </summary>
 		[Column("deleted")]
 		public bool Deleted { get; private set; }
 
 		/// <summary>
-		/// 创建时间
+		/// Creation time
 		/// </summary>
 		[Required]
 		[Column("creation_time")]
@@ -68,7 +68,7 @@ namespace DotnetSpider.AgentCenter.Store
 		public bool Online => (DateTimeOffset.Now - LastModificationTime).TotalSeconds <= 30;
 
 		/// <summary>
-		/// 刷新上一次更新时间
+		/// Refresh the last update time
 		/// </summary>
 		public void Refresh()
 		{

@@ -3,31 +3,31 @@ using System;
 namespace DotnetSpider.DataFlow.Storage
 {
 	/// <summary>
-	/// Schema 信息
+	/// Schema information
 	/// </summary>
 	public class Schema : Attribute
 	{
 		/// <summary>
-		/// 数据库名
+		/// Database name
 		/// </summary>
 		public string Database { get; }
 
 		/// <summary>
-		/// 表名
+		/// Table Name
 		/// </summary>
 		public string Table { get; }
 
 		/// <summary>
-		/// 表名后缀
+		/// Table name suffix
 		/// </summary>
 		public TablePostfix TablePostfix { get; set; }
 
 		/// <summary>
-		/// 构造方法
+		/// Construction method
 		/// </summary>
-		/// <param name="database">数据库名</param>
-		/// <param name="table">表名</param>
-		/// <param name="tablePostfix">表名后缀</param>
+		/// <param name="database">Database name</param>
+		/// <param name="table">Table name</param>
+		/// <param name="tablePostfix">Table name suffix</param>
 		public Schema(string database, string table, TablePostfix tablePostfix = TablePostfix.None)
 		{
 			Database = database;

@@ -6,28 +6,28 @@ namespace DotnetSpider.AgentCenter.Store
     public interface IAgentStore
     {
         /// <summary>
-        /// 创建数据库和表
+        /// Create database and tables
         /// </summary>
         /// <returns></returns>
         Task EnsureDatabaseAndTableCreatedAsync();
 
         /// <summary>
-        /// 查询所有已经注册的下载器代理
+        /// Query all registered downloader agents
         /// </summary>
         /// <returns></returns>
         Task<IEnumerable<AgentInfo>> GetAllListAsync();
 
         /// <summary>
-        /// 添加下载器代理
+        /// Add downloader agent
         /// </summary>
-        /// <param name="agent">下载器代理</param>
+        /// <param name="agent">Downloader agent</param>
         /// <returns></returns>
         Task RegisterAsync(AgentInfo agent);
 
         /// <summary>
-        /// 保存下载器代理的心跳
+        /// Save heartbeat of downloader agent
         /// </summary>
-        /// <param name="heartbeat">下载器代理心跳</param>
+        /// <param name="heartbeat">Downloader agent heartbeat</param>
         /// <returns></returns>
         Task HeartbeatAsync(AgentHeartbeat heartbeat); 
     }

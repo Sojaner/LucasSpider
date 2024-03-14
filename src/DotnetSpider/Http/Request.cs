@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 namespace DotnetSpider.Http
 {
 	/// <summary>
-	/// 请求
+	/// Ask
 	/// </summary>
 	[Serializable]
 	public class Request : IDisposable
@@ -28,47 +28,47 @@ namespace DotnetSpider.Http
 		private IDictionary<string, object> _properties;
 
 		/// <summary>
-		/// 请求的哈希
+		/// Requested hash
 		/// </summary>
 		public string Hash { get; set; }
 
 		/// <summary>
-		/// 任务标识
+		/// Task ID
 		/// </summary>
 		public string Owner { get; set; }
 
 		/// <summary>
-		/// 请求的 Timeout 时间
+		/// Requested Timeout time
 		/// </summary>
 		public int Timeout { get; set; } = 30000;
 
 		/// <summary>
-		/// 下载代理标识
+		/// Download agent ID
 		/// </summary>
 		public string Agent { get; set; }
 
 		/// <summary>
-		/// 下载代理类型
+		/// Download agent type
 		/// </summary>
 		public string Downloader { get; set; }
 
 		/// <summary>
-		/// 链接的深度
+		/// Link depth
 		/// </summary>
 		public int Depth { get; set; }
 
 		/// <summary>
-		/// 创建时间
+		/// Creation time
 		/// </summary>
 		public long Timestamp { get; set; }
 
 		/// <summary>
-		/// 下载策略
+		/// Download strategy
 		/// </summary>
 		public RequestPolicy Policy { get; set; }
 
 		/// <summary>
-		/// 已经重试的次数
+		/// The number of times it has been retried
 		/// </summary>
 		internal int RequestedTimes { get; set; }
 
@@ -252,7 +252,7 @@ namespace DotnetSpider.Http
 				Depth = Depth,
 				RequestUri = RequestUri,
 				Method = Method,
-				// 是否需要复制
+				// Do you need to copy
 				Timestamp = Timestamp,
 				Content = (Content as IHttpContent)?.Clone(),
 				Policy = Policy,

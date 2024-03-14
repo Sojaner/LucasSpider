@@ -3,12 +3,12 @@ namespace DotnetSpider.Http
 	public enum RequestPolicy
 	{
 		/// <summary>
-		/// 随机
+		/// Random
 		/// </summary>
 		Random,
 
 		/// <summary>
-		/// 链式
+		/// Chain
 		/// </summary>
 		Chained
 	}

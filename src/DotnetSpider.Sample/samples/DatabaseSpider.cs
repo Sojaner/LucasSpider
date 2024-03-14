@@ -1,4 +1,4 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using DotnetSpider.DataFlow;
@@ -65,7 +65,7 @@ create table if not exists cnblogs2.news2
 			{
 				if (IsNullOrEmpty(context))
 				{
-					Logger.LogWarning("数据流上下文不包含解析结果");
+					Logger.LogWarning("Data flow context does not contain parsing results");
 					return;
 				}
 

@@ -5,31 +5,31 @@ using Newtonsoft.Json;
 namespace DotnetSpider.DataFlow.Parser
 {
 	/// <summary>
-	/// 目标链接选择器的定义
+	/// Target link selector definition
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 	public class FollowRequestSelector : Attribute
 	{
 		/// <summary>
-		/// 查询器类型
+		/// Query type
 		/// </summary>
 		public SelectorType SelectorType { get; set; } = SelectorType.XPath;
 
 		/// <summary>
-		/// 查询表达式
+		/// Query expression
 		/// </summary>
 		public string[] Expressions { get; set; }
 
 #if !NET451
 		/// <summary>
-		/// 避免被序列化出去
+		/// Avoid being serialized
 		/// </summary>
 		[JsonIgnore]
 		public override object TypeId => base.TypeId;
 #endif
 
 		/// <summary>
-		/// 匹配目标链接的正则表达式
+		/// Regular expression to match target link
 		/// </summary>
 		public string[] Patterns { get; set; } = new string[0];
 	}

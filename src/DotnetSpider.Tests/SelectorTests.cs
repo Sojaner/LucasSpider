@@ -38,7 +38,7 @@ namespace DotnetSpider.Tests
 		[Fact(DisplayName = "RemoveOutboundLinks")]
 		public void RemoveOutboundLinks()
 		{
-			// 绝对路径不需要做补充
+			// The absolute path does not need to be supplemented
 			var selectable2 = new HtmlSelectable("<div><a href=\"http://www.aaaa.com\">aaaaaaab</a></div>",
 				"http://www.b.com");
 			var value2 = selectable2.SelectList(Selectors.XPath(".//a"));
@@ -75,12 +75,12 @@ namespace DotnetSpider.Tests
 				UriUtilities.CanonicalizeUrl("../../aa", "http://www.dianping.com/sh/ss/com");
 			Assert.Equal("http://www.dianping.com/aa", absoluteUrl);
 
-			// 只有相对路径需要做补充
+			// Only relative paths need to be added
 			var selectable1 = new HtmlSelectable("<div><a href=\"/a/b\">aaaaaaab</a></div>", "http://www.b.com");
 			var value1 = selectable1.Links().First();
 			Assert.Equal("http://www.b.com/a/b", value1);
 
-			// 绝对路径不需要做补充
+			// The absolute path does not need to be supplemented
 			var selectable2 = new HtmlSelectable("<div><a href=\"http://www.aaaa.com\">aaaaaaab</a></div>",
 				"http://www.b.com", false);
 			var value2 = selectable2.SelectList(Selectors.XPath(".//a")).First().Value;

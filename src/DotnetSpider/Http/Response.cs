@@ -39,24 +39,24 @@ namespace DotnetSpider.Http
 		}
 
 		/// <summary>
-		/// 返回状态码
+		/// Return status code
 		/// </summary>
 		public HttpStatusCode StatusCode { get; set; }
 
 		public string ReasonPhrase { get; set; }
 
 		/// <summary>
-		/// 下载内容
+		/// Download content
 		/// </summary>
 		public ByteArrayContent Content { get; set; }
 
 		/// <summary>
-		/// 下载消耗的时间
+		/// Download time
 		/// </summary>
 		public int ElapsedMilliseconds { get; set; }
 
 		/// <summary>
-		/// 最终地址
+		/// Final address
 		/// </summary>
 		public string TargetUrl { get; set; }
 
@@ -75,7 +75,7 @@ namespace DotnetSpider.Http
 
 		public string ReadAsString()
 		{
-			// todo: 推测编码
+			// Todo: guess encoding
 			return Encoding.UTF8.GetString(Content.Bytes);
 		}
 

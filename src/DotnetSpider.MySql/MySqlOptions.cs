@@ -18,25 +18,25 @@ namespace DotnetSpider.MySql
 			: (StorageMode)Enum.Parse(typeof(StorageMode), _configuration["MySql:Mode"]);
 
 		/// <summary>
-		/// 数据库连接字符串
+		/// Database connection string
 		/// </summary>
 		public string ConnectionString => _configuration["MySql:ConnectionString"];
 
 		/// <summary>
-		/// 数据库操作重试次数
+		/// Number of database operation retries
 		/// </summary>
 		public int RetryTimes => string.IsNullOrWhiteSpace(_configuration["MySql:RetryTimes"])
 			? 600
 			: int.Parse(_configuration["MySql:RetryTimes"]);
 
 		/// <summary>
-		/// 是否使用事务操作。默认不使用。
+		/// Whether to use transaction operations. 
 		/// </summary>
 		public bool UseTransaction => !string.IsNullOrWhiteSpace(_configuration["MySql:UseTransaction"]) &&
 		                              bool.Parse(_configuration["MySql:UseTransaction"]);
 
 		/// <summary>
-		/// 数据库忽略大小写
+		/// Database ignores case
 		/// </summary>
 		public bool IgnoreCase => !string.IsNullOrWhiteSpace(_configuration["MySql:IgnoreCase"]) &&
 		                          bool.Parse(_configuration["MySql:IgnoreCase"]);

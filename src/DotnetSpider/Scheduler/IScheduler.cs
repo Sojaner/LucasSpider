@@ -6,50 +6,50 @@ using DotnetSpider.Http;
 namespace DotnetSpider.Scheduler
 {
 	/// <summary>
-	/// 调度器接口
+	/// Scheduler interface
 	/// </summary>
 	public interface IScheduler : IDisposable
 	{
 		/// <summary>
-		/// 初始化
+		/// Initialization
 		/// </summary>
 		/// <param name="spiderId"></param>
 		Task InitializeAsync(string spiderId);
 
 		/// <summary>
-		/// 从队列中取出指定爬虫的指定个数请求
+		/// Remove the specified number of requests for the specified crawler from the queue
 		/// </summary>
-		/// <param name="count">出队数</param>
-		/// <returns>请求</returns>
+		/// <param name="count">Number of outputs</param>
+		/// <returns>Request</returns>
 		Task<IEnumerable<Request>> DequeueAsync(int count = 1);
 
 		/// <summary>
-		/// 请求入队
+		/// Request to join the queue
 		/// </summary>
-		/// <param name="requests">请求</param>
-		/// <returns>入队个数</returns>
+		/// <param name="requests">Requests</param>
+		/// <returns>Number of queued entries</returns>
 		Task<int> EnqueueAsync(IEnumerable<Request> requests);
 
 		/// <summary>
-		/// 队列中的总请求个数
+		/// The total number of requests in the queue
 		/// </summary>
 		Task<long> GetTotalAsync();
 
 		/// <summary>
-		/// 重置
+		/// Reset
 		/// </summary>
 		/// <returns></returns>
 		Task ResetDuplicateCheckAsync();
 
 		/// <summary>
-		/// 标记请求成功
+		/// Tag request successful
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns></returns>
 		Task SuccessAsync(Request request);
 
 		/// <summary>
-		/// 标记请求失败
+		/// Tag request failed
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns></returns>

@@ -5,11 +5,11 @@ namespace DotnetSpider.Infrastructure
 	public static class UriUtilities
 	{
 		/// <summary>
-		/// 计算最终的URL
+		/// Calculate the final URL
 		/// </summary>
 		/// <param name="uri">Base uri</param>
 		/// <param name="relativeUri">Relative uri</param>
-		/// <returns>最终的URL</returns>
+		/// <returns>Final URL</returns>
 		public static string CanonicalizeUrl(string uri, string relativeUri)
 		{
 			try

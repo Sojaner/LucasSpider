@@ -1,35 +1,35 @@
-﻿using System;
+using System;
 
 namespace DotnetSpider.DataFlow.Parser.Formatters
 {
 	/// <summary>
-	/// 如果值等于EqualValue, 则返回Displacement. 比如用于: 采集的结果为: 是, 转化为 False
+	/// If the value is equal to EqualValue, then Displacement is returned. For example, used for: The collected result is: Yes, converted to False
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
 	public class DisplaceFormatter : Formatter
 	{
 		/// <summary>
-		/// 比较的值
+		/// Compare value
 		/// </summary>
 		public string EqualValue { get; set; }
 
 		/// <summary>
-		/// 最终替换的值
+		/// Final replaced value
 		/// </summary>
 		public string Displacement { get; set; }
 
 		/// <summary>
-		/// 实现数值的转化
+		/// Achieve numerical conversion
 		/// </summary>
-		/// <param name="value">数值</param>
-		/// <returns>被格式化后的数值</returns>
+		/// <param name="value">Value</param>
+		/// <returns>The formatted value</returns>
 		protected override string Handle(string value)
 		{
 			return value.Equals(EqualValue) ? Displacement : value;
 		}
 
 		/// <summary>
-		/// 校验参数是否设置正确
+		/// Verify whether the parameters are set correctly
 		/// </summary>
 		protected override void CheckArguments()
 		{

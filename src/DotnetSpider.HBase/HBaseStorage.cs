@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Net.Http;
 using System.Text;
@@ -38,9 +38,9 @@ namespace DotnetSpider.HBase
 			_tableCreatedDict = new();
 
 		/// <summary>
-		/// 根据配置返回存储器
+		/// Returns memory based on configuration
 		/// </summary>
-		/// <param name="configuration">配置</param>
+		/// <param name="configuration">Deployment</param>
 		/// <returns></returns>
 		public static HBaseStorage CreateFromOptions(IConfiguration configuration)
 		{

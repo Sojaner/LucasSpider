@@ -67,16 +67,16 @@ namespace DotnetSpider.Tests
 		}
 
 		/// <summary>
-		/// 测试能正确创建 MySql 表
-		/// 1. 如果实体的 Schema 没有配置表名，则使用类名
-		/// 2. 如果实体的 Schema 配置了表名，则使用配置的表名
-		/// 3. 是否有正确添加表的后缀
+		/// Test that the MySql table can be created correctly
+		/// 1. If the entity's Schema does not configure a table name, use the class name
+		/// 2. If the entity's Schema is configured with a table name, use the configured table name.
+		/// 3. Is the suffix of the table added correctly?
 		/// </summary>
 		[Fact(DisplayName = "CreateTableWhenNoSchema")]
 		public async Task CreateTableWhenNoSchema()
 		{
 			using var conn = CreateConnection();
-			// 如果实体的 Schema 没有配置表名，则使用类名
+			// If the entity's Schema does not configure a table name, the class name is used
 			await conn.ExecuteAsync($"drop table if exists createtableentity1;");
 			var storage = CreateStorage(StorageMode.Insert);
 			var context = new DataFlowContext(null, new SpiderOptions(),
@@ -102,7 +102,7 @@ namespace DotnetSpider.Tests
 		public async Task CreateTableWhenNoTableNameInSchema()
 		{
 			using var conn = CreateConnection();
-			// 如果实体的 Schema 没有配置表名，则使用类名
+			// If the entity's Schema does not configure a table name, the class name is used
 			await conn.ExecuteAsync($"drop table if exists createtablenotablename;");
 			var storage = CreateStorage(StorageMode.Insert);
 			var context = new DataFlowContext(null, new SpiderOptions(),
@@ -131,7 +131,7 @@ namespace DotnetSpider.Tests
 		public async Task CreateTable()
 		{
 			using var conn = CreateConnection();
-			// 如果实体的 Schema 没有配置表名，则使用类名
+			// If the entity's Schema does not configure a table name, the class name is used
 			await conn.ExecuteAsync($"drop table if exists {Escape}test{Escape}.{Escape}createtable{Escape};");
 			{
 				var storage = CreateStorage(StorageMode.Insert);
@@ -164,7 +164,7 @@ namespace DotnetSpider.Tests
 		public async Task MultiPrimary()
 		{
 			using var conn = CreateConnection();
-			// 如果实体的 Schema 没有配置表名，则使用类名
+			// If the entity's Schema does not configure a table name, the class name is used
 			await conn.ExecuteAsync(
 				$"drop table if exists {Escape}test{Escape}.{Escape}createtablemultiprimay{Escape};");
 			var storage = CreateStorage(StorageMode.Insert);
@@ -205,7 +205,7 @@ namespace DotnetSpider.Tests
 		public async Task Primary()
 		{
 			using var conn = CreateConnection();
-			// 如果实体的 Schema 没有配置表名，则使用类名
+			// If the entity's Schema does not configure a table name, the class name is used
 			await conn.ExecuteAsync(
 				$"drop table if exists {Escape}test{Escape}.{Escape}createtableprimay{Escape};");
 			{
@@ -245,7 +245,7 @@ namespace DotnetSpider.Tests
 		public async Task AutoIncPrimary()
 		{
 			using var conn = CreateConnection();
-			// 如果实体的 Schema 没有配置表名，则使用类名
+			// If the entity's Schema does not configure a table name, the class name is used
 			await conn.ExecuteAsync(
 				$"drop table if exists {Escape}test{Escape}.{Escape}createtableautoincprimay{Escape};");
 
@@ -285,7 +285,7 @@ namespace DotnetSpider.Tests
 		}
 
 		/// <summary>
-		/// 测试能正确插入数据
+		/// Test that data can be inserted correctly
 		/// </summary>
 		[Fact(DisplayName = "Insert")]
 		public async Task Insert()
@@ -294,13 +294,13 @@ namespace DotnetSpider.Tests
 		}
 
 		/// <summary>
-		/// 测试能正确插入数据，如果遇到重复数据则忽略插入
+		/// Test that the data can be inserted correctly. If duplicate data is encountered, the insertion will be ignored.
 		/// </summary>
 		[Fact(DisplayName = "InsertIgnoreDuplicate")]
 		public async Task InsertIgnoreDuplicate()
 		{
 			using var conn = CreateConnection();
-			// 如果实体的 Schema 没有配置表名，则使用类名
+			// If the entity's Schema does not configure a table name, the class name is used
 			await conn.ExecuteAsync(
 				$"drop table if exists {Escape}test{Escape}.{Escape}createtableprimay{Escape};");
 
@@ -332,15 +332,15 @@ namespace DotnetSpider.Tests
 		}
 
 		/// <summary>
-		/// 测试 如果遇到重复数据则更新，主键不重复则插入
-		/// 1. 此模式必须配置有主键，无主键效率太低
-		/// 2. 更新则是全量更新
+		/// Test: If duplicate data is encountered, update it, and insert it if the primary key is not repeated.
+		/// 1. This mode must be configured with a primary key. Without a primary key, the efficiency is too low.
+		/// 2. The update is a full update
 		/// </summary>
 		[Fact(DisplayName = "InsertAndUpdate")]
 		public async Task InsertAndUpdate()
 		{
 			using var conn = CreateConnection();
-			// 如果实体的 Schema 没有配置表名，则使用类名
+			// If the entity's Schema does not configure a table name, the class name is used
 			await conn.ExecuteAsync(
 				$"drop table if exists {Escape}test{Escape}.{Escape}createtableprimay{Escape};");
 
@@ -374,13 +374,13 @@ namespace DotnetSpider.Tests
 		}
 
 		/// <summary>
-		/// 测试能否正确更新数据
+		/// Test whether the data can be updated correctly
 		/// </summary>
 		[Fact(DisplayName = "UpdateAllColumns")]
 		public async Task UpdateAllColumns()
 		{
 			using var conn = CreateConnection();
-			// 如果实体的 Schema 没有配置表名，则使用类名
+			// If the entity's Schema does not configure a table name, the class name is used
 			await conn.ExecuteAsync(
 				$"drop table if exists {Escape}test{Escape}.{Escape}createtableprimay{Escape};");
 			{
@@ -429,13 +429,13 @@ namespace DotnetSpider.Tests
 		}
 
 		/// <summary>
-		/// 测试能否正确更新数据
+		/// Test whether the data can be updated correctly
 		/// </summary>
 		[Fact(DisplayName = "UpdatePartColumns")]
 		public async Task UpdatePartColumns()
 		{
 			using var conn = CreateConnection();
-			// 如果实体的 Schema 没有配置表名，则使用类名
+			// If the entity's Schema does not configure a table name, the class name is used
 			await conn.ExecuteAsync(
 				$"drop table if exists {Escape}test{Escape}.{Escape}updatepartcolumns{Escape};");
 
@@ -488,13 +488,13 @@ namespace DotnetSpider.Tests
 		}
 
 		/// <summary>
-		/// 测试事务能否正常开启
+		/// Test whether the transaction can be opened normally
 		/// </summary>
 		[Fact(DisplayName = "UseTransaction")]
 		public async Task UseTransaction()
 		{
 			using var conn = CreateConnection();
-			// 如果实体的 Schema 没有配置表名，则使用类名
+			// If the entity's Schema does not configure a table name, the class name is used
 			await conn.ExecuteAsync(
 				$"drop table if exists {Escape}test{Escape}.{Escape}createtableprimay{Escape};");
 			{
@@ -528,13 +528,13 @@ namespace DotnetSpider.Tests
 		}
 
 		/// <summary>
-		/// 测试数据库名，表名，列名是的大小写是否正确
+		/// Test whether the database name, table name, and column name are in correct case
 		/// </summary>
 		[Fact(DisplayName = "IgnoreCase")]
 		public async Task IgnoreCase()
 		{
 			using var conn = CreateConnection();
-			// 如果实体的 Schema 没有配置表名，则使用类名
+			// If the entity's Schema does not configure a table name, the class name is used
 			await conn.ExecuteAsync($"drop table if exists {Escape}test{Escape}.{Escape}IgnoreCase{Escape};");
 
 			{

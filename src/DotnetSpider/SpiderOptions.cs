@@ -3,47 +3,47 @@ namespace DotnetSpider
 	public class SpiderOptions
 	{
 		/// <summary>
-		/// 请求队列数限制
+		/// Request queue number limit
 		/// </summary>
 		public int RequestedQueueCount { get; set; } = 1000;
 
 		/// <summary>
-		/// 请求链接深度限制
+		/// Request link depth limit
 		/// </summary>
 		public int Depth { get; set; }
 
 		/// <summary>
-		/// 请求重试次数限制
+		/// Request retry limit
 		/// </summary>
 		public int RetriedTimes { get; set; } = 3;
 
 		/// <summary>
-		/// 当队列中无链接超时后退出爬虫
+		/// Exit the crawler after timeout when there is no link in the queue
 		/// </summary>
 		public int EmptySleepTime { get; set; } = 60;
 
 		/// <summary>
-		/// 爬虫采集速度，1 表示 1 秒钟一个请求，0.5 表示 1 秒钟 0.5 个请求，5 表示 1 秒钟 5 个请求
+		/// Crawler collection speed, 1 means one request per second, 0.5 means 0.5 requests per second, 5 means 5 requests per second
 		/// </summary>
 		public double Speed { get; set; } = 1;
 
 		/// <summary>
-		/// 一次请求队列获取多少个请求
+		/// How many requests does the request queue get at one time?
 		/// </summary>
 		public uint Batch { get; set; } = 4;
 
 		/// <summary>
-		/// 是否去除外链
+		/// Whether to remove external links
 		/// </summary>
 		public bool RemoveOutboundLinks { get; set; } = false;
 
 		/// <summary>
-		/// 存储器类型: FullTypeName, AssemblyName
+		/// Memory type: FullTypeName, AssemblyName
 		/// </summary>
 		public string StorageType { get; set; } = "DotnetSpider.MySql.MySqlEntityStorage, DotnetSpider.MySql";
 
 		/// <summary>
-		/// 获取新代码的时间间隔
+		/// The time interval for getting new codes
 		/// </summary>
 		public int RefreshProxy { get; set; } = 30;
 	}

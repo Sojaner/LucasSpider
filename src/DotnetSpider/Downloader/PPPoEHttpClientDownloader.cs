@@ -21,7 +21,7 @@ namespace DotnetSpider.Downloader
 			_pppoeService = pppoeService;
 			if (!_pppoeService.IsActive)
 			{
-				throw new SpiderException("PPoE 配置不正确");
+				throw new SpiderException("PPoE configuration is incorrect");
 			}
 		}
 
@@ -31,7 +31,7 @@ namespace DotnetSpider.Downloader
 		{
 			Response response = null;
 
-			// todo: 要考虑并发过程中切换拨号的问题
+			// Todo: Consider the issue of switching dialing during concurrent processes
 			var text = await responseMessage.Content.ReadAsStringAsync();
 			var validResult = await _pppoeService.DetectAsync(request, text);
 			if (!string.IsNullOrWhiteSpace(validResult))

@@ -1,38 +1,38 @@
-﻿using System;
+using System;
 
 namespace DotnetSpider.DataFlow.Parser.Formatters
 {
 	/// <summary>
-	/// 截取数值
+	/// Intercept value
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
 	public class CutoutFormatter : Formatter
 	{
 		/// <summary>
-		/// 起始部分的内容
+		/// Contents of the initial part
 		/// </summary>
 		public string StartPart { get; set; }
 
 		/// <summary>
-		/// 结束部分的内容
+		/// The content of the closing part
 		/// </summary>
 		public string EndPart { get; set; }
 
 		/// <summary>
-		/// 开始截取的偏移
+		/// Offset to start interception
 		/// </summary>
 		public int StartOffset { get; set; } = 0;
 
 		/// <summary>
-		/// 结束截取的偏移
+		/// Offset to end interception
 		/// </summary>
 		public int EndOffset { get; set; } = 0;
 
 		/// <summary>
-		/// 实现数值的转化
+		/// Achieve numerical conversion
 		/// </summary>
-		/// <param name="value">数值</param>
-		/// <returns>被格式化后的数值</returns>
+		/// <param name="value">Value</param>
+		/// <returns>The formatted value</returns>
 		protected override string Handle(string value)
 		{
 			var tmp = value;
@@ -60,7 +60,7 @@ namespace DotnetSpider.DataFlow.Parser.Formatters
 		}
 
 		/// <summary>
-		/// 校验参数是否设置正确
+		/// Verify whether the parameters are set correctly
 		/// </summary>
 		protected override void CheckArguments()
 		{

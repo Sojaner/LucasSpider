@@ -14,13 +14,13 @@ namespace DotnetSpider.Scheduler.Component
 		Task<bool> IsDuplicateAsync(Request request);
 
 		/// <summary>
-		/// 初始化
+		/// Initialization
 		/// </summary>
 		/// <param name="spiderId"></param>
 		Task InitializeAsync(string spiderId);
 
 		/// <summary>
-		/// 获取总数
+		/// Get total
 		/// </summary>
 		Task<long> GetTotalAsync();
 

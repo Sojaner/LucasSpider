@@ -14,7 +14,7 @@ using Newtonsoft.Json.Linq;
 namespace DotnetSpider.DataFlow.Parser
 {
 	/// <summary>
-	/// 数据解析器
+	/// Data parser
 	/// </summary>
 	public abstract class DataParser : DataFlowBase
 	{
@@ -22,14 +22,14 @@ namespace DotnetSpider.DataFlow.Parser
 		private readonly List<Func<Request, bool>> _requiredValidator;
 
 		/// <summary>
-		/// 选择器的生成方法
+		/// Selector generation method
 		/// </summary>
 		public Func<DataFlowContext, ISelectable> SelectableBuilder { get; protected set; }
 
 		/// <summary>
-		/// 数据解析
+		/// Data analysis
 		/// </summary>
-		/// <param name="context">处理上下文</param>
+		/// <param name="context">Processing context</param>
 		/// <returns></returns>
 		protected abstract Task ParseAsync(DataFlowContext context);
 
@@ -107,9 +107,9 @@ namespace DotnetSpider.DataFlow.Parser
 		}
 
 		/// <summary>
-		/// 数据解析
+		/// Data analysis
 		/// </summary>
-		/// <param name="context">处理上下文</param>
+		/// <param name="context">Processing context</param>
 		/// <returns></returns>
 		public override async Task HandleAsync(DataFlowContext context)
 		{
@@ -171,7 +171,7 @@ namespace DotnetSpider.DataFlow.Parser
 			{
 				if (IsValidRequest(request))
 				{
-					// 在此强制设制 Owner, 防止用户忘记导致出错
+					// It is mandatory to set the Owner here to prevent users from forgetting and causing errors.
 					request.Owner = context.Request.Owner;
 					request.Agent = context.Response.Agent;
 					context.AddFollowRequests(request);

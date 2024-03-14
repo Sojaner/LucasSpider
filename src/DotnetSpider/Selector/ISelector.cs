@@ -3,23 +3,23 @@ using System.Collections.Generic;
 namespace DotnetSpider.Selector
 {
 	/// <summary>
-	/// 查询器
+	/// Queryer
 	/// </summary>
 	public interface ISelector
 	{
 		/// <summary>
-		/// 从文本中查询单个结果
-		/// 如果符合条件的结果有多个, 仅返回第一个
+		/// Query a single result from text
+		/// If there are multiple results that meet the criteria, only the first one is returned
 		/// </summary>
-		/// <param name="text">需要查询的文本</param>
-		/// <returns>查询结果</returns>
+		/// <param name="text">Text to be queried</param>
+		/// <returns>Query results</returns>
 		ISelectable Select(string text);
 
 		/// <summary>
-		/// 从文本中查询所有结果
+		/// Query all results from text
 		/// </summary>
-		/// <param name="text">需要查询的文本</param>
-		/// <returns>查询结果</returns>
+		/// <param name="text">Text to be queried</param>
+		/// <returns>Query results</returns>
 		IEnumerable<ISelectable> SelectList(string text);
 	}
 }

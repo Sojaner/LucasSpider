@@ -1,59 +1,59 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace DotnetSpider.Selector
 {
     /// <summary>
-    /// 查询接口
+    /// Query interface
     /// </summary>
     public abstract class Selectable : ISelectable
     {
         /// <summary>
-        /// 查找所有的链接
+        /// Find all links
         /// </summary>
-        /// <returns>查询接口</returns>
+        /// <returns>Query interface</returns>
         public abstract IEnumerable<string> Links();
 
         public abstract SelectableType Type { get; }
 
         /// <summary>
-        /// 通过XPath查找结果
+        /// Find results via XPath
         /// </summary>
-        /// <param name="xpath">XPath 表达式</param>
-        /// <returns>查询接口</returns>
+        /// <param name="xpath">XPath expression</param>
+        /// <returns>Query interface</returns>
         public virtual ISelectable XPath(string xpath)
         {
             return Select(Selectors.XPath(xpath));
         }
 
         /// <summary>
-        /// 通过Css 选择器查找元素, 并取得属性的值
+        /// Find elements through CSS selectors and get attribute values
         /// </summary>
-        /// <param name="css">Css 选择器</param>
-        /// <param name="attrName">查询到的元素的属性</param>
-        /// <returns>查询接口</returns>
+        /// <param name="css">Css selector</param>
+        /// <param name="attrName">Attributes of the queried element</param>
+        /// <returns>Query interface</returns>
         public ISelectable Css(string css, string attrName)
         {
             return Select(Selectors.Css(css, attrName));
         }
 
         /// <summary>
-        /// 通过JsonPath查找结果
+        /// Find results via JsonPath
         /// </summary>
-        /// <param name="jsonPath">JsonPath 表达式</param>
-        /// <returns>查询接口</returns>
+        /// <param name="jsonPath">JsonPath expression</param>
+        /// <returns>Query interface</returns>
         public virtual ISelectable JsonPath(string jsonPath)
         {
             return Select(Selectors.JsonPath(jsonPath));
         }
 
         /// <summary>
-        /// 通过正则表达式查找结果
+        /// Find results by regular expression
         /// </summary>
-        /// <param name="pattern">正则表达式</param>
+        /// <param name="pattern">regular expression</param>
         /// <param name="options"></param>
         /// <param name="replacement"></param>
-        /// <returns>查询接口</returns>
+        /// <returns>Query interface</returns>
         public virtual ISelectable Regex(string pattern, RegexOptions options = RegexOptions.None, string replacement = "$0")
         {
             return Select(Selectors.Regex(pattern, options, replacement));
@@ -64,17 +64,17 @@ namespace DotnetSpider.Selector
         public abstract string Value { get; }
 
         /// <summary>
-        /// 通过查询器查找结果
+        /// Find results via query
         /// </summary>
-        /// <param name="selector">查询器</param>
-        /// <returns>查询接口</returns>
+        /// <param name="selector">Queryer</param>
+        /// <returns>Query interface</returns>
         public abstract ISelectable Select(ISelector selector);
 
         /// <summary>
-        /// 通过查询器查找结果
+        /// Find results via query
         /// </summary>
-        /// <param name="selector">查询器</param>
-        /// <returns>查询接口</returns>
+        /// <param name="selector">Queryer</param>
+        /// <returns>Query interface</returns>
         public abstract IEnumerable<ISelectable> SelectList(ISelector selector);
     }
 }

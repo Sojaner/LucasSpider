@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DotnetSpider.Infrastructure;
@@ -6,7 +6,7 @@ using DotnetSpider.Infrastructure;
 namespace DotnetSpider.Selector
 {
     /// <summary>
-    /// 正则查询器
+    /// Regular query
     /// </summary>
     public class RegexSelector : ISelector
     {
@@ -14,9 +14,9 @@ namespace DotnetSpider.Selector
         private readonly string _replacement;
 
         /// <summary>
-        /// 构造方法
+        /// Construction method
         /// </summary>
-        /// <param name="pattern">正则表达式</param>
+        /// <param name="pattern">regular expression</param>
         /// <param name="options"></param>
         /// <param name="replacement"></param>
         public RegexSelector(string pattern, RegexOptions options = RegexOptions.None, string replacement = "$0")
@@ -27,11 +27,11 @@ namespace DotnetSpider.Selector
         }
 
         /// <summary>
-        /// 从文本中查询单个结果
-        /// 如果符合条件的结果有多个, 仅返回第一个
+        /// Query a single result from text
+        /// If there are multiple results that meet the criteria, only the first one is returned
         /// </summary>
-        /// <param name="text">需要查询的文本</param>
-        /// <returns>查询结果</returns>
+        /// <param name="text">Text to be queried</param>
+        /// <returns>Query results</returns>
         public ISelectable Select(string text)
         {
             if (string.IsNullOrWhiteSpace(text))
@@ -49,10 +49,10 @@ namespace DotnetSpider.Selector
         }
 
         /// <summary>
-        /// 从文本中查询所有结果
+        /// Query all results from text
         /// </summary>
-        /// <param name="text">需要查询的文本</param>
-        /// <returns>查询结果</returns>
+        /// <param name="text">Text to be queried</param>
+        /// <returns>Query results</returns>
         public IEnumerable<ISelectable> SelectList(string text)
         {
             if (string.IsNullOrWhiteSpace(text))

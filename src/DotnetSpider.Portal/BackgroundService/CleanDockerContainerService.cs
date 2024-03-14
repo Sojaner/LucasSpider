@@ -48,7 +48,7 @@ namespace DotnetSpider.Portal.BackgroundService
 									new ContainerRemoveParameters(),
 									stoppingToken);
 
-								_logger.LogInformation($"删除过期实例: {JsonConvert.SerializeObject(container.Labels)}");
+								_logger.LogInformation($"Delete expired instances: {JsonConvert.SerializeObject(container.Labels)}");
 							}
 						}
 					}

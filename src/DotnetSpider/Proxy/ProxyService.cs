@@ -16,7 +16,7 @@ namespace DotnetSpider.Proxy
 			public Uri Uri { get; private set; }
 
 			/// <summary>
-			/// 使用此代理下载数据的失败次数
+			/// The number of failed data downloads using this proxy
 			/// </summary>
 			public int FailedNum { get; set; }
 
@@ -51,7 +51,7 @@ namespace DotnetSpider.Proxy
 		{
 			if (_dict.TryGetValue(proxy, out var p))
 			{
-				// 若是返回成功，则直接把失败次数至为 0
+				// If success is returned, the number of failures will be directly set to 0.
 				if (statusCode.IsSuccessStatusCode())
 				{
 					p.FailedNum = 0;
@@ -61,14 +61,14 @@ namespace DotnetSpider.Proxy
 					p.FailedNum += 1;
 				}
 
-				// 若是失败次数大于 ignoreCount，则把此代理从缓存中删除，不再使用
+				// If the number of failures is greater than ignoreCount, the agent will be deleted from the cache and no longer used.
 				if (p.FailedNum > _ignoreCount)
 				{
 					_dict.TryRemove(p.Uri, out _);
 					return;
 				}
 
-				// 若是失败次数为 reDetectCount 的倍数则尝试重新测试此代理是否正常，若是测试不成功，则把此代理从缓存中删除，不再使用
+				// If the number of failures is a multiple of reDetectCount, try to retest whether the proxy is normal. If the test is unsuccessful, delete the proxy from the cache and no longer use it.
 				if ((p.FailedNum != 0 && p.FailedNum % _reDetectCount == 0) &&
 				    !await _proxyValidator.IsAvailable(p.Uri))
 				{

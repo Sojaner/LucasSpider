@@ -9,7 +9,7 @@ using DotnetSpider.Selector;
 namespace DotnetSpider.DataFlow
 {
 	/// <summary>
-	/// 数据流处理器上下文
+	/// Data flow processor context
 	/// </summary>
 	public class DataFlowContext : IDisposable
 	{
@@ -21,32 +21,32 @@ namespace DotnetSpider.DataFlow
 		public SpiderOptions Options { get; }
 
 		/// <summary>
-		/// 下载器返回的结果
+		/// Results returned by the downloader
 		/// </summary>
 		public Response Response { get; }
 
 		/// <summary>
-		/// 消息队列回传的内容
+		/// The content returned by the message queue
 		/// </summary>
 		public byte[] MessageBytes { get; internal set; }
 
 		/// <summary>
-		/// 下载的请求
+		/// Download request
 		/// </summary>
 		public Request Request { get; }
 
 		/// <summary>
-		/// 解析到的目标链接
+		/// Resolved target link
 		/// </summary>
 		internal List<Request> FollowRequests { get; }
 
 		public IServiceProvider ServiceProvider { get; }
 
 		/// <summary>
-		/// 构造方法
+		/// Construction method
 		/// </summary>
 		/// <param name="request"></param>
-		/// <param name="response">下载器返回的结果</param>
+		/// <param name="response">Results returned by the downloader</param>
 		/// <param name="options"></param>
 		/// <param name="serviceProvider"></param>
 		public DataFlowContext(IServiceProvider serviceProvider,
@@ -98,7 +98,7 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 获取属性
+		/// Get properties
 		/// </summary>
 		/// <param name="key">Key</param>
 		public dynamic this[string key]
@@ -119,7 +119,7 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 是否包含属性
+		/// Whether to include attributes
 		/// </summary>
 		/// <param name="key">Key</param>
 		/// <returns></returns>
@@ -129,7 +129,7 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 添加属性
+		/// Add properties
 		/// </summary>
 		/// <param name="key">Key</param>
 		/// <param name="value">Value</param>
@@ -139,7 +139,7 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 添加数据项
+		/// Add data item
 		/// </summary>
 		/// <param name="name">Name</param>
 		/// <param name="data">Value</param>
@@ -157,7 +157,7 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 获取数据项
+		/// Get data items
 		/// </summary>
 		/// <param name="name">Name</param>
 		/// <returns></returns>
@@ -167,7 +167,7 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 获取所有数据项
+		/// Get all data items
 		/// </summary>
 		/// <returns></returns>
 		public IDictionary<object, dynamic> GetData()
@@ -176,12 +176,12 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 是否包含数据项
+		/// Whether to include data items
 		/// </summary>
 		public bool IsEmpty => _data.Count == 0;
 
 		/// <summary>
-		/// 清空数据
+		/// Clear data
 		/// </summary>
 		public void Clear()
 		{

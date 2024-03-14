@@ -19,7 +19,7 @@ using Microsoft.Extensions.Logging.EventLog;
 namespace DotnetSpider
 {
 	/// <summary>
-	/// 单机爬虫构建器
+	/// Stand-alone crawler builder
 	/// </summary>
 	public class Builder : HostBuilder
 	{

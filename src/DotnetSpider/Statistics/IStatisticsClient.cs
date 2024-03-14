@@ -5,44 +5,44 @@ namespace DotnetSpider.Statistics
 	public interface IStatisticsClient
 	{
 		/// <summary>
-		/// 总请求数加 1
+		/// Add 1 to the total number of requests
 		/// </summary>
-		/// <param name="id">爬虫标识</param>
+		/// <param name="id">Crawler ID</param>
 		/// <param name="count"></param>
 		/// <returns></returns>
 		Task IncreaseTotalAsync(string id, long count);
 
 		/// <summary>
-		/// 成功次数加 1
+		/// Add 1 to the number of successes
 		/// </summary>
-		/// <param name="id">爬虫标识</param>
+		/// <param name="id">Crawler ID</param>
 		/// <returns></returns>
 		Task IncreaseSuccessAsync(string id);
 
 		/// <summary>
-		/// 失败次数加 1
+		/// Add 1 to the number of failures
 		/// </summary>
-		/// <param name="id">爬虫标识</param>
+		/// <param name="id">Crawler ID</param>
 		/// <returns></returns>
 		Task IncreaseFailureAsync(string id);
 
 		/// <summary>
-		/// 爬虫启动
+		/// Crawler starts
 		/// </summary>
-		/// <param name="id">爬虫标识</param>
-		/// <param name="name">爬虫名称</param>
+		/// <param name="id">Crawler ID</param>
+		/// <param name="name">Crawler name</param>
 		/// <returns></returns>
 		Task StartAsync(string id, string name);
 
 		/// <summary>
-		/// 爬虫退出
+		/// Crawler exits
 		/// </summary>
-		/// <param name="id">爬虫标识</param>
+		/// <param name="id">Crawler ID</param>
 		/// <returns></returns>
 		Task ExitAsync(string id);
 
 		/// <summary>
-		/// 注册节点
+		/// Register node
 		/// </summary>
 		/// <param name="agentId"></param>
 		/// <param name="agentName"></param>
@@ -50,23 +50,23 @@ namespace DotnetSpider.Statistics
 		Task RegisterAgentAsync(string agentId, string agentName);
 
 		/// <summary>
-		/// 下载成功次数加 1
+		/// Add 1 to the number of successful downloads
 		/// </summary>
-		/// <param name="agentId">下载代理器标识</param>
-		/// <param name="elapsedMilliseconds">下载总消耗的时间</param>
+		/// <param name="agentId">Download agent ID</param>
+		/// <param name="elapsedMilliseconds">Total download time</param>
 		/// <returns></returns>
 		Task IncreaseAgentSuccessAsync(string agentId, int elapsedMilliseconds);
 
 		/// <summary>
-		/// 下载失败次数加 1
+		/// Add 1 to the number of failed downloads
 		/// </summary>
-		/// <param name="agentId">下载代理器标识</param>
-		/// <param name="elapsedMilliseconds">下载总消耗的时间</param>
+		/// <param name="agentId">Download agent ID</param>
+		/// <param name="elapsedMilliseconds">Total download time</param>
 		/// <returns></returns>
 		Task IncreaseAgentFailureAsync(string agentId, int elapsedMilliseconds);
 
 		/// <summary>
-		/// 打印信息
+		/// Print information
 		/// </summary>
 		/// <param name="id"></param>
 		/// <returns></returns>

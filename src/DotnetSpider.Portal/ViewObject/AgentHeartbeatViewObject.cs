@@ -3,29 +3,29 @@ namespace DotnetSpider.Portal.ViewObject
 	public class AgentHeartbeatViewObject
 	{
 		/// <summary>
-		/// 节点标识
+		/// Node ID
 		/// </summary>
 		public int Id { get; set; }
 
 		/// <summary>
-		/// 标识
+		/// Logo
 		/// </summary>
 		public string AgentId { get; set; }
 
 		/// <summary>
-		/// 名称
+		/// Name
 		/// </summary>
 		public string AgentName { get; set; }
 
 		/// <summary>
-		/// 空闲内存
+		/// Free memory
 		/// </summary>
 		public int AvailableMemory { get; set; }
 
 		public int CpuLoad { get; set; }
 
 		/// <summary>
-		/// 上报时间
+		/// Reporting time
 		/// </summary>
 		public string CreationTime { get; set; }
 	}

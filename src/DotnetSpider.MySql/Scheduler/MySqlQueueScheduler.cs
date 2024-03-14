@@ -14,14 +14,14 @@ using MySqlConnector;
 namespace DotnetSpider.MySql.Scheduler
 {
 	/// <summary>
-	/// {spiderId}_hash 表存着所有请求的 hash
-	/// {spiderId}_set 表存着所有的请求，以 hash 做主键
-	/// Enqueue 操作：
-	/// 先尝试插入 hash 表，若插入成功，则再把请求插入 set 表，若是插入失败，则跳过此请求
-	/// Dequeue 操作：
-	/// 1. 获取分布式锁
-	/// 2. 查询出需要的请求
-	/// 3. 删除请求
+	/// The {spiderId}_hash table stores the hashes of all requests
+	/// The {spiderId}_set table stores all requests, with hash as the primary key.
+	/// Enqueue operation:
+	/// First try to insert into the hash table. If the insertion is successful, then insert the request into the set table. If the insertion fails, skip this request.
+	/// Dequeue operation:
+	/// 1. Obtain distributed lock
+	/// 2. Query the required requests
+	/// 3. Delete request
 	/// </summary>
 	public abstract class MySqlQueueScheduler : IScheduler
 	{
@@ -171,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `{spiderId}_queue`
 		}
 
 		/// <summary>
-		/// 队列中的总请求个数
+		/// The total number of requests in the queue
 		/// </summary>
 		public async Task<long> GetTotalAsync()
 		{

@@ -3,17 +3,17 @@ namespace DotnetSpider.Downloader
 	public class PPPoEOptions
 	{
 		/// <summary>
-		/// ADSL 帐户
+		/// ADSL account
 		/// </summary>
 		public string Account { get; set; }
 
 		/// <summary>
-		/// ADSL 密码
+		/// ADSL password
 		/// </summary>
 		public string Password { get; set; }
 
 		/// <summary>
-		/// ADSL 网络接口
+		/// ADSL network interface
 		/// </summary>
 		public string Interface { get; set; }
 	}
