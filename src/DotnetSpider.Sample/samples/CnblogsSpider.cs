@@ -49,7 +49,7 @@ namespace DotnetSpider.Sample.samples
 
 		protected override SpiderId GenerateSpiderId()
 		{
-			return new(ObjectId.CreateId().ToString(), "博客园");
+			return new(ObjectId.CreateId().ToString(), "Blog Garden");
 		}
 
 
@@ -71,7 +71,7 @@ namespace DotnetSpider.Sample.samples
 					var title = news.Select(Selectors.XPath(".//h2[@class='news_entry']"))?.Value;
 					var url = news.Select(Selectors.XPath(".//h2[@class='news_entry']/a/@href"))?.Value;
 					var summary = news.Select(Selectors.XPath(".//div[@class='entry_summary']"))?.Value;
-					var views = news.Select(Selectors.XPath(".//span[@class='view']"))?.Value.Replace(" 人浏览", "");
+					var views = news.Select(Selectors.XPath(".//span[@class='view']"))?.Value.Replace(" People browse", "");
 
 					if (!string.IsNullOrWhiteSpace(url))
 					{

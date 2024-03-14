@@ -9,45 +9,45 @@ namespace DotnetSpider.Statistics.Store
 	public class SpiderStatistics
 	{
 		/// <summary>
-		/// 爬虫标识
+		/// Reptile ID
 		/// </summary>
 		[StringLength(36)]
 		[Column("id")]
 		public virtual string Id { get; private set; }
 
 		/// <summary>
-		/// 爬虫名称
+		/// Reptile name
 		/// </summary>
 		[StringLength(255)]
 		[Column("name")]
 		public virtual string Name { get; private set; }
 
 		/// <summary>
-		/// 爬虫开始时间
+		/// Crawler start time
 		/// </summary>
 		[Column("start")]
 		public virtual DateTimeOffset? Start { get; private set; }
 
 		/// <summary>
-		/// 爬虫退出时间
+		/// Crawler exit time
 		/// </summary>
 		[Column("exit")]
 		public virtual DateTimeOffset? Exit { get; private set; }
 
 		/// <summary>
-		/// 链接总数
+		/// Total number of links
 		/// </summary>
 		[Column("total")]
 		public virtual long Total { get; private set; }
 
 		/// <summary>
-		/// 已经完成
+		/// Has been completed
 		/// </summary>
 		[Column("success")]
 		public virtual long Success { get; private set; }
 
 		/// <summary>
-		/// 失败链接数
+		/// Number of failed links
 		/// </summary>
 		[Column("failure")]
 		public virtual long Failure { get; private set; }

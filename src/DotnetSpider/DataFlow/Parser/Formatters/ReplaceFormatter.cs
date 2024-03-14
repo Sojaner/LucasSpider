@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace DotnetSpider.DataFlow.Parser.Formatters
 {
@@ -9,7 +9,7 @@ namespace DotnetSpider.DataFlow.Parser.Formatters
 	public class ReplaceFormatter : Formatter
 	{
 		/// <summary>
-		/// 需要被替换的值
+		/// The value that needs to be replaced
 		/// </summary>
 		public string OldValue { get; set; }
 
@@ -19,17 +19,17 @@ namespace DotnetSpider.DataFlow.Parser.Formatters
 		public string NewValue { get; set; }
 
 		/// <summary>
-		/// 实现数值的转化
+		/// Achieve numerical conversion
 		/// </summary>
-		/// <param name="value">数值</param>
-		/// <returns>被格式化后的数值</returns>
+		/// <param name="value">Value</param>
+		/// <returns>The formatted value</returns>
 		protected override string Handle(string value)
 		{
 			return value.Replace(OldValue, NewValue);
 		}
 
 		/// <summary>
-		/// 校验参数是否设置正确
+		/// Verify whether the parameters are set correctly
 		/// </summary>
 		protected override void CheckArguments()
 		{

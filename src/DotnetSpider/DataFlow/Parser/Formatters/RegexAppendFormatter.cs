@@ -1,29 +1,29 @@
-﻿using System;
+using System;
 using System.Text.RegularExpressions;
 
 namespace DotnetSpider.DataFlow.Parser.Formatters
 {
 	/// <summary>
-	/// 如果数值符合正则表达式则在数值后面追加指定的内容. 如采集到的内容为数字, 则在后面添加 "人"
+	/// If the value matches the regular expression, append the specified content after the value. If the collected content is a number, add "person" after it.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
 	public class RegexAppendFormatter : Formatter
 	{
 		/// <summary>
-		/// 正则表达式
+		/// Regular expression
 		/// </summary>
 		public string Pattern { get; set; }
 
 		/// <summary>
-		/// 追加的内容
+		/// Additional content
 		/// </summary>
 		public string AppendValue { get; set; }
 
 		/// <summary>
-		/// 实现数值的转化
+		/// Achieve numerical conversion
 		/// </summary>
-		/// <param name="value">数值</param>
-		/// <returns>被格式化后的数值</returns>
+		/// <param name="value">Value</param>
+		/// <returns>The formatted value</returns>
 		protected override string Handle(string value)
 		{
 			var tmp = value;
@@ -31,7 +31,7 @@ namespace DotnetSpider.DataFlow.Parser.Formatters
 		}
 
 		/// <summary>
-		/// 校验参数是否设置正确
+		/// Verify whether the parameters are set correctly
 		/// </summary>
 		protected override void CheckArguments()
 		{

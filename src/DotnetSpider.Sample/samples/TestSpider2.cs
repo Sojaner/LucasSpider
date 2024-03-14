@@ -51,12 +51,12 @@ namespace DotnetSpider.Sample.samples
 
 		protected override SpiderId GenerateSpiderId()
 		{
-			return new(ObjectId.CreateId().ToString(), "测试爬虫 1");
+			return new(ObjectId.CreateId().ToString(), "Test crawler 1");
 		}
 
 		[Schema("cnblogs", "news")]
 		[EntitySelector(Expression = ".//div[@class='news_block']", Type = SelectorType.XPath)]
-		[GlobalValueSelector(Expression = ".//a[@class='current']", Name = "类别", Type = SelectorType.XPath)]
+		[GlobalValueSelector(Expression = ".//a[@class='current']", Name = "Category", Type = SelectorType.XPath)]
 		[FollowRequestSelector(Expressions = new[] {"//div[@class='pager']"},
 			Patterns = new[] {"news\\.cnblogs\\.com/n/page"})]
 		public class CnblogsEntity : EntityBase<CnblogsEntity>
@@ -71,17 +71,17 @@ namespace DotnetSpider.Sample.samples
 
 			[Required]
 			[StringLength(200)]
-			[ValueSelector(Expression = "类别", Type = SelectorType.Environment)]
+			[ValueSelector(Expression = "Category", Type = SelectorType.Environment)]
 			public string Category { get; set; }
 
 			[Required]
 			[StringLength(200)]
-			[ValueSelector(Expression = "网站", Type = SelectorType.Environment)]
+			[ValueSelector(Expression = "Website", Type = SelectorType.Environment)]
 			public string WebSite { get; set; }
 
 			[StringLength(200)]
 			[ValueSelector(Expression = "//title")]
-			[ReplaceFormatter(NewValue = "", OldValue = " - 博客园")]
+			[ReplaceFormatter(NewValue = "", OldValue = " - Blog Park")]
 			public string Title { get; set; }
 
 			[StringLength(40)]

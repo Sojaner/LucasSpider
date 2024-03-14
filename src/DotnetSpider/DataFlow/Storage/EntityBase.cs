@@ -13,7 +13,7 @@ namespace DotnetSpider.DataFlow.Storage
     }
 
     /// <summary>
-    /// 实体基类
+    /// Entity base class
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public abstract class EntityBase<T> : IEntity where T : class, new()
@@ -21,7 +21,7 @@ namespace DotnetSpider.DataFlow.Storage
         private readonly Lazy<TableMetadata> _tableMetadata = new();
 
         /// <summary>
-        /// 获取实体的表元数据
+        /// Get the table metadata of an entity
         /// </summary>
         /// <returns></returns>
         TableMetadata IEntity.GetTableMetadata()
@@ -67,7 +67,7 @@ namespace DotnetSpider.DataFlow.Storage
                 _tableMetadata.Value.Columns.Add(property.Name, column);
             }
 
-            // 如果未设置主键, 但实体中有名为 Id 的属性, 则默认把 Id 作为主键
+            // If the primary key is not set, but there is an attribute named Id in the entity, Id will be used as the primary key by default.
             if (_tableMetadata.Value.Primary == null || _tableMetadata.Value.Primary.Count == 0)
             {
                 var primary = properties.FirstOrDefault(x => x.Name.ToLower() == "id");
@@ -79,7 +79,7 @@ namespace DotnetSpider.DataFlow.Storage
 
             _tableMetadata.Value.TypeName = type.FullName;
 
-            // 如果有主键，但没有设置更新字段，则完全更新
+            // If there is a primary key but no update field is set, then update completely
             if (_tableMetadata.Value.Primary != null && _tableMetadata.Value.Primary.Count > 0 &&
                 !_tableMetadata.Value.HasUpdateColumns)
             {
@@ -105,7 +105,7 @@ namespace DotnetSpider.DataFlow.Storage
             var columns = GetColumns(expression);
             if (columns == null || columns.Count == 0)
             {
-                throw new SpiderException("主键不能为空");
+                throw new SpiderException("Primary key cannot be empty");
             }
 
             _tableMetadata.Value.Primary = new HashSet<string>(columns);
@@ -120,7 +120,7 @@ namespace DotnetSpider.DataFlow.Storage
 
             if (columns == null || columns.Count == 0)
             {
-                throw new SpiderException("索引列不能为空");
+                throw new SpiderException("Index column cannot be empty");
             }
 
             _tableMetadata.Value.Indexes.Add(new IndexMetadata(columns.ToArray(), isUnique));
@@ -153,7 +153,7 @@ namespace DotnetSpider.DataFlow.Storage
 
                     if (columns.Count != body.Arguments.Count)
                     {
-                        throw new SpiderException("表达式不正确");
+                        throw new SpiderException("Expression is incorrect");
                     }
 
                     break;
@@ -176,7 +176,7 @@ namespace DotnetSpider.DataFlow.Storage
 
                 default:
                 {
-                    throw new SpiderException("表达式不正确");
+                    throw new SpiderException("Expression is incorrect");
                 }
             }
 

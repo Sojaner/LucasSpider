@@ -8,38 +8,38 @@ namespace DotnetSpider.Statistics.Store
 	public class AgentStatistics
 	{
 		/// <summary>
-		/// 节点标识
+		/// Node ID
 		/// </summary>
 		[StringLength(36)]
 		[Column("agent_id")]
 		public virtual string Id { get; private set; }
 
 		/// <summary>
-		/// 节点名称
+		/// Node name
 		/// </summary>
 		[Column("name")]
 		public string Name { get; private set; }
 
 		/// <summary>
-		/// 下载成功数
+		/// Number of successful downloads
 		/// </summary>
 		[Column("success")]
 		public virtual long Success { get; private set; }
 
 		/// <summary>
-		/// 下载失败数
+		/// Number of failed downloads
 		/// </summary>
 		[Column("failure")]
 		public virtual long Failure { get; private set; }
 
 		/// <summary>
-		/// 下载总消耗时间
+		/// Total download time
 		/// </summary>
 		[Column("elapsed_milliseconds")]
 		public virtual long ElapsedMilliseconds { get; private set; }
 
 		/// <summary>
-		/// 上报时间
+		/// Reporting time
 		/// </summary>
 		[Column("creation_time")]
 		public DateTimeOffset CreationTime { get; private set; }

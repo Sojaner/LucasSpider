@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 namespace DotnetSpider.DataFlow
 {
 	/// <summary>
-	/// 控制台打印(实体)解析结果
+	/// Console print (entity) parsing results
 	/// </summary>
 	public class ConsoleEntityStorage : EntityStorageBase
 	{

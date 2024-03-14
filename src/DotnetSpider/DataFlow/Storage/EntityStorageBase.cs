@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace DotnetSpider.DataFlow.Storage
 {
 	/// <summary>
-	/// 实体存储器
+	/// Physical memory
 	/// </summary>
 	public abstract class EntityStorageBase : DataFlowBase
 	{
@@ -16,8 +16,8 @@ namespace DotnetSpider.DataFlow.Storage
 		/// <summary>
 		///
 		/// </summary>
-		/// <param name="context">数据流上下文</param>
-		/// <param name="entities">数据解析结果 (数据类型, List(数据对象))</param>
+		/// <param name="context">Data flow context</param>
+		/// <param name="entities">Data parsing results (data type, List (data object))</param>
 		/// <returns></returns>
 		protected abstract Task HandleAsync(DataFlowContext context, IDictionary<Type, ICollection<dynamic>> entities);
 
@@ -25,7 +25,7 @@ namespace DotnetSpider.DataFlow.Storage
 		{
 			if (IsNullOrEmpty(context))
 			{
-				Logger.LogWarning("数据流上下文不包含实体解析结果");
+				Logger.LogWarning("Data flow context does not contain entity resolution results");
 				return;
 			}
 

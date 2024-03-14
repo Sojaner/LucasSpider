@@ -1,31 +1,31 @@
-﻿using System;
+using System;
 using System.Text.RegularExpressions;
 
 namespace DotnetSpider.DataFlow.Parser.Formatters
 {
 	/// <summary>
-	/// 把包含中文的字符串转化成数字
+	/// Convert strings containing Chinese characters into numbers
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
 	public class DigitUnitFormatter : Formatter
 	{
-		private const string UnitStringForShi = "十";
-		private const string UnitStringForBai = "百";
-		private const string UnitStringForQian = "千";
-		private const string UnitStringForWan = "万";
-		private const string UnitStringForYi = "亿";
+		private const string UnitStringForShi = "Ten";
+		private const string UnitStringForBai = "Hundred";
+		private const string UnitStringForQian = "Thousand";
+		private const string UnitStringForWan = "Ten thousand";
+		private const string UnitStringForYi = "100 million";
 		private readonly Regex _decimalRegex = new(@"\d+(\.\d+)?");
 
 		/// <summary>
-		/// 数字格式化模版
+		/// Digital formatting template
 		/// </summary>
 		public string NumberFormat { get; set; } = "F0";
 
 		/// <summary>
-		/// 把包含中文的字符串转化成数字
+		/// Convert strings containing Chinese characters into numbers
 		/// </summary>
-		/// <param name="value">数值</param>
-		/// <returns>被格式化后的数值</returns>
+		/// <param name="value">Value</param>
+		/// <returns>The formatted value</returns>
 		protected override string Handle(string value)
 		{
 			var tmp = value;
@@ -58,7 +58,7 @@ namespace DotnetSpider.DataFlow.Parser.Formatters
 		}
 
 		/// <summary>
-		/// 校验参数是否设置正确
+		/// Verify whether the parameters are set correctly
 		/// </summary>
 		protected override void CheckArguments()
 		{

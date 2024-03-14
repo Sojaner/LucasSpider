@@ -7,10 +7,10 @@ namespace DotnetSpider.DataFlow.Parser
     public static class SelectorExtensions
     {
         /// <summary>
-        /// 把 BaseSelector 转换成真正的查询器
+        /// Convert BaseSelector into a real queryer
         /// </summary>
         /// <param name="selector">BaseSelector</param>
-        /// <returns>查询器</returns>
+        /// <returns>Queryer</returns>
         public static ISelector ToSelector(this Selector selector)
         {
             if (selector != null)

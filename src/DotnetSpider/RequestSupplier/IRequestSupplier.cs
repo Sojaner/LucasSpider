@@ -6,12 +6,12 @@ using DotnetSpider.Http;
 namespace DotnetSpider.RequestSupplier
 {
     /// <summary>
-    /// 请求供应接口
+    /// Request supply interface
     /// </summary>
     public interface IRequestSupplier
     {
         /// <summary>
-        /// 运行请求供应
+        /// Run request provisioning
         /// </summary>
         Task<IEnumerable<Request>> GetAllListAsync(CancellationToken cancellationToken);
     }

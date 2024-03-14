@@ -9,8 +9,8 @@ using Newtonsoft.Json;
 namespace DotnetSpider.DataFlow
 {
 	/// <summary>
-	/// JSON 文件保存解析结果(所有解析结果)
-	/// 保存路径: [当前程序运行目录]/files/[任务标识]/[request.hash].json
+	/// JSON file saves parsing results (all parsing results)
+	/// Save path: [current program running directory]/files/[task identification]/[request.hash].json
 	/// </summary>
 	public class JsonFileStorage : FileStorageBase
 	{
@@ -23,7 +23,7 @@ namespace DotnetSpider.DataFlow
 		{
 			if (IsNullOrEmpty(context))
 			{
-				Logger.LogWarning("数据流上下文不包含解析结果");
+				Logger.LogWarning("Data flow context does not contain parsing results");
 				return;
 			}
 

@@ -35,34 +35,34 @@ namespace DotnetSpider
 		private readonly IList<DataParser> _dataParsers;
 
 		/// <summary>
-		/// 请求 Timeout 事件
+		/// Request Timeout event
 		/// </summary>
 		protected event Action<Request[]> OnRequestTimeout;
 
 		/// <summary>
-		/// 请求错误事件
+		/// Request error event
 		/// </summary>
 		protected event Action<Request, Response> OnRequestError;
 
 		/// <summary>
-		/// 调度器中无新的请求事件
+		/// No new request events in scheduler
 		/// </summary>
 		protected event Action OnSchedulerEmpty;
 
 		protected SpiderOptions Options { get; }
 
 		/// <summary>
-		/// 爬虫标识
+		/// Reptile ID
 		/// </summary>
 		protected SpiderId SpiderId { get; private set; }
 
 		/// <summary>
-		/// 日志接口
+		/// Log interface
 		/// </summary>
 		protected ILogger Logger { get; }
 
 		/// <summary>
-		/// 是否分布式爬虫
+		/// Is it a distributed crawler?
 		/// </summary>
 		protected bool IsDistributed => _services.MessageQueue.IsDistributed;
 
@@ -91,14 +91,14 @@ namespace DotnetSpider
 		}
 
 		/// <summary>
-		/// 初始化爬虫数据
+		/// Initialize crawler data
 		/// </summary>
 		/// <param name="stoppingToken"></param>
 		/// <returns></returns>
 		protected abstract Task InitializeAsync(CancellationToken stoppingToken = default);
 
 		/// <summary>
-		/// 获取爬虫标识和名称
+		/// Get the crawler ID and name
 		/// </summary>
 		/// <returns></returns>
 		protected virtual SpiderId GenerateSpiderId()
@@ -127,7 +127,7 @@ namespace DotnetSpider
 		}
 
 		/// <summary>
-		/// 配置请求(从 Scheduler 中出队的)
+		/// Configuration requests (dequeued from Scheduler)
 		/// </summary>
 		/// <param name="request"></param>
 		protected virtual void ConfigureRequest(Request request)
@@ -192,16 +192,16 @@ namespace DotnetSpider
 						$"Request {request.RequestUri}, {request.Hash} set to use PPPoE but PPPoERegex is empty");
 				}
 
-				// 1. 请求次数超过限制则跳过，并添加失败记录
-				// 2. 默认构造的请求次数为 0， 并且不允许用户更改，因此可以保证数据安全性
+				// 1. If the number of requests exceeds the limit, it will be skipped and a failure record will be added.
+				// 2. The number of requests constructed by default is 0, and users are not allowed to change it, so data security can be guaranteed.
 				if (request.RequestedTimes > Options.RetriedTimes)
 				{
 					await _services.StatisticsClient.IncreaseFailureAsync(SpiderId.Id);
 					continue;
 				}
 
-				// 1. 默认构造的深度为 0， 并且不允许用户更改，因此可以保证数据安全性
-				// 2. 当深度超过限制则跳过
+				// 1. The default construction depth is 0, and users are not allowed to change it, so data security can be guaranteed.
+				// 2. Skip when the depth exceeds the limit
 				if (Options.Depth > 0 && request.Depth > Options.Depth)
 				{
 					continue;
@@ -268,8 +268,8 @@ namespace DotnetSpider
 						}
 					case Response response:
 						{
-							// 1. 从请求队列中去除请求
-							// 2. 若是 timeout 的请求，无法通过 Dequeue 获取，会通过 _requestedQueue.GetAllTimeoutList() 获取得到
+							// 1. Remove the request from the request queue
+							// 2. If it is a timeout request, it cannot be obtained through Dequeue, but will be obtained through _requestedQueue.GetAllTimeoutList()
 							var request = _requestedQueue.Dequeue(response.RequestHash);
 
 							if (request != null)
@@ -284,7 +284,7 @@ namespace DotnetSpider
 											$"{SpiderId} download {request.RequestUri}, {request.Hash} via {request.Agent} success");
 									}
 
-									// 是否下载成功由爬虫来决定，则非 Agent 自身
+									// Whether the download is successful or not is determined by the crawler, not the Agent itself.
 									await _services.StatisticsClient.IncreaseAgentSuccessAsync(response.Agent,
 										response.ElapsedMilliseconds);
 									await HandleResponseAsync(request, response, bytes);
@@ -334,11 +334,11 @@ namespace DotnetSpider
 				var count = await AddRequestsAsync(context.FollowRequests);
 				await _services.StatisticsClient.IncreaseTotalAsync(SpiderId.Id, count);
 
-				// 增加一次成功的请求
+				// Add a successful request
 				await _services.StatisticsClient.IncreaseSuccessAsync(SpiderId.Id);
 				await _services.Scheduler.SuccessAsync(request);
 			}
-			// DataFlow 可以参过抛出 ExitException 来中止爬虫程序
+			// DataFlow can abort the crawler program by throwing ExitException
 			catch (ExitException ee)
 			{
 				Logger.LogError($"Exit: {ee}");
@@ -359,7 +359,7 @@ namespace DotnetSpider
 		}
 
 		/// <summary>
-		/// 若是没有数据解析器，则认为是不需要数据解析器，直接通到存储器，返回 true
+		/// If there is no data parser, it is considered that there is no need for a data parser, and it is passed directly to the memory and returns true.
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns></returns>
@@ -419,7 +419,7 @@ namespace DotnetSpider
 						{
 							ConfigureRequest(request);
 
-							// 若是没有一个 Parser 可以处理此请求，则不需要下载
+							// If there is no Parser that can handle this request, there is no need to download it.
 							// https://github.com/dotnetcore/DotnetSpider/issues/182
 							if (!IsValidRequest(request))
 							{
@@ -559,7 +559,7 @@ namespace DotnetSpider
 					{
 						switch (request.Policy)
 						{
-							// 非初始请求如果是链式模式则使用旧的下载器
+							// Non-initial requests use the old downloader if they are in chain mode
 							case RequestPolicy.Chained:
 								{
 									topic = $"{request.Agent}";
@@ -596,7 +596,7 @@ namespace DotnetSpider
 
 		protected async Task LoadRequestFromSuppliers(CancellationToken stoppingToken)
 		{
-			// 通过供应接口添加请求
+			// Add request via provisioning interface
 			foreach (var requestSupplier in _requestSuppliers)
 			{
 				foreach (var request in await requestSupplier.GetAllListAsync(stoppingToken))

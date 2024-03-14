@@ -32,7 +32,7 @@ namespace DotnetSpider.Sample.samples
 
 		protected override SpiderId GenerateSpiderId()
 		{
-			return new(ObjectId.CreateId().ToString(), "Github 图片");
+			return new(ObjectId.CreateId().ToString(), "Github images");
 		}
 
 		protected override async Task InitializeAsync(CancellationToken stoppingToken = default)

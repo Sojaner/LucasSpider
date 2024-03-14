@@ -9,8 +9,8 @@ using Microsoft.Extensions.Configuration;
 namespace DotnetSpider.DataFlow
 {
 	/// <summary>
-	/// JSON 文件保存解析(实体)结果
-	/// 保存路径: [当前程序运行目录]/files/[任务标识]/[request.hash].data
+	/// JSON file saves parsing (entity) results
+	/// Save path: [current program running directory]/files/[task identification]/[request.hash].data
 	/// </summary>
 	public class JsonEntityFileStorage : EntityFileStorageBase
 	{
@@ -18,9 +18,9 @@ namespace DotnetSpider.DataFlow
 			new();
 
 		/// <summary>
-		/// 根据配置返回存储器
+		/// Returns memory based on configuration
 		/// </summary>
-		/// <param name="configuration">配置</param>
+		/// <param name="configuration">Deployment</param>
 		/// <returns></returns>
 		public static JsonEntityFileStorage CreateFromOptions(IConfiguration configuration)
 		{

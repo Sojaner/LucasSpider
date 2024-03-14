@@ -3,12 +3,12 @@ namespace DotnetSpider.Agent
 	public class AgentOptions
 	{
 		/// <summary>
-		/// 节点标识
+		/// Node ID
 		/// </summary>
 		public string AgentId { get; set; }
 
 		/// <summary>
-		/// 节点名称
+		/// Node name
 		/// </summary>
 		public string AgentName { get; set; }
 	}

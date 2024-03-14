@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Text.RegularExpressions;
 
 namespace DotnetSpider.DataFlow.Parser.Formatters
 {
 	/// <summary>
-	/// 如果能匹配正则表达式则返回True的内容, 如果不符合正则表达式则返回 False的内容
+	/// If it matches the regular expression, it returns True. If it does not match the regular expression, it returns False.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
 	public class RegexFormatter : Formatter
@@ -12,30 +12,30 @@ namespace DotnetSpider.DataFlow.Parser.Formatters
 		private const string Id = "227a207a28024b1cbee3754e76443df2";
 
 		/// <summary>
-		/// 正则表达式格式化
+		/// Regular expression formatting
 		/// </summary>
 		public string Pattern { get; set; }
 
 		/// <summary>
-		/// 符合正则表达式应该返回的内容
+		/// What the regular expression should return
 		/// </summary>
 		public string True { get; set; } = Id;
 
 		/// <summary>
-		/// 不符合正则表达式应该返回的内容
+		/// Does not match what the regular expression should return
 		/// </summary>
 		public string False { get; set; } = Id;
 
 		/// <summary>
-		/// 如果 True没有设值, 则返回正则表达式匹配的 Group 内容
+		/// If True is not set, the Group content matching the regular expression is returned.
 		/// </summary>
 		public int Group { get; set; } = -1;
 
 		/// <summary>
-		/// 实现数值的转化
+		/// Achieve numerical conversion
 		/// </summary>
-		/// <param name="value">数值</param>
-		/// <returns>被格式化后的数值</returns>
+		/// <param name="value">Value</param>
+		/// <returns>The formatted value</returns>
 
 		protected override string Handle(string value)
 		{
@@ -55,7 +55,7 @@ namespace DotnetSpider.DataFlow.Parser.Formatters
 		}
 
 		/// <summary>
-		/// 校验参数是否设置正确
+		/// Verify whether the parameters are set correctly
 		/// </summary>
 		protected override void CheckArguments()
 		{

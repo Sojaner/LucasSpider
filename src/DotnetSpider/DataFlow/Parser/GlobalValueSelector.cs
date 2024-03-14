@@ -6,7 +6,7 @@ namespace DotnetSpider.DataFlow.Parser
 	public class GlobalValueSelector : ValueSelector
 	{
 		/// <summary>
-		/// 解析值的名称
+		/// The name of the parsed value
 		/// </summary>
 		public string Name { get; set; }
 	}

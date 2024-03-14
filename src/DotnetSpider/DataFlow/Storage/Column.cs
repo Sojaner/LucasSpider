@@ -3,7 +3,7 @@ using System.Reflection;
 namespace DotnetSpider.DataFlow.Storage
 {
 	/// <summary>
-	/// 列信息
+	/// Column information
 	/// </summary>
 	public class Column
 	{
@@ -13,7 +13,7 @@ namespace DotnetSpider.DataFlow.Storage
 		public bool Required { get; set; }
 
 		/// <summary>
-		/// 属性反射，用于设置解析值到实体对象
+		/// Property reflection, used to set parsed values ​​to entity objects
 		/// </summary>
 		public PropertyInfo PropertyInfo { get; set; }
 	}

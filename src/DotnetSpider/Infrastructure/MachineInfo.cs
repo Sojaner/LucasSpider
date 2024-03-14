@@ -75,15 +75,15 @@ namespace DotnetSpider.Infrastructure
 #pragma warning disable 649
 			private readonly struct VmStatistics
 			{
-				public readonly int free_count; /* # 空闲内存页数量，没有被占用的 */
-				public readonly int active_count; /* # 活跃内存页数量，正在使用或者最近被使用 */
-				public readonly int inactive_count; /* # 非活跃内存页数量，有数据，但是最近没有被使用过，下一个可能就要干掉他 */
-				public readonly int wire_count; /* # 系统占用的内存页，不可被换出的 */
-				public readonly ulong zero_fill_count; /* # Filled with Zero Page 的页数 */
-				public readonly ulong reactivations; /* # 重新激活的页数 inactive to active */
-				public readonly ulong pageins; /* # 换入，写入内存 */
-				public readonly ulong pageouts; /* # 换出，写入磁盘 */
-				public readonly ulong faults; /* # Page fault 次数 */
+				public readonly int free_count; /* # Number of free memory pages, those that are not occupied */
+				public readonly int active_count; /* # Number of active memory pages, currently in use or recently used */
+				public readonly int inactive_count; /* # Number of inactive memory pages. There is data, but it has not been used recently. It may be necessary to kill it next. */
+				public readonly int wire_count; /* # The memory pages occupied by the system cannot be swapped out */
+				public readonly ulong zero_fill_count; /* # Number of pages Filled with Zero Page */
+				public readonly ulong reactivations; /* # Number of reactivated pages inactive to active */
+				public readonly ulong pageins; /* # Swap in and write to memory */
+				public readonly ulong pageouts; /* # Swap out and write to disk */
+				public readonly ulong faults; /* # Page fault times */
 				public readonly ulong cow_faults; /* # of copy-on-writes */
 				public readonly ulong lookups; /* object cache lookups */
 				public readonly ulong hits; /* object cache hits */
@@ -105,13 +105,13 @@ namespace DotnetSpider.Infrastructure
 				public readonly ulong compressions; /* # of pages compressed */
 				public readonly ulong swapins; /* # of pages swapped in (via compression segments) */
 				public readonly ulong swapouts; /* # of pages swapped out (via compression segments) */
-				public readonly int compressor_page_count; /* # 压缩过个内存 */
+				public readonly int compressor_page_count; /* # Compressed memory */
 				public readonly int throttled_count; /* # of pages throttled */
 
 				public readonly int
-					external_page_count; /* # of pages that are file-backed (non-swap) mmap() 映射到磁盘文件的 */
+					external_page_count; /* # of pages that are file-backed (non-swap) mmap() mapped to disk files */
 
-				public readonly int internal_page_count; /* # of pages that are anonymous malloc() 分配的内存 */
+				public readonly int internal_page_count; /* # of pages that are anonymous malloc() allocated memory */
 
 				public readonly ulong
 					total_uncompressed_pages_in_compressor; /* # of pages (uncompressed) held within the compressor. */
@@ -183,15 +183,15 @@ namespace DotnetSpider.Infrastructure
 #pragma warning disable 649
 			private struct WindowsMemoryStatus
 			{
-				public uint DwLength; // 当前结构体大小
-				public readonly uint DwMemoryLoad; // 当前内存使用率
-				public readonly long UllTotalPhys; // 总计物理内存大小
-				public readonly long UllAvailPhys; // 可用物理内存大小
-				public readonly long UllTotalPageFile; // 总计交换文件大小
-				public readonly long UllAvailPageFile; // 总计交换文件大小
-				public readonly long UllTotalVirtual; // 总计虚拟内存大小
-				public readonly long UllAvailVirtual; // 可用虚拟内存大小
-				public readonly long UllAvailExtendedVirtual; // 保留 这个值始终为0
+				public uint DwLength; // Current structure size
+				public readonly uint DwMemoryLoad; // Current memory usage
+				public readonly long UllTotalPhys; // Total physical memory size
+				public readonly long UllAvailPhys; // Available physical memory size
+				public readonly long UllTotalPageFile; // Total swap file size
+				public readonly long UllAvailPageFile; // Total swap file size
+				public readonly long UllTotalVirtual; // Total virtual memory size
+				public readonly long UllAvailVirtual; // Available virtual memory size
+				public readonly long UllAvailExtendedVirtual; // Reserved This value is always 0
 			}
 
 			[DllImport("Kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]

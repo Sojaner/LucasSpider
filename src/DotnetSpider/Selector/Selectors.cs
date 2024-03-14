@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 namespace DotnetSpider.Selector
 {
     /// <summary>
-    /// 查询器的构建帮助类, 相同的查询器会缓存起来.
+    /// Query construction helper class, the same query will be cached.
     /// </summary>
     public class Selectors
     {
@@ -12,12 +12,12 @@ namespace DotnetSpider.Selector
             new();
 
         /// <summary>
-        /// 创建正则查询器
+        /// Create a regular query
         /// </summary>
-        /// <param name="expr">正则表达式</param>
+        /// <param name="expr">regular expression</param>
         /// <param name="options"></param>
         /// <param name="group"></param>
-        /// <returns>查询器</returns>
+        /// <returns>Queryer</returns>
         public static ISelector Regex(string expr,
             RegexOptions options = RegexOptions.None, string replacement = "$0")
         {
@@ -31,11 +31,11 @@ namespace DotnetSpider.Selector
         }
 
         /// <summary>
-        /// 创建Css查询器
+        /// Create CSS query
         /// </summary>
-        /// <param name="expr">Css表达式</param>
-        /// <param name="attr">属性名称</param>
-        /// <returns>查询器</returns>
+        /// <param name="expr">Css expression</param>
+        /// <param name="attr">Attribute name</param>
+        /// <returns>Queryer</returns>
         public static ISelector Css(string expr, string attr = null)
         {
             var key = $"c_{expr}_{attr}";
@@ -48,10 +48,10 @@ namespace DotnetSpider.Selector
         }
 
         /// <summary>
-        /// 创建XPath查询器
+        /// Create an XPath query
         /// </summary>
-        /// <param name="expr">Xpath表达式</param>
-        /// <returns>查询器</returns>
+        /// <param name="expr">Xpath expression</param>
+        /// <returns>Queryer</returns>
         public static ISelector XPath(string expr)
         {
             var key = $"x_{expr}";
@@ -64,10 +64,10 @@ namespace DotnetSpider.Selector
         }
 
         /// <summary>
-        /// 创建JsonPath查询器
+        /// Create JsonPath queryer
         /// </summary>
-        /// <param name="expr">JsonPath表达式</param>
-        /// <returns>查询器</returns>
+        /// <param name="expr">JsonPath expression</param>
+        /// <returns>Queryer</returns>
         public static ISelector JsonPath(string expr)
         {
             var key = $"j_{expr}";

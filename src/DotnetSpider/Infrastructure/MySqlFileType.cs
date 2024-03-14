@@ -8,7 +8,7 @@ namespace DotnetSpider.Infrastructure
         LoadFile,
 
         /// <summary>
-        /// INSERT SQL语句
+        /// INSERT SQL statement
         /// </summary>
         InsertSql
     }

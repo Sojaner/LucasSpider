@@ -8,8 +8,8 @@ using Microsoft.Extensions.Logging;
 namespace DotnetSpider.DataFlow
 {
 	/// <summary>
-	/// 文件保存解析结果(所有解析结果)
-	/// 保存路径: [当前程序运行目录]/files/[任务标识]/[request.hash].data
+	/// File saves analysis results (all analysis results)
+	/// Save path: [current program running directory]/files/[task identification]/[request.hash].data
 	/// </summary>
 	public class FileStorage : FileStorageBase
 	{
@@ -22,7 +22,7 @@ namespace DotnetSpider.DataFlow
 		{
 			if (IsNullOrEmpty(context))
 			{
-				Logger.LogWarning("数据流上下文不包含解析结果");
+				Logger.LogWarning("Data flow context does not contain parsing results");
 				return;
 			}
 

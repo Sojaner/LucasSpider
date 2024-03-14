@@ -27,10 +27,10 @@ namespace DotnetSpider.Selector
         public override string Value => _token?.ToString();
 
         /// <summary>
-        /// 通过查询器查找结果
+        /// Find results via query
         /// </summary>
-        /// <param name="selector">查询器</param>
-        /// <returns>查询接口</returns>
+        /// <param name="selector">Queryer</param>
+        /// <returns>Query interface</returns>
         public override ISelectable Select(ISelector selector)
         {
             selector.NotNull(nameof(selector));
@@ -38,10 +38,10 @@ namespace DotnetSpider.Selector
         }
 
         /// <summary>
-        /// 通过查询器查找结果
+        /// Find results via query
         /// </summary>
-        /// <param name="selector">查询器</param>
-        /// <returns>查询接口</returns>
+        /// <param name="selector">Queryer</param>
+        /// <returns>Query interface</returns>
         public override IEnumerable<ISelectable> SelectList(ISelector selector)
         {
             selector.NotNull(nameof(selector));

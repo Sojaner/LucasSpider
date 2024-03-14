@@ -1,27 +1,27 @@
 namespace DotnetSpider.DataFlow.Storage
 {
 	/// <summary>
-	/// 存储器类型
+	/// Memory type
 	/// </summary>
     public enum StorageMode
     {
         /// <summary>
-        /// 直接执行插入
+        /// Perform insert directly
         /// </summary>
         Insert,
 
         /// <summary>
-        /// 插入不重复数据
+        /// Insert unique data
         /// </summary>
         InsertIgnoreDuplicate,
 
         /// <summary>
-        /// 如果主键不存在则插入, 如果存在则更新
+        /// Insert if the primary key does not exist, update if it exists
         /// </summary>
         InsertAndUpdate,
 
         /// <summary>
-        /// 直接更新
+        /// Direct update
         /// </summary>
         Update
     }

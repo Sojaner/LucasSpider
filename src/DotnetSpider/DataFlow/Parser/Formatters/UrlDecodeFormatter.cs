@@ -1,4 +1,4 @@
-﻿#if !NETSTANDARD
+#if !NETSTANDARD
 using System.Web;
 #else
 using System.Net;
@@ -18,10 +18,10 @@ namespace DotnetSpider.DataFlow.Parser.Formatters
 		}
 
 		/// <summary>
-		/// 实现数值的转化
+		/// Achieve numerical conversion
 		/// </summary>
-		/// <param name="value">数值</param>
-		/// <returns>被格式化后的数值</returns>
+		/// <param name="value">Value</param>
+		/// <returns>The formatted value</returns>
 		protected override string Handle(string value)
 		{
 			var tmp = value;

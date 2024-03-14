@@ -24,7 +24,7 @@ namespace DotnetSpider.Infrastructure
 		private readonly int _c;
 
 		/// <summary>
-		/// System.Text.Json.JsonSerializer 需要注册类型
+		/// System.Text.Json.JsonSerializer requires registered types
 		/// </summary>
 		internal static void AddTypeDescriptor()
 		{

@@ -6,7 +6,7 @@ using DotnetSpider.Infrastructure;
 namespace DotnetSpider.Scheduler.Component
 {
 	/// <summary>
-	/// 通过哈希去重
+	/// Deduplication via hashing
 	/// </summary>
 	public class HashSetDuplicateRemover : IDuplicateRemover
 	{
@@ -25,7 +25,7 @@ namespace DotnetSpider.Scheduler.Component
 
 			if (request.Owner != _spiderId)
 			{
-				throw new SpiderException("请求所属爬虫的标识与去重器所属的爬虫标识不一致");
+				throw new SpiderException("The identity of the crawler to which the request belongs is inconsistent with the identity of the crawler to which the deduplicator belongs.");
 			}
 
 			var isDuplicate = _dict.TryAdd(request.Hash, null);
@@ -45,7 +45,7 @@ namespace DotnetSpider.Scheduler.Component
 		}
 
 		/// <summary>
-		/// 重置去重器
+		/// Reset deduplicator
 		/// </summary>
 		public Task ResetDuplicateCheckAsync()
 		{

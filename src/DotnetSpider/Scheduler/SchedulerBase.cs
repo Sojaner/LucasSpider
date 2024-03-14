@@ -21,7 +21,7 @@ namespace DotnetSpider.Scheduler
 		}
 
 		/// <summary>
-		/// 重置去重器
+		/// Reset deduplicator
 		/// </summary>
 		public virtual async Task ResetDuplicateCheckAsync()
 		{
@@ -39,9 +39,9 @@ namespace DotnetSpider.Scheduler
 		}
 
 		/// <summary>
-		/// 如果请求未重复就添加到队列中
+		/// If the request is not repeated, add it to the queue
 		/// </summary>
-		/// <param name="request">请求</param>
+		/// <param name="request">Request</param>
 		protected abstract Task PushWhenNoDuplicate(Request request);
 
 		/// <summary>
@@ -53,7 +53,7 @@ namespace DotnetSpider.Scheduler
 		}
 
 		/// <summary>
-		/// 队列中的总请求个数
+		/// The total number of requests in the queue
 		/// </summary>
 		public async Task<long> GetTotalAsync()
 		{
@@ -61,10 +61,10 @@ namespace DotnetSpider.Scheduler
 		}
 
 		/// <summary>
-		/// 从队列中取出指定爬虫的指定个数请求
+		/// Remove the specified number of requests for the specified crawler from the queue
 		/// </summary>
-		/// <param name="count">出队数</param>
-		/// <returns>请求</returns>
+		/// <param name="count">Number of outputs</param>
+		/// <returns>Request</returns>
 		protected abstract Task<IEnumerable<Request>> ImplDequeueAsync(int count = 1);
 
 		public virtual async Task InitializeAsync(string spiderId)
@@ -78,15 +78,15 @@ namespace DotnetSpider.Scheduler
 
 			try
 			{
-				//申请获取锁
+				//Apply for a lock
 				_spinLock.Enter(ref locker);
 
 				return await ImplDequeueAsync(count);
 			}
 			finally
 			{
-				//工作完毕，或者发生异常时，检测一下当前线程是否占有锁，如果咱有了锁释放它
-				//以避免出现死锁的情况
+				//When the work is completed or an exception occurs, check whether the current thread holds the lock. If we have the lock, release it
+				//To avoid deadlock situations
 				if (locker)
 				{
 					_spinLock.Exit();
@@ -95,10 +95,10 @@ namespace DotnetSpider.Scheduler
 		}
 
 		/// <summary>
-		/// 请求入队
+		/// Request to join the queue
 		/// </summary>
-		/// <param name="requests">请求</param>
-		/// <returns>入队个数</returns>
+		/// <param name="requests">Requests</param>
+		/// <returns>Number of queued entries</returns>
 		public async Task<int> EnqueueAsync(IEnumerable<Request> requests)
 		{
 			var count = 0;

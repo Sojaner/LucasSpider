@@ -8,7 +8,7 @@ namespace DotnetSpider.Tests
     public class ModelTests
     {
         /// <summary>
-        /// 测试实体模型的 TypeName 是否解析到 Model 对象中
+        /// Test whether the TypeName of the entity model is resolved into the Model object
         /// </summary>
         [Fact(DisplayName = "ModelTypeName")]
         public void ModelTypeName()
@@ -22,7 +22,7 @@ namespace DotnetSpider.Tests
         }
 
         /// <summary>
-        /// 测试实体模型上的 EntitySelector 是否解析到 Model 对象中
+        /// Test whether the EntitySelector on the entity model resolves into a Model object
         /// 1. Type
         /// 2. Expression
         /// 3. Arguments
