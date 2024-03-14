@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace DotnetSpider.DataFlow.Parser
 {
 	/// <summary>
-	/// Mockup
+	/// Model for parsing
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	public class Model<T> where T : EntityBase<T>, new()
