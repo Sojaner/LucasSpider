@@ -14,16 +14,16 @@ namespace DotnetSpider.DataFlow.Parser.Formatters
 		public enum TrimType
 		{
 			/// <summary>
-			/// Only the back of Trim
+			/// Trim only the leading white-spaces
 			/// </summary>
 			Right,
 			/// <summary>
-			/// Only the Trim front
+			/// Trim only the trailing white-spaces
 			/// </summary>
 			Left,
 
 			/// <summary>
-			/// Trim before and after
+			/// Trim both leading and trailing white-spaces
 			/// </summary>
 			All
 		}
