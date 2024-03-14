@@ -9,11 +9,11 @@ namespace DotnetSpider.DataFlow.Parser.Formatters
 	[AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
 	public class DigitUnitFormatter : Formatter
 	{
-		private const string UnitStringForShi = "Ten";
-		private const string UnitStringForBai = "Hundred";
-		private const string UnitStringForQian = "Thousand";
-		private const string UnitStringForWan = "Ten thousand";
-		private const string UnitStringForYi = "100 million";
+		private const string UnitStringForShi = "十";
+		private const string UnitStringForBai = "百";
+		private const string UnitStringForQian = "千";
+		private const string UnitStringForWan = "万";
+		private const string UnitStringForYi = "亿";
 		private readonly Regex _decimalRegex = new(@"\d+(\.\d+)?");
 
 		/// <summary>
