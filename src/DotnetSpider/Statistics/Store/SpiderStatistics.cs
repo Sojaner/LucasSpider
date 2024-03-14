@@ -9,14 +9,14 @@ namespace DotnetSpider.Statistics.Store
 	public class SpiderStatistics
 	{
 		/// <summary>
-		/// Reptile ID
+		/// Spider ID
 		/// </summary>
 		[StringLength(36)]
 		[Column("id")]
 		public virtual string Id { get; private set; }
 
 		/// <summary>
-		/// Reptile name
+		/// Spider name
 		/// </summary>
 		[StringLength(255)]
 		[Column("name")]

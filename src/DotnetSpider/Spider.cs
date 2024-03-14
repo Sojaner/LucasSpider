@@ -52,7 +52,7 @@ namespace DotnetSpider
 		protected SpiderOptions Options { get; }
 
 		/// <summary>
-		/// Reptile ID
+		/// Spider ID
 		/// </summary>
 		protected SpiderId SpiderId { get; private set; }
 
@@ -76,7 +76,7 @@ namespace DotnetSpider
 
 			if (Options.Speed > 500)
 			{
-				throw new SpiderException("Speed should not large than 500");
+				throw new SpiderException("Speed should not be larger than 500");
 			}
 
 			_services = services;
@@ -91,14 +91,14 @@ namespace DotnetSpider
 		}
 
 		/// <summary>
-		/// Initialize crawler data
+		/// Initialize Spider data
 		/// </summary>
 		/// <param name="stoppingToken"></param>
 		/// <returns></returns>
 		protected abstract Task InitializeAsync(CancellationToken stoppingToken = default);
 
 		/// <summary>
-		/// Get the crawler ID and name
+		/// Get the Spider ID and name
 		/// </summary>
 		/// <returns></returns>
 		protected virtual SpiderId GenerateSpiderId()
@@ -127,7 +127,7 @@ namespace DotnetSpider
 		}
 
 		/// <summary>
-		/// Configuration requests (dequeued from Scheduler)
+		/// Configure a request (dequeued from Scheduler)
 		/// </summary>
 		/// <param name="request"></param>
 		protected virtual void ConfigureRequest(Request request)
@@ -219,7 +219,7 @@ namespace DotnetSpider
 		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 		{
 			SpiderId = GenerateSpiderId();
-			Logger.LogInformation($"Initialize spider {SpiderId}, {SpiderId.Name}");
+			Logger.LogInformation($"Initializing spider {SpiderId}, {SpiderId.Name}");
 			await _services.StatisticsClient.StartAsync(SpiderId.Id, SpiderId.Name);
 			await _services.Scheduler.InitializeAsync(SpiderId.Id);
 			await InitializeAsync(stoppingToken);
@@ -249,7 +249,7 @@ namespace DotnetSpider
 				}
 				catch (Exception e)
 				{
-					Logger.LogError($"Deserialize message failed: {e}");
+					Logger.LogError($"Deserializing message failed: {e}");
 					return;
 				}
 
@@ -258,7 +258,7 @@ namespace DotnetSpider
 					case Messages.Spider.Exit exit:
 						{
 							Logger.LogInformation(
-								$"{SpiderId} receive exit message {System.Text.Json.JsonSerializer.Serialize(exit)}");
+								$"{SpiderId} received exit message {System.Text.Json.JsonSerializer.Serialize(exit)}");
 							if (exit.SpiderId == SpiderId.Id)
 							{
 								await ExitAsync();
@@ -307,7 +307,7 @@ namespace DotnetSpider
 						}
 					default:
 						Logger.LogError(
-							$"{SpiderId} receive error message {System.Text.Json.JsonSerializer.Serialize(message)}");
+							$"{SpiderId} received error message {System.Text.Json.JsonSerializer.Serialize(message)}");
 						break;
 				}
 			};
@@ -394,7 +394,7 @@ namespace DotnetSpider
 						sleepTime += 10;
 
 						if (await WaitForContinueAsync(sleepTime, sleepTimeLimit, (end - start).TotalSeconds,
-							    $"{SpiderId} too much requests enqueued"))
+							    $"{SpiderId} has too many requests enqueued"))
 						{
 							continue;
 						}
@@ -455,7 +455,7 @@ namespace DotnetSpider
 			}
 			catch (Exception e)
 			{
-				Logger.LogError($"{SpiderId} exited by exception: {e}");
+				Logger.LogError($"{SpiderId} exited with exception: {e}");
 			}
 			finally
 			{
@@ -476,7 +476,7 @@ namespace DotnetSpider
 				request.RequestedTimes += 1;
 
 				Logger.LogWarning(
-					$"{SpiderId} request {request.RequestUri}, {request.Hash} timeout");
+					$"{SpiderId} request {request.RequestUri}, {request.Hash} timed out");
 			}
 
 			await AddRequestsAsync(timeoutRequests);
@@ -586,7 +586,7 @@ namespace DotnetSpider
 					else
 					{
 						Logger.LogWarning(
-							$"{SpiderId} enqueue request: {request.RequestUri}, {request.Hash} failed");
+							$"{SpiderId} enqueuing request: {request.RequestUri}, {request.Hash} failed");
 					}
 				}
 			}
@@ -605,7 +605,7 @@ namespace DotnetSpider
 				}
 
 				Logger.LogInformation(
-					$"{SpiderId} load request from {requestSupplier.GetType().Name} {_requestSuppliers.IndexOf(requestSupplier)}/{_requestSuppliers.Count}");
+					$"{SpiderId} loaded request from {requestSupplier.GetType().Name} {_requestSuppliers.IndexOf(requestSupplier)}/{_requestSuppliers.Count}");
 			}
 		}
 
@@ -613,7 +613,7 @@ namespace DotnetSpider
 		{
 			if (_dataFlows.Count == 0)
 			{
-				Logger.LogWarning($"{SpiderId} there is no any dataFlow");
+				Logger.LogWarning($"{SpiderId} has no dataFlow");
 			}
 			else
 			{
@@ -633,7 +633,7 @@ namespace DotnetSpider
 					catch (Exception e)
 					{
 						Logger.LogError(
-							$"{SpiderId} initialize dataFlow {dataFlow.GetType().Name} failed: {e}");
+							$"{SpiderId} initializing dataFlow {dataFlow.GetType().Name} failed: {e}");
 						_services.ApplicationLifetime.StopApplication();
 					}
 				}

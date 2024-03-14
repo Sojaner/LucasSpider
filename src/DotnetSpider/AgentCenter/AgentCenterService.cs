@@ -50,7 +50,7 @@ namespace DotnetSpider.AgentCenter
 					}
 					catch (Exception e)
 					{
-						_logger.LogError($"Deserialize message failed: {e}");
+						_logger.LogError($"Deserializing message failed: {e}");
 						return;
 					}
 
@@ -60,7 +60,7 @@ namespace DotnetSpider.AgentCenter
 						{
 							if (_distributed)
 							{
-								_logger.LogInformation($"Register agent: {register.AgentId}, {register.AgentName}");
+								_logger.LogInformation($"Registering agent: {register.AgentId}, {register.AgentName}");
 							}
 
 							await _agentStore.RegisterAsync(new AgentInfo(register.AgentId, register.AgentName,
@@ -73,7 +73,7 @@ namespace DotnetSpider.AgentCenter
 							if (_distributed)
 							{
 								_logger.LogInformation(
-									$"Receive heartbeat: {heartbeat.AgentId}, {heartbeat.AgentName}");
+									$"Received heartbeat: {heartbeat.AgentId}, {heartbeat.AgentName}");
 							}
 
 							await _agentStore.HeartbeatAsync(new AgentHeartbeat(heartbeat.AgentId, heartbeat.AgentName,

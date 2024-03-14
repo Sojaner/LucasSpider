@@ -30,7 +30,7 @@ namespace DotnetSpider
 		public IConfiguration Configuration { get; private set; }
 
 		/// <summary>
-		/// Create a spider builder only contains spider background service
+		/// Create a spider builder that only contains spider background service
 		/// </summary>
 		/// <param name="configureDelegate"></param>
 		/// <typeparam name="T"></typeparam>
@@ -48,7 +48,7 @@ namespace DotnetSpider
 		}
 
 		/// <summary>
-		/// Create a spider builder only contains spider background service
+		/// Create a spider builder that only contains spider background service
 		/// </summary>
 		/// <param name="args"></param>
 		/// <param name="configureDelegate"></param>

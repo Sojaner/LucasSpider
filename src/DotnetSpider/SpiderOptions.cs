@@ -3,7 +3,7 @@ namespace DotnetSpider
 	public class SpiderOptions
 	{
 		/// <summary>
-		/// Request queue number limit
+		/// Request queue count limit
 		/// </summary>
 		public int RequestedQueueCount { get; set; } = 1000;
 
@@ -18,7 +18,7 @@ namespace DotnetSpider
 		public int RetriedTimes { get; set; } = 3;
 
 		/// <summary>
-		/// Exit the crawler after timeout when there is no link in the queue
+		/// Timeout before exiting the crawler if no links in the queue
 		/// </summary>
 		public int EmptySleepTime { get; set; } = 60;
 
@@ -28,7 +28,7 @@ namespace DotnetSpider
 		public double Speed { get; set; } = 1;
 
 		/// <summary>
-		/// How many requests does the request queue get at one time?
+		/// Requests queue batch size
 		/// </summary>
 		public uint Batch { get; set; } = 4;
 
@@ -38,7 +38,7 @@ namespace DotnetSpider
 		public bool RemoveOutboundLinks { get; set; } = false;
 
 		/// <summary>
-		/// Memory type: FullTypeName, AssemblyName
+		/// Storage type: FullTypeName, AssemblyName
 		/// </summary>
 		public string StorageType { get; set; } = "DotnetSpider.MySql.MySqlEntityStorage, DotnetSpider.MySql";
 

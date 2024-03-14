@@ -111,7 +111,7 @@ namespace DotnetSpider.Agent
 			}
 			catch (Exception e)
 			{
-				_logger.LogError($"Deserialize message failed: {e}");
+				_logger.LogError($"Deserializing message failed: {e}");
 				return;
 			}
 
