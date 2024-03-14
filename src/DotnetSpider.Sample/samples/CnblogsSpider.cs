@@ -71,7 +71,7 @@ namespace DotnetSpider.Sample.samples
 					var title = news.Select(Selectors.XPath(".//h2[@class='news_entry']"))?.Value;
 					var url = news.Select(Selectors.XPath(".//h2[@class='news_entry']/a/@href"))?.Value;
 					var summary = news.Select(Selectors.XPath(".//div[@class='entry_summary']"))?.Value;
-					var views = news.Select(Selectors.XPath(".//span[@class='view']"))?.Value.Replace(" People browse", "");
+					var views = news.Select(Selectors.XPath(".//span[@class='view']"))?.Value.Replace(" 人浏览", "");
 
 					if (!string.IsNullOrWhiteSpace(url))
 					{

@@ -36,7 +36,7 @@ namespace DotnetSpider.Tests
 		public async Task ParseEntity()
 		{
 			var request = new Request("https://list.jd.com/list.html?cat=9987,653,655",
-				new Dictionary<string, object> {{"cat", "Cell phone"}, {"cat3", "110"}});
+				new Dictionary<string, object> {{"cat", "手机"}, {"cat3", "110"}});
 			var dataContext = new DataFlowContext(null, new SpiderOptions(), request,
 				new Response {Content = new ByteArrayContent(File.ReadAllBytes("Jd.html"))});
 
@@ -47,15 +47,15 @@ namespace DotnetSpider.Tests
 
 			var results = (List<Product>)dataContext.GetData(typeof(Product));
 			Assert.Equal(60, results.Count);
-			Assert.Contains("Mobile product filtering", results[0].Title);
-			Assert.Contains("Mobile product filtering", results[1].Title);
-			Assert.Contains("Mobile product filtering", results[2].Title);
-			Assert.Equal("Cell phone", results[0].CategoryName);
+			Assert.Contains("手机商品筛选", results[0].Title);
+			Assert.Contains("手机商品筛选", results[1].Title);
+			Assert.Contains("手机商品筛选", results[2].Title);
+			Assert.Equal("手机", results[0].CategoryName);
 			Assert.Equal(110, results[0].CategoryId);
 			Assert.Equal("https://item.jd.com/3031737.html", results[0].Url);
 			Assert.Equal("3031737", results[0].Sku);
-			Assert.Equal("Honor official flagship store", results[0].ShopName);
-			Assert.Equal("Honor NOTE 8 4GB+32GB Full Netcom Edition Glacier Silver", results[0].Name);
+			Assert.Equal("荣耀官方旗舰店", results[0].ShopName);
+			Assert.Equal("荣耀 NOTE 8 4GB+32GB 全网通版 冰河银", results[0].Name);
 			Assert.Equal("1000000904", results[0].VenderId);
 			Assert.Equal("1000000904", results[0].JdzyShopId);
 			Assert.Equal(DateTimeOffset.Now.ToString("yyyy-MM-dd"), results[0].RunId.ToString("yyyy-MM-dd"));
