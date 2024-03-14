@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 namespace DotnetSpider.Http
 {
 	/// <summary>
-	/// Ask
+	/// Request
 	/// </summary>
 	[Serializable]
 	public class Request : IDisposable

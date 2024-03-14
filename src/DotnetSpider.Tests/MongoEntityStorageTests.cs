@@ -45,7 +45,7 @@ namespace DotnetSpider.Tests
         [Fact]
         public async Task Store_Should_Success()
         {
-            var mongoCollection = new Mock<IMongoCollection<BsonDocument>>();
+			var mongoCollection = new Mock<IMongoCollection<BsonDocument>>();
 
             var mongoDatabase = new Mock<IMongoDatabase>();
             mongoDatabase.Setup(d =>
