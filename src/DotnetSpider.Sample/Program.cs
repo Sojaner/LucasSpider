@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using DotnetSpider.Sample.samples;
@@ -28,7 +28,8 @@ namespace DotnetSpider.Sample
 			// // await DistributedSpider.RunAsync();
 			// await ProxySpider.RunAsync();
 			// await EntitySpider.RunMySqlQueueAsync();
-			await CnBlogsSpider.RunAsync();
+			//await CnBlogsSpider.RunAsync();
+			await BaseUsageSpider.RunAsync();
 
 			Console.WriteLine("Bye!");
 		}
