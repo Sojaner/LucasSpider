@@ -64,14 +64,6 @@ namespace DotnetSpider.Scheduler
 			{
 				_requests.RemoveRange(0, requests.Length);
 			}
-			else
-			{
-				requests = _requests.Take(count).ToArray();
-				if (requests.Length > 0)
-				{
-					_requests.RemoveRange(0, count);
-				}
-			}
 
 			return Task.FromResult(requests.Select(x => x.Clone()));
 		}
