@@ -51,29 +51,15 @@ namespace DotnetSpider.Scheduler
 		/// <returns>Request</returns>
 		protected override Task<IEnumerable<Request>> ImplDequeueAsync(int count = 1)
 		{
-			Request[] requests = null;
-
-			if (_options.OneRequestDoneFirst)
-			{
-				requests = _requests
+			var requests = _options.OneRequestDoneFirst ?
+					_requests
 					.OrderByDescending(x => x.Depth)
-					.Take(count).ToArray();
+					.Take(count).ToArray() :
+					_requests.Take(count).ToArray();
 
-				if (requests.Length > 0)
-				{
-					foreach (var request in requests)
-					{
-						_requests.Remove(request);
-					}
-				}
-			}
-			else
+			if (requests.Length > 0)
 			{
-				requests = _requests.Take(count).ToArray();
-				if (requests.Length > 0)
-				{
-					_requests.RemoveRange(0, count);
-				}
+				_requests.RemoveRange(0, requests.Length);
 			}
 
 			return Task.FromResult(requests.Select(x => x.Clone()));
