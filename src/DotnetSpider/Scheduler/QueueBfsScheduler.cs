@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DotnetSpider.Http;
 using DotnetSpider.Infrastructure;
 using DotnetSpider.Scheduler.Component;
+using Microsoft.Extensions.Options;
 
 namespace DotnetSpider.Scheduler
 {
@@ -12,14 +13,17 @@ namespace DotnetSpider.Scheduler
 	/// </summary>
 	public class QueueBfsScheduler : SchedulerBase
 	{
+		private readonly SpiderOptions _options;
+
 		private readonly List<Request> _requests =
 			new();
 
 		/// <summary>
 		/// Construction method
 		/// </summary>
-		public QueueBfsScheduler(IRequestHasher requestHasher) : base(new FakeDuplicateRemover(), requestHasher)
+		public QueueBfsScheduler(IRequestHasher requestHasher, IOptions<SpiderOptions> options) : base(new FakeDuplicateRemover(), requestHasher)
 		{
+			_options = options.Value;
 		}
 
 		public override void Dispose()
@@ -59,6 +63,14 @@ namespace DotnetSpider.Scheduler
 			if (requests.Length > 0)
 			{
 				_requests.RemoveRange(0, requests.Length);
+			}
+			else
+			{
+				requests = _requests.Take(count).ToArray();
+				if (requests.Length > 0)
+				{
+					_requests.RemoveRange(0, count);
+				}
 			}
 
 			return Task.FromResult(requests.Select(x => x.Clone()));
