@@ -46,10 +46,5 @@ namespace DotnetSpider
 		/// The time interval for getting new codes
 		/// </summary>
 		public int RefreshProxy { get; set; } = 30;
-
-		/// <summary>
-		/// Prioritize request -> sub request -> sub request -> .... -> IDataFlow
-		/// </summary>
-		public bool OneRequestDoneFirst { get; set; } = false;
 	}
 }

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using DotnetSpider.Http;
 using DotnetSpider.Infrastructure;
 using DotnetSpider.Scheduler.Component;
-using Microsoft.Extensions.Options;
 
 namespace DotnetSpider.Scheduler
 {
@@ -13,15 +12,12 @@ namespace DotnetSpider.Scheduler
 	/// </summary>
 	public class QueueDistinctBfsScheduler : SchedulerBase
 	{
-		private readonly SpiderOptions _options;
-
 		private readonly List<Request> _requests =
 			new();
 
-		public QueueDistinctBfsScheduler(IDuplicateRemover duplicateRemover, IRequestHasher requestHasher, IOptions<SpiderOptions> options)
+		public QueueDistinctBfsScheduler(IDuplicateRemover duplicateRemover, IRequestHasher requestHasher)
 			: base(duplicateRemover, requestHasher)
 		{
-			_options = options.Value;
 		}
 
 		public override void Dispose()
@@ -51,11 +47,7 @@ namespace DotnetSpider.Scheduler
 		/// <returns>Request</returns>
 		protected override Task<IEnumerable<Request>> ImplDequeueAsync(int count = 1)
 		{
-			var requests = _options.OneRequestDoneFirst ?
-					_requests
-					.OrderByDescending(x => x.Depth)
-					.Take(count).ToArray() :
-					_requests.Take(count).ToArray();
+			var requests = _requests.Take(count).ToArray();
 
 			if (requests.Length > 0)
 			{
