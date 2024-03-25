@@ -6,7 +6,7 @@ using DotnetSpider.Infrastructure;
 namespace DotnetSpider.Selector
 {
 	/// <summary>
-	/// 查询接口
+	/// Query interface
 	/// </summary>
 	public class TextSelectable : Selectable
 	{
@@ -15,27 +15,27 @@ namespace DotnetSpider.Selector
 		public override SelectableType Type => SelectableType.Text;
 
 		/// <summary>
-		/// 构造方法
+		/// Construction method
 		/// </summary>
-		/// <param name="text">内容</param>
+		/// <param name="text">Content</param>
 		public TextSelectable(string text)
 		{
 			_text = text;
 		}
 
 		/// <summary>
-		/// 取得查询器里所有的结果
+		/// Get all results in the query
 		/// </summary>
-		/// <returns>查询接口</returns>
+		/// <returns>Query interface</returns>
 		public override IEnumerable<ISelectable> Nodes()
 		{
 			return new[] {new TextSelectable(_text)};
 		}
 
 		/// <summary>
-		/// 查找所有的链接
+		/// Find all links
 		/// </summary>
-		/// <returns>查询接口</returns>
+		/// <returns>Query interface</returns>
 		public override IEnumerable<string> Links()
 		{
 			// todo: re-impl with regex
@@ -67,10 +67,10 @@ namespace DotnetSpider.Selector
 		public override string Value => _text;
 
 		/// <summary>
-		/// 通过查询器查找结果
+		/// Find results via query
 		/// </summary>
-		/// <param name="selector">查询器</param>
-		/// <returns>查询接口</returns>
+		/// <param name="selector">Queryer</param>
+		/// <returns>Query interface</returns>
 		public override ISelectable Select(ISelector selector)
 		{
 			selector.NotNull(nameof(selector));
@@ -78,10 +78,10 @@ namespace DotnetSpider.Selector
 		}
 
 		/// <summary>
-		/// 通过查询器查找结果
+		/// Find results via query
 		/// </summary>
-		/// <param name="selector">查询器</param>
-		/// <returns>查询接口</returns>
+		/// <param name="selector">Queryer</param>
+		/// <returns>Query interface</returns>
 		public override IEnumerable<ISelectable> SelectList(ISelector selector)
 		{
 			selector.NotNull(nameof(selector));

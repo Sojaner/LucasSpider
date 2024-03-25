@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace DotnetSpider.DataFlow
 {
 	/// <summary>
-	/// 控制台打印解析结果(所有解析结果)
+	/// The console prints the parsing results (all parsing results)
 	/// </summary>
 	public class ConsoleStorage : DataFlowBase
 	{
@@ -25,7 +25,7 @@ namespace DotnetSpider.DataFlow
 		{
 			if (IsNullOrEmpty(context))
 			{
-				Logger.LogWarning("数据流上下文不包含解析结果");
+				Logger.LogWarning("Data flow context does not contain parsing results");
 				return Task.CompletedTask;
 			}
 

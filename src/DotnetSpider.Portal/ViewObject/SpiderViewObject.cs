@@ -19,20 +19,20 @@ namespace DotnetSpider.Portal.ViewObject
 		public string Image { get; set; }
 
 		/// <summary>
-		/// 定时表达式
+		/// Timed expression
 		/// </summary>
 		[Required]
 		[StringLength(100)]
 		public string Cron { get; set; }
 
 		/// <summary>
-		/// 环境变量
+		/// Environment variables
 		/// </summary>
 		[StringLength(2000)]
 		public string Environment { get; set; }
 
 		/// <summary>
-		/// 挂载目录
+		/// Mount directory
 		/// </summary>
 		[StringLength(2000)]
 		public string Volume { get; set; }

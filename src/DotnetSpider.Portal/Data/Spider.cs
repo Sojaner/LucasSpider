@@ -8,19 +8,19 @@ namespace DotnetSpider.Portal.Data
 	public class Spider
 	{
 		/// <summary>
-		/// 主键
+		/// Primary key
 		/// </summary>
 		[Column("ID")]
 		public int Id { get; set; }
 
 		/// <summary>
-		/// 是否启用
+		/// Whether to enable
 		/// </summary>
 		[Column("ENABLED")]
 		public bool Enabled { get; set; }
 
 		/// <summary>
-		/// 爬虫名称
+		/// Reptile name
 		/// </summary>
 		[Required]
 		[StringLength(255)]
@@ -28,7 +28,7 @@ namespace DotnetSpider.Portal.Data
 		public string Name { get; set; }
 
 		/// <summary>
-		/// 爬虫名称
+		/// Reptile name
 		/// </summary>
 		[Required]
 		[StringLength(255)]
@@ -36,7 +36,7 @@ namespace DotnetSpider.Portal.Data
 		public string Image { get; set; }
 
 		/// <summary>
-		/// 定时表达式
+		/// Timed expression
 		/// </summary>
 		[StringLength(255)]
 		[Required]
@@ -44,14 +44,14 @@ namespace DotnetSpider.Portal.Data
 		public string Cron { get; set; }
 
 		/// <summary>
-		/// docker 运行的环境变量
+		/// Environment variables for docker running
 		/// </summary>
 		[StringLength(2000)]
 		[Column("ENVIRONMENT")]
 		public string Environment { get; set; }
 
 		/// <summary>
-		/// docker 运行挂载的盘
+		/// Docker runs the mounted disk
 		/// </summary>
 		[StringLength(2000)]
 		[Column("VOLUME")]
@@ -65,7 +65,7 @@ namespace DotnetSpider.Portal.Data
 		public DateTimeOffset CreationTime { get; set; }
 
 		/// <summary>
-		/// 上一次更新时间
+		/// Last updated
 		/// </summary>
 		[Column("LAST_MODIFICATION_TIME")]
 		public DateTimeOffset LastModificationTime { get; set; }

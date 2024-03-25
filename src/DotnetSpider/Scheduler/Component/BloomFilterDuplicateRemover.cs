@@ -28,7 +28,7 @@ namespace DotnetSpider.Scheduler.Component
 		}
 
 		/// <summary>
-		/// 构造方法
+		/// Construction method
 		/// </summary>
 		public BloomFilterDuplicateRemover(BloomFilterOptions options)
 		{

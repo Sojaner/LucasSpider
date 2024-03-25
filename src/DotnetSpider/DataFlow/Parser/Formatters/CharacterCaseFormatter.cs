@@ -1,30 +1,30 @@
-﻿using System;
+using System;
 
 namespace DotnetSpider.DataFlow.Parser.Formatters
 {
 	/// <summary>
-	/// 字符串大写化或者小写化
+	/// Capitalize or lowercase strings
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Property)]
 	public class CharacterCaseFormatter : Formatter
 	{
 		/// <summary>
-		/// 如果为 True 则把数据大写化, 如果为 False 则表数据小写化
+		/// If True, the data will be uppercase. If False, the table data will be lowercase.
 		/// </summary>
 		public bool ToUpper { get; set; } = true;
 
 		/// <summary>
-		/// 实现数值的转化
+		/// Achieve numerical conversion
 		/// </summary>
-		/// <param name="value">数值</param>
-		/// <returns>被格式化后的数值</returns>
+		/// <param name="value">Value</param>
+		/// <returns>The formatted value</returns>
 		protected override string Handle(string value)
 		{
 			return ToUpper ? value.ToUpperInvariant() : value.ToLowerInvariant();
 		}
 
 		/// <summary>
-		/// 校验参数是否设置正确
+		/// Verify whether the parameters are set correctly
 		/// </summary>
 		protected override void CheckArguments()
 		{

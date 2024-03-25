@@ -2,12 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DotnetSpider.DataFlow;
 using DotnetSpider.DataFlow.Storage;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
 [assembly: InternalsVisibleTo("DotnetSpider.Tests")]
@@ -15,7 +18,7 @@ using MongoDB.Driver;
 namespace DotnetSpider.Mongo
 {
 	/// <summary>
-	/// MongoDB 保存解析(实体)结果 TODO: 是否要考虑存储模式：插入，新的插入旧的更新，更新 ETC
+	/// MongoDB saves parsing (entity) results TODO: Should we consider the storage mode: insert, new insert, old update, update ETC
 	/// </summary>
 	public class MongoEntityStorage : EntityStorageBase
 	{
@@ -36,9 +39,9 @@ namespace DotnetSpider.Mongo
 		public string ConnectionString { get; }
 
 		/// <summary>
-		/// 构造方法
+		/// Construction method
 		/// </summary>
-		/// <param name="connectionString">连接字符串</param>
+		/// <param name="connectionString">Connection string</param>
 		public MongoEntityStorage(string connectionString)
 		{
 			_client = new MongoClient(connectionString);
@@ -76,6 +79,11 @@ namespace DotnetSpider.Mongo
 
 				var db = _cache[tableMetadata.Schema.Database];
 				var collection = db.GetCollection<BsonDocument>(tableMetadata.Schema.Table);
+
+				BsonSerializer
+					.RegisterSerializer(new ObjectSerializer(type =>
+						ObjectSerializer.DefaultAllowedTypes(type) ||
+						list.Cast<object>().Any(o => o.GetType().FullName == type.FullName)));
 
 				var bsonDocs = new List<BsonDocument>();
 				foreach (var data in list)

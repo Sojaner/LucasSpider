@@ -35,34 +35,34 @@ namespace DotnetSpider
 		private readonly IList<DataParser> _dataParsers;
 
 		/// <summary>
-		/// 请求 Timeout 事件
+		/// Request Timeout event
 		/// </summary>
 		protected event Action<Request[]> OnRequestTimeout;
 
 		/// <summary>
-		/// 请求错误事件
+		/// Request error event
 		/// </summary>
 		protected event Action<Request, Response> OnRequestError;
 
 		/// <summary>
-		/// 调度器中无新的请求事件
+		/// No new request events in scheduler
 		/// </summary>
 		protected event Action OnSchedulerEmpty;
 
 		protected SpiderOptions Options { get; }
 
 		/// <summary>
-		/// 爬虫标识
+		/// Spider ID
 		/// </summary>
 		protected SpiderId SpiderId { get; private set; }
 
 		/// <summary>
-		/// 日志接口
+		/// Log interface
 		/// </summary>
 		protected ILogger Logger { get; }
 
 		/// <summary>
-		/// 是否分布式爬虫
+		/// Is it a distributed crawler?
 		/// </summary>
 		protected bool IsDistributed => _services.MessageQueue.IsDistributed;
 
@@ -76,7 +76,7 @@ namespace DotnetSpider
 
 			if (Options.Speed > 500)
 			{
-				throw new SpiderException("Speed should not large than 500");
+				throw new SpiderException("Speed should not be larger than 500");
 			}
 
 			_services = services;
@@ -91,14 +91,14 @@ namespace DotnetSpider
 		}
 
 		/// <summary>
-		/// 初始化爬虫数据
+		/// Initialize Spider data
 		/// </summary>
 		/// <param name="stoppingToken"></param>
 		/// <returns></returns>
 		protected abstract Task InitializeAsync(CancellationToken stoppingToken = default);
 
 		/// <summary>
-		/// 获取爬虫标识和名称
+		/// Get the Spider ID and name
 		/// </summary>
 		/// <returns></returns>
 		protected virtual SpiderId GenerateSpiderId()
@@ -127,7 +127,7 @@ namespace DotnetSpider
 		}
 
 		/// <summary>
-		/// 配置请求(从 Scheduler 中出队的)
+		/// Configure a request (dequeued from Scheduler)
 		/// </summary>
 		/// <param name="request"></param>
 		protected virtual void ConfigureRequest(Request request)
@@ -192,16 +192,16 @@ namespace DotnetSpider
 						$"Request {request.RequestUri}, {request.Hash} set to use PPPoE but PPPoERegex is empty");
 				}
 
-				// 1. 请求次数超过限制则跳过，并添加失败记录
-				// 2. 默认构造的请求次数为 0， 并且不允许用户更改，因此可以保证数据安全性
+				// 1. If the number of requests exceeds the limit, it will be skipped and a failure record will be added.
+				// 2. The number of requests constructed by default is 0, and users are not allowed to change it, so data security can be guaranteed.
 				if (request.RequestedTimes > Options.RetriedTimes)
 				{
 					await _services.StatisticsClient.IncreaseFailureAsync(SpiderId.Id);
 					continue;
 				}
 
-				// 1. 默认构造的深度为 0， 并且不允许用户更改，因此可以保证数据安全性
-				// 2. 当深度超过限制则跳过
+				// 1. The default construction depth is 0, and users are not allowed to change it, so data security can be guaranteed.
+				// 2. Skip when the depth exceeds the limit
 				if (Options.Depth > 0 && request.Depth > Options.Depth)
 				{
 					continue;
@@ -219,7 +219,7 @@ namespace DotnetSpider
 		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 		{
 			SpiderId = GenerateSpiderId();
-			Logger.LogInformation($"Initialize spider {SpiderId}, {SpiderId.Name}");
+			Logger.LogInformation($"Initializing spider {SpiderId}, {SpiderId.Name}");
 			await _services.StatisticsClient.StartAsync(SpiderId.Id, SpiderId.Name);
 			await _services.Scheduler.InitializeAsync(SpiderId.Id);
 			await InitializeAsync(stoppingToken);
@@ -249,7 +249,7 @@ namespace DotnetSpider
 				}
 				catch (Exception e)
 				{
-					Logger.LogError($"Deserialize message failed: {e}");
+					Logger.LogError($"Deserializing message failed: {e}");
 					return;
 				}
 
@@ -258,7 +258,7 @@ namespace DotnetSpider
 					case Messages.Spider.Exit exit:
 						{
 							Logger.LogInformation(
-								$"{SpiderId} receive exit message {System.Text.Json.JsonSerializer.Serialize(exit)}");
+								$"{SpiderId} received exit message {System.Text.Json.JsonSerializer.Serialize(exit)}");
 							if (exit.SpiderId == SpiderId.Id)
 							{
 								await ExitAsync();
@@ -268,8 +268,8 @@ namespace DotnetSpider
 						}
 					case Response response:
 						{
-							// 1. 从请求队列中去除请求
-							// 2. 若是 timeout 的请求，无法通过 Dequeue 获取，会通过 _requestedQueue.GetAllTimeoutList() 获取得到
+							// 1. Remove the request from the request queue
+							// 2. If it is a timeout request, it cannot be obtained through Dequeue, but will be obtained through _requestedQueue.GetAllTimeoutList()
 							var request = _requestedQueue.Dequeue(response.RequestHash);
 
 							if (request != null)
@@ -284,7 +284,7 @@ namespace DotnetSpider
 											$"{SpiderId} download {request.RequestUri}, {request.Hash} via {request.Agent} success");
 									}
 
-									// 是否下载成功由爬虫来决定，则非 Agent 自身
+									// Whether the download is successful or not is determined by the crawler, not the Agent itself.
 									await _services.StatisticsClient.IncreaseAgentSuccessAsync(response.Agent,
 										response.ElapsedMilliseconds);
 									await HandleResponseAsync(request, response, bytes);
@@ -307,7 +307,7 @@ namespace DotnetSpider
 						}
 					default:
 						Logger.LogError(
-							$"{SpiderId} receive error message {System.Text.Json.JsonSerializer.Serialize(message)}");
+							$"{SpiderId} received error message {System.Text.Json.JsonSerializer.Serialize(message)}");
 						break;
 				}
 			};
@@ -334,11 +334,11 @@ namespace DotnetSpider
 				var count = await AddRequestsAsync(context.FollowRequests);
 				await _services.StatisticsClient.IncreaseTotalAsync(SpiderId.Id, count);
 
-				// 增加一次成功的请求
+				// Add a successful request
 				await _services.StatisticsClient.IncreaseSuccessAsync(SpiderId.Id);
 				await _services.Scheduler.SuccessAsync(request);
 			}
-			// DataFlow 可以参过抛出 ExitException 来中止爬虫程序
+			// DataFlow can abort the crawler program by throwing ExitException
 			catch (ExitException ee)
 			{
 				Logger.LogError($"Exit: {ee}");
@@ -359,7 +359,7 @@ namespace DotnetSpider
 		}
 
 		/// <summary>
-		/// 若是没有数据解析器，则认为是不需要数据解析器，直接通到存储器，返回 true
+		/// If there is no data parser, it is considered that there is no need for a data parser, and it is passed directly to the memory and returns true.
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns></returns>
@@ -379,7 +379,8 @@ namespace DotnetSpider
 			{
 				var sleepTimeLimit = Options.EmptySleepTime * 1000;
 
-				var bucket = CreateBucket(Options.Speed);
+				var speed = Options.Speed;
+				var bucket = CreateBucket(speed);
 				var sleepTime = 0;
 				var batch = (int)Options.Batch;
 				var start = DateTime.Now;
@@ -394,7 +395,7 @@ namespace DotnetSpider
 						sleepTime += 10;
 
 						if (await WaitForContinueAsync(sleepTime, sleepTimeLimit, (end - start).TotalSeconds,
-							    $"{SpiderId} too much requests enqueued"))
+							    $"{SpiderId} has too many requests enqueued"))
 						{
 							continue;
 						}
@@ -409,6 +410,12 @@ namespace DotnetSpider
 						continue;
 					}
 
+					// If the batch size is changed, we should update the batch size
+					if (batch != Options.Batch)
+					{
+						batch = (int)Options.Batch;
+					}
+
 					var requests = (await _services.Scheduler.DequeueAsync(batch)).ToArray();
 
 					if (requests.Length > 0)
@@ -419,7 +426,7 @@ namespace DotnetSpider
 						{
 							ConfigureRequest(request);
 
-							// 若是没有一个 Parser 可以处理此请求，则不需要下载
+							// If there is no Parser that can handle this request, there is no need to download it.
 							// https://github.com/dotnetcore/DotnetSpider/issues/182
 							if (!IsValidRequest(request))
 							{
@@ -429,6 +436,15 @@ namespace DotnetSpider
 							while (bucket.ShouldThrottle(1, out var waitTimeMillis))
 							{
 								await Task.Delay(waitTimeMillis, default);
+							}
+
+							// If the speed is changed, the bucket needs to be recreated
+							// Since the maximum speed is 500, the smallest division is 0.002, so the comparison is accurate to 0.001
+							if (Math.Abs(speed - Options.Speed) > 0.001)
+							{
+								speed = Options.Speed;
+
+								bucket = CreateBucket(speed);
 							}
 
 							if (!await PublishRequestMessagesAsync(request))
@@ -455,7 +471,7 @@ namespace DotnetSpider
 			}
 			catch (Exception e)
 			{
-				Logger.LogError($"{SpiderId} exited by exception: {e}");
+				Logger.LogError($"{SpiderId} exited with exception: {e}");
 			}
 			finally
 			{
@@ -476,7 +492,7 @@ namespace DotnetSpider
 				request.RequestedTimes += 1;
 
 				Logger.LogWarning(
-					$"{SpiderId} request {request.RequestUri}, {request.Hash} timeout");
+					$"{SpiderId} request {request.RequestUri}, {request.Hash} timed out");
 			}
 
 			await AddRequestsAsync(timeoutRequests);
@@ -559,7 +575,7 @@ namespace DotnetSpider
 					{
 						switch (request.Policy)
 						{
-							// 非初始请求如果是链式模式则使用旧的下载器
+							// Non-initial requests use the old downloader if they are in chain mode
 							case RequestPolicy.Chained:
 								{
 									topic = $"{request.Agent}";
@@ -586,7 +602,7 @@ namespace DotnetSpider
 					else
 					{
 						Logger.LogWarning(
-							$"{SpiderId} enqueue request: {request.RequestUri}, {request.Hash} failed");
+							$"{SpiderId} enqueuing request: {request.RequestUri}, {request.Hash} failed");
 					}
 				}
 			}
@@ -596,7 +612,7 @@ namespace DotnetSpider
 
 		protected async Task LoadRequestFromSuppliers(CancellationToken stoppingToken)
 		{
-			// 通过供应接口添加请求
+			// Add request via provisioning interface
 			foreach (var requestSupplier in _requestSuppliers)
 			{
 				foreach (var request in await requestSupplier.GetAllListAsync(stoppingToken))
@@ -605,7 +621,7 @@ namespace DotnetSpider
 				}
 
 				Logger.LogInformation(
-					$"{SpiderId} load request from {requestSupplier.GetType().Name} {_requestSuppliers.IndexOf(requestSupplier)}/{_requestSuppliers.Count}");
+					$"{SpiderId} loaded request from {requestSupplier.GetType().Name} {_requestSuppliers.IndexOf(requestSupplier)}/{_requestSuppliers.Count}");
 			}
 		}
 
@@ -613,7 +629,7 @@ namespace DotnetSpider
 		{
 			if (_dataFlows.Count == 0)
 			{
-				Logger.LogWarning($"{SpiderId} there is no any dataFlow");
+				Logger.LogWarning($"{SpiderId} has no dataFlow");
 			}
 			else
 			{
@@ -633,7 +649,7 @@ namespace DotnetSpider
 					catch (Exception e)
 					{
 						Logger.LogError(
-							$"{SpiderId} initialize dataFlow {dataFlow.GetType().Name} failed: {e}");
+							$"{SpiderId} initializing dataFlow {dataFlow.GetType().Name} failed: {e}");
 						_services.ApplicationLifetime.StopApplication();
 					}
 				}

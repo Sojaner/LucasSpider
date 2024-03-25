@@ -14,7 +14,7 @@ using Newtonsoft.Json.Linq;
 namespace DotnetSpider.DataFlow.Parser
 {
 	/// <summary>
-	/// 数据解析器
+	/// Data parser
 	/// </summary>
 	public abstract class DataParser : DataFlowBase
 	{
@@ -22,14 +22,14 @@ namespace DotnetSpider.DataFlow.Parser
 		private readonly List<Func<Request, bool>> _requiredValidator;
 
 		/// <summary>
-		/// 选择器的生成方法
+		/// Selector generation method
 		/// </summary>
 		public Func<DataFlowContext, ISelectable> SelectableBuilder { get; protected set; }
 
 		/// <summary>
-		/// 数据解析
+		/// Data analysis
 		/// </summary>
-		/// <param name="context">处理上下文</param>
+		/// <param name="context">Processing context</param>
 		/// <returns></returns>
 		protected abstract Task ParseAsync(DataFlowContext context);
 
@@ -39,6 +39,11 @@ namespace DotnetSpider.DataFlow.Parser
 			_requiredValidator = new List<Func<Request, bool>>();
 		}
 
+		/// <summary>
+		/// Selects the part of the page where the URLs are found and followed
+		/// </summary>
+		/// <param name="selector">The Selector to be used for selecting the part of the page where the links on the page will be followed</param>
+		/// <remarks>Selectors.XPath(".") or Selectors.Css("*") or similar will result in following all the links on the page</remarks>
 		public virtual void AddFollowRequestQuerier(ISelector selector)
 		{
 			_followRequestQueriers.Add(context =>
@@ -56,11 +61,19 @@ namespace DotnetSpider.DataFlow.Parser
 			});
 		}
 
+		/// <summary>
+		/// Validates if the Request should be processed
+		/// </summary>
+		/// <param name="requiredValidator">The expression to decide if the Request should be processed</param>
 		public virtual void AddRequiredValidator(Func<Request, bool> requiredValidator)
 		{
 			_requiredValidator.Add(requiredValidator);
 		}
 
+		/// <summary>
+		/// Validates if the URL should be processed
+		/// </summary>
+		/// <param name="pattern">The regular expression to match the URLs that should be processed</param>
 		public virtual void AddRequiredValidator(string pattern)
 		{
 			_requiredValidator.Add(request => Regex.IsMatch(request.RequestUri.ToString(), pattern));
@@ -107,9 +120,9 @@ namespace DotnetSpider.DataFlow.Parser
 		}
 
 		/// <summary>
-		/// 数据解析
+		/// Data analysis
 		/// </summary>
-		/// <param name="context">处理上下文</param>
+		/// <param name="context">Processing context</param>
 		/// <returns></returns>
 		public override async Task HandleAsync(DataFlowContext context)
 		{
@@ -171,7 +184,7 @@ namespace DotnetSpider.DataFlow.Parser
 			{
 				if (IsValidRequest(request))
 				{
-					// 在此强制设制 Owner, 防止用户忘记导致出错
+					// It is mandatory to set the Owner here to prevent users from forgetting and causing errors.
 					request.Owner = context.Request.Owner;
 					request.Agent = context.Response.Agent;
 					context.AddFollowRequests(request);

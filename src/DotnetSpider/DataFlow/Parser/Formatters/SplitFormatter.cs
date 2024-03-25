@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace DotnetSpider.DataFlow.Parser.Formatters
@@ -15,15 +15,15 @@ namespace DotnetSpider.DataFlow.Parser.Formatters
 		public string[] Separator { get; set; }
 
 		/// <summary>
-		/// 分割数值后需要返回的数值索引
+		/// The index of the value that needs to be returned after splitting the value
 		/// </summary>
 		public int ElementAt { get; set; } = int.MaxValue;
 
 		/// <summary>
-		/// 实现数值的转化
+		/// Achieve numerical conversion
 		/// </summary>
-		/// <param name="value">数值</param>
-		/// <returns>被格式化后的数值</returns>
+		/// <param name="value">Value</param>
+		/// <returns>The formatted value</returns>
 		protected override string Handle(string value)
 		{
 			var result = value.Split(Separator, StringSplitOptions.RemoveEmptyEntries);
@@ -37,7 +37,7 @@ namespace DotnetSpider.DataFlow.Parser.Formatters
 		}
 
 		/// <summary>
-		/// 校验参数是否设置正确
+		/// Verify whether the parameters are set correctly
 		/// </summary>
 		protected override void CheckArguments()
 		{

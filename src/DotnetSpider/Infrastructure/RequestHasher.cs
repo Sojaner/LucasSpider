@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using DotnetSpider.Extensions;
 using DotnetSpider.Http;
 
 namespace DotnetSpider.Infrastructure
 {
 	/// <summary>
-	///请求哈希编译器
+	///Request hash compiler
 	/// </summary>
 	public class RequestHasher : IRequestHasher
 	{

@@ -1,7 +1,7 @@
-﻿namespace DotnetSpider.Selector
+namespace DotnetSpider.Selector
 {
     /// <summary>
-    /// 查询器类型
+    /// Query type
     /// </summary>
     public enum SelectorType
     {

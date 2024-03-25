@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using DotnetSpider.HtmlAgilityPack.Css;
 using HtmlAgilityPack;
@@ -6,7 +6,7 @@ using HtmlAgilityPack;
 namespace DotnetSpider.Selector
 {
     /// <summary>
-    /// CSS 选择器
+    /// CSS selectors
     /// </summary>
     public class CssSelector : ISelector
     {
@@ -14,19 +14,19 @@ namespace DotnetSpider.Selector
         private readonly string _attrName;
 
         /// <summary>
-        /// 构造方法
+        /// Construction method
         /// </summary>
-        /// <param name="selector">Css 选择器</param>
+        /// <param name="selector">Css selector</param>
         public CssSelector(string selector)
         {
             _selector = selector;
         }
 
         /// <summary>
-        /// 构造方法
+        /// Construction method
         /// </summary>
-        /// <param name="selector">Css 选择器</param>
-        /// <param name="attr">属性名称</param>
+        /// <param name="selector">Css selector</param>
+        /// <param name="attr">Attribute name</param>
         public CssSelector(string selector, string attr)
         {
             _selector = selector;
@@ -34,10 +34,10 @@ namespace DotnetSpider.Selector
         }
 
         /// <summary>
-        /// 对节点进行查询, 查询结果为第一个符合查询条件的元素
+        /// Query the node, and the query result is the first element that meets the query conditions.
         /// </summary>
         /// <param name="text">HTML</param>
-        /// <returns>查询结果</returns>
+        /// <returns>Query results</returns>
         public ISelectable Select(string text)
         {
             if (string.IsNullOrWhiteSpace(text))
@@ -60,10 +60,10 @@ namespace DotnetSpider.Selector
         }
 
         /// <summary>
-        /// 对节点进行查询, 查询结果为所有符合查询条件的元素
+        /// Query the node, and the query result is all elements that meet the query conditions.
         /// </summary>
         /// <param name="text">HTML</param>
-        /// <returns>查询结果</returns>
+        /// <returns>Query results</returns>
         public IEnumerable<ISelectable> SelectList(string text)
         {
             if (string.IsNullOrWhiteSpace(text))
@@ -84,9 +84,9 @@ namespace DotnetSpider.Selector
         }
 
         /// <summary>
-        /// 判断查询是否包含属性
+        /// Determine whether the query contains attributes
         /// </summary>
-        /// <returns>如果返回 True, 则说明是查询元素的属性值</returns>
+        /// <returns>If True is returned, it means the attribute value of the query element</returns>
         public bool HasAttribute => !string.IsNullOrWhiteSpace(_attrName);
     }
 }

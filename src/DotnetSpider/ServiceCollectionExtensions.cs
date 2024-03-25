@@ -43,7 +43,7 @@ namespace DotnetSpider
 		}
 		
 		/// <summary>
-		/// 使用 ADSL 拨号服务
+		/// Use ADSL dial-up service
 		/// </summary>
 		/// <param name="serviceCollection"></param>
 		/// <param name="configure"></param>

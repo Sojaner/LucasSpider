@@ -10,7 +10,7 @@ namespace DotnetSpider.Http
 		public ContentHeaders Headers => _headers ??= new ContentHeaders();
 
 		/// <summary>
-		/// 内容
+		/// Content
 		/// </summary>
 		public byte[] Bytes { get; private set; }
 

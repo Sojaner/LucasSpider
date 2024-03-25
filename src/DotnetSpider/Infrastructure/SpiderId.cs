@@ -12,7 +12,7 @@ namespace DotnetSpider.Infrastructure
 			id.NotNullOrWhiteSpace("Id");
 			if (id.Length > 36)
 			{
-				throw new ArgumentException("Id 长度不能超过 36 个字符");
+				throw new ArgumentException("Id length cannot exceed 36 characters");
 			}
 
 			Id = id;

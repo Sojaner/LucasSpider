@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 namespace DotnetSpider.DataFlow
 {
 	/// <summary>
-	/// 数据库版本
+	/// Database version
 	/// </summary>
 	public enum SqlServerVersion
 	{
@@ -41,32 +41,32 @@ namespace DotnetSpider.DataFlow
 			: (SqlServerVersion)Enum.Parse(typeof(SqlServerVersion), _configuration["SqlServer:Version"]);
 
 		/// <summary>
-		/// 连接字符串
+		/// Connection string
 		/// </summary>
 		public string ConnectionString => _configuration["SqlServer:ConnectionString"];
 
 		/// <summary>
-		/// 数据库操作重试次数
+		/// Number of database operation retries
 		/// </summary>
 		public int RetryTimes => string.IsNullOrWhiteSpace(_configuration["SqlServer:RetryTimes"])
 			? 600
 			: int.Parse(_configuration["SqlServer:RetryTimes"]);
 
 		/// <summary>
-		/// 是否使用事务操作。默认不使用。
+		/// Whether to use transaction operations. 
 		/// </summary>
 		public bool UseTransaction => !string.IsNullOrWhiteSpace(_configuration["SqlServer:UseTransaction"]) &&
 		                              bool.Parse(_configuration["SqlServer:UseTransaction"]);
 
 		/// <summary>
-		/// 数据库忽略大小写
+		/// Database ignores case
 		/// </summary>
 		public bool IgnoreCase => !string.IsNullOrWhiteSpace(_configuration["SqlServer:IgnoreCase"]) &&
 		                          bool.Parse(_configuration["SqlServer:IgnoreCase"]);
 	}
 
 	/// <summary>
-	/// SqlServer 保存解析(实体)结果
+	/// SqlServer saves parsing (entity) results
 	/// </summary>
 	public class SqlServerEntityStorage : RelationalDatabaseEntityStorageBase
 	{
@@ -89,11 +89,11 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 构造方法
+		/// Construction method
 		/// </summary>
 		/// <param name="mode"></param>
-		/// <param name="connectionString">连接字符串</param>
-		/// <param name="version">数据库版本</param>
+		/// <param name="connectionString">Connection string</param>
+		/// <param name="version">Database version</param>
 		public SqlServerEntityStorage(StorageMode mode,
 			string connectionString, SqlServerVersion version = SqlServerVersion.V2017) : base(mode,
 			connectionString)
@@ -102,9 +102,9 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 创建数据库连接接口
+		/// Create database connection interface
 		/// </summary>
-		/// <param name="connectString">连接字符串</param>
+		/// <param name="connectString">Connection string</param>
 		/// <returns></returns>
 		protected override IDbConnection CreateDbConnection(string connectString)
 		{
@@ -112,9 +112,9 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 生成 SQL 语句
+		/// Generate SQL statements
 		/// </summary>
-		/// <param name="tableMetadata">表元数据</param>
+		/// <param name="tableMetadata">Table metadata</param>
 		/// <returns></returns>
 		protected override SqlStatements GenerateSqlStatements(TableMetadata tableMetadata)
 		{
@@ -134,10 +134,10 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 生成创建数据库的 SQL 语句
+		/// Generate SQL statements to create the database
 		/// </summary>
-		/// <param name="tableMetadata">表元数据</param>
-		/// <returns>SQL 语句</returns>
+		/// <param name="tableMetadata">Table metadata</param>
+		/// <returns>SQL statement</returns>
 		protected virtual string GenerateCreateDatabaseSql(TableMetadata tableMetadata)
 		{
 			if (string.IsNullOrWhiteSpace(tableMetadata.Schema.Database))
@@ -170,10 +170,10 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 生成创建表的 SQL 语句
+		/// Generate SQL statements to create tables
 		/// </summary>
-		/// <param name="tableMetadata">表元数据</param>
-		/// <returns>SQL 语句</returns>
+		/// <param name="tableMetadata">Table metadata</param>
+		/// <returns>SQL statement</returns>
 		protected virtual string GenerateCreateTableSql(TableMetadata tableMetadata)
 		{
 			var isAutoIncrementPrimary = tableMetadata.IsAutoIncrementPrimary;
@@ -240,15 +240,15 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 生成插入数据的 SQL 语句
+		/// Generate SQL statements to insert data
 		/// </summary>
-		/// <param name="tableMetadata">表元数据</param>
-		/// <returns>SQL 语句</returns>
+		/// <param name="tableMetadata">Table metadata</param>
+		/// <returns>SQL statement</returns>
 		protected virtual string GenerateInsertSql(TableMetadata tableMetadata)
 		{
 			var columns = tableMetadata.Columns;
 			var isAutoIncrementPrimary = tableMetadata.IsAutoIncrementPrimary;
-			// 去掉自增主键
+			// Remove the auto-incrementing primary key
 			var insertColumns =
 				(isAutoIncrementPrimary ? columns.Where(c1 => c1.Key != tableMetadata.Primary.First()) : columns)
 				.ToArray();
@@ -264,10 +264,10 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 生成更新数据的 SQL 语句
+		/// Generate SQL statements to update data
 		/// </summary>
-		/// <param name="tableMetadata">表元数据</param>
-		/// <returns>SQL 语句</returns>
+		/// <param name="tableMetadata">Table metadata</param>
+		/// <returns>SQL statement</returns>
 		protected virtual string GenerateUpdateSql(TableMetadata tableMetadata)
 		{
 			if (tableMetadata.Updates == null || tableMetadata.Updates.Count == 0)
@@ -291,22 +291,22 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 生成插入新数据或者更新旧数据的 SQL 语句
+		/// Generate SQL statements to insert new data or update old data
 		/// </summary>
-		/// <param name="tableMetadata">表元数据</param>
-		/// <returns>SQL 语句</returns>
+		/// <param name="tableMetadata">Table metadata</param>
+		/// <returns>SQL statement</returns>
 		protected virtual string GenerateInsertAndUpdateSql(TableMetadata tableMetadata)
 		{
 			if (!tableMetadata.HasPrimary)
 			{
-				Logger?.LogWarning("实体没有设置主键, 无法生成 InsertAndUpdate 语句");
+				Logger?.LogWarning("The entity does not have a primary key set, and the InsertAndUpdate statement cannot be generated.");
 				return null;
 			}
 
 			// UPDATE MyTable SET FieldA=@FieldA WHERE Key=@Key IF @@ROWCOUNT = 0 INSERT INTO MyTable (FieldA) VALUES (@FieldA)
 			var columns = tableMetadata.Columns;
 			var isAutoIncrementPrimary = tableMetadata.IsAutoIncrementPrimary;
-			// 去掉自增主键
+			// Remove the auto-incrementing primary key
 			var insertColumns =
 				(isAutoIncrementPrimary ? columns.Where(c1 => c1.Key != tableMetadata.Primary.First()) : columns)
 				.ToArray();
@@ -332,10 +332,10 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 生成数据库名称的 SQL
+		/// SQL to generate database name
 		/// </summary>
-		/// <param name="tableMetadata">表元数据</param>
-		/// <returns>SQL 语句</returns>
+		/// <param name="tableMetadata">Table metadata</param>
+		/// <returns>SQL statement</returns>
 		protected virtual string GenerateTableSql(TableMetadata tableMetadata)
 		{
 			var tableName = GetNameSql(tableMetadata.Schema.Table);
@@ -344,9 +344,9 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 生成列的 SQL
+		/// SQL to generate columns
 		/// </summary>
-		/// <returns>SQL 语句</returns>
+		/// <returns>SQL statement</returns>
 		protected virtual string GenerateColumnSql(Column column, bool isPrimary)
 		{
 			var columnName = GetNameSql(column.Name);
@@ -360,11 +360,11 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 生成数据类型的 SQL
+		/// Generate SQL for data types
 		/// </summary>
-		/// <param name="type">数据类型</param>
-		/// <param name="length">数据长度</param>
-		/// <returns>SQL 语句</returns>
+		/// <param name="type">Data type</param>
+		/// <param name="length">Data length</param>
+		/// <returns>SQL statement</returns>
 		protected virtual string GenerateDataTypeSql(string type, int length)
 		{
 			string dataType;

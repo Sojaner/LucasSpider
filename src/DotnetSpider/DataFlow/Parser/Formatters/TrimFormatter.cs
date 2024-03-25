@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace DotnetSpider.DataFlow.Parser.Formatters
 {
@@ -9,35 +9,35 @@ namespace DotnetSpider.DataFlow.Parser.Formatters
 	public class TrimFormatter : Formatter
 	{
 		/// <summary>
-		/// Trim 类型
+		/// Trim type
 		/// </summary>
 		public enum TrimType
 		{
 			/// <summary>
-			/// 只Trim后边
+			/// Trim only the leading white-spaces
 			/// </summary>
 			Right,
 			/// <summary>
-			/// 只Trim前边
+			/// Trim only the trailing white-spaces
 			/// </summary>
 			Left,
 
 			/// <summary>
-			/// Trim前后
+			/// Trim both leading and trailing white-spaces
 			/// </summary>
 			All
 		}
 
 		/// <summary>
-		/// Trim 类型
+		/// Trim type
 		/// </summary>
 		public TrimType Type { get; set; } = TrimType.All;
 
 		/// <summary>
-		/// 实现数值的转化
+		/// Achieve numerical conversion
 		/// </summary>
-		/// <param name="value">数值</param>
-		/// <returns>被格式化后的数值</returns>
+		/// <param name="value">Value</param>
+		/// <returns>The formatted value</returns>
 		protected override string Handle(string value)
 		{
 			switch (Type)
@@ -62,7 +62,7 @@ namespace DotnetSpider.DataFlow.Parser.Formatters
 		}
 
 		/// <summary>
-		/// 校验参数是否设置正确
+		/// Verify whether the parameters are set correctly
 		/// </summary>
 		protected override void CheckArguments()
 		{

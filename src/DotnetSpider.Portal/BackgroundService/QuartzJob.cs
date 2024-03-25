@@ -23,7 +23,7 @@ namespace DotnetSpider.Portal.BackgroundService
 			using var scope = ServiceProvider.Instance.CreateScope();
 			var services = scope.ServiceProvider;
 			var logger = services.GetRequiredService<ILogger<QuartzJob>>();
-			logger.LogInformation($"触发任务 {jobId}");
+			logger.LogInformation($"Trigger task {jobId}");
 			try
 			{
 				var options = services.GetRequiredService<PortalOptions>();
@@ -32,13 +32,13 @@ namespace DotnetSpider.Portal.BackgroundService
 				var spider = await dbContext.Spiders.FirstOrDefaultAsync(x => x.Id == int.Parse(jobId));
 				if (spider == null)
 				{
-					logger.LogError($"任务 {jobId} 不存在");
+					logger.LogError($"Task {jobId} does not exist");
 					return;
 				}
 
 				if (!spider.Enabled)
 				{
-					logger.LogError($"任务 {jobId} 被禁用");
+					logger.LogError($"Task {jobId} is disabled");
 					return;
 				}
 
@@ -86,7 +86,7 @@ namespace DotnetSpider.Portal.BackgroundService
 
 				if (result.ID == null)
 				{
-					logger.LogError($"创建任务 {jobId} 实例失败: {string.Join(", ", result.Warnings)}");
+					logger.LogError($"Failed to create task {jobId} instance: {string.Join(", ", result.Warnings)}");
 				}
 
 				var spiderContainer = new SpiderHistory
@@ -108,11 +108,11 @@ namespace DotnetSpider.Portal.BackgroundService
 
 				await dbContext.SaveChangesAsync();
 
-				logger.LogInformation($"触发任务 {jobId} 完成");
+				logger.LogInformation($"Trigger task {jobId} to complete");
 			}
 			catch (Exception ex)
 			{
-				logger.LogError($"触发任务 {jobId} 失败: {ex}");
+				logger.LogError($"Failed to trigger task {jobId}: {ex}");
 			}
 		}
 	}

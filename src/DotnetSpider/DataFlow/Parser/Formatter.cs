@@ -1,15 +1,15 @@
-﻿using System;
+using System;
 
 namespace DotnetSpider.DataFlow.Parser
 {
 	/// <summary>
-	/// 数据格式化
+	/// Data formatting
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Property)]
 	public abstract class Formatter : Attribute
 	{
 		/// <summary>
-		/// 构造方法
+		/// Construction method
 		/// </summary>
 		protected Formatter()
 		{
@@ -17,32 +17,32 @@ namespace DotnetSpider.DataFlow.Parser
 		}
 
 		/// <summary>
-		/// 格式化的名称
+		/// Formatted name
 		/// </summary>
 		public string Name { get; set; }
 
 		/// <summary>
-		/// 如果被格式化的值为空的返回值
+		/// Return value if the formatted value is empty
 		/// </summary>
 		public string Default { get; set; }
 
 		/// <summary>
-		/// 实现数值的转化
+		/// Achieve numerical conversion
 		/// </summary>
-		/// <param name="value">数值</param>
-		/// <returns>被格式化后的数值</returns>
+		/// <param name="value">Value</param>
+		/// <returns>The formatted value</returns>
 		protected abstract string Handle(string value);
 
 		/// <summary>
-		/// 校验参数是否设置正确
+		/// Verify whether the parameters are set correctly
 		/// </summary>
 		protected abstract void CheckArguments();
 
 		/// <summary>
-		/// 格式化数据
+		/// Format data
 		/// </summary>
-		/// <param name="value">数值</param>
-		/// <returns>被格式化后的数值</returns>
+		/// <param name="value">Value</param>
+		/// <returns>The formatted value</returns>
 		public string Format(string value)
 		{
 			CheckArguments();

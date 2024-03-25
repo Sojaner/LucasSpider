@@ -15,9 +15,9 @@ namespace DotnetSpider.Tests
 	public partial class DataParserTests
 	{
 		/// <summary>
-		/// 检测在实体类上面添加 GlobalValueSelectors 是否生效
-		/// 1. 实体类上面添加 ValueSelector
-		/// 2. 属性上使用 Environment 查询共享值
+		/// Check whether adding GlobalValueSelectors to the entity class takes effect
+		/// 1. Add ValueSelector to the entity class
+		/// 2. Use Environment to query shared values ​​on attributes
 		/// </summary>
 		[Fact]
 		public void GlobalValueSelectors()
@@ -26,7 +26,7 @@ namespace DotnetSpider.Tests
 		}
 
 		/// <summary>
-		/// 测试实体类的解析是否正确
+		/// Test whether the entity class is parsed correctly
 		/// 1. GlobalValue
 		/// 2. FollowSelector
 		/// 3. Environment
@@ -74,7 +74,7 @@ namespace DotnetSpider.Tests
 ";
 
 		/// <summary>
-		/// 测试页面与数据对象 1:1 解析是否正确
+		/// Test whether the 1:1 parsing of page and data object is correct
 		/// </summary>
 		[Fact]
 		public async Task SingleEntitySelector()
@@ -95,7 +95,7 @@ namespace DotnetSpider.Tests
 		}
 
 		/// <summary>
-		/// 测试页面与数据对象 1:n 解析是否正确
+		/// Test whether the page and data object 1:n are parsed correctly
 		/// </summary>
 		[Fact]
 		public async Task MultiEntitySelector()

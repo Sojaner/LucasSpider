@@ -9,39 +9,39 @@ namespace DotnetSpider.AgentCenter.Store
 	public class AgentHeartbeat
 	{
 		/// <summary>
-		/// 节点标识
+		/// Node ID
 		/// </summary>
 		// ReSharper disable once UnusedAutoPropertyAccessor.Local
 		public long Id { get; private set; }
 
 		/// <summary>
-		/// 标识
+		/// Logo
 		/// </summary>
 		[StringLength(36)]
 		[Column("agent_id")]
 		public string AgentId { get; private set; }
 
 		/// <summary>
-		/// 名称
+		/// Name
 		/// </summary>
 		[StringLength(255)]
 		[Column("agent_name")]
 		public string AgentName { get; private set; }
 
 		/// <summary>
-		/// 空闲内存
+		/// Free memory
 		/// </summary>
 		[Column("available_memory")]
 		public long AvailableMemory { get; private set; }
 
 		/// <summary>
-		/// CPU 负载
+		/// CPU load
 		/// </summary>
 		[Column("cpu_load")]
 		public int CpuLoad { get; private set; }
 
 		/// <summary>
-		/// 上报时间
+		/// Reporting time
 		/// </summary>
 		[Column("creation_time")]
 		public DateTimeOffset CreationTime { get; private set; }

@@ -1,20 +1,20 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net;
 
 namespace DotnetSpider.DataFlow.Parser.Formatters
 {
 	/// <summary>
-	/// 下载内容
+	/// Download content
 	/// </summary>
 	public class Download : Formatter
 	{
 		private readonly WebClient _client = new();
 		/// <summary>
-		/// 执行下载操作
+		/// Perform download operation
 		/// </summary>
-		/// <param name="value">下载的链接</param>
-		/// <returns>下载完成后的文件名</returns>
+		/// <param name="value">Download link</param>
+		/// <returns>File name after download is completed</returns>
 		protected override string Handle(string value)
 		{
 			var filePath = value;
@@ -25,7 +25,7 @@ namespace DotnetSpider.DataFlow.Parser.Formatters
 		}
 
 		/// <summary>
-		/// 校验参数是否设置正确
+		/// Verify whether the parameters are set correctly
 		/// </summary>
 		protected override void CheckArguments()
 		{

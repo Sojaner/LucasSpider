@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace DotnetSpider.DataFlow.Storage
 {
 	/// <summary>
-	/// 实体解析结果的文件存储器
+	/// File storage for entity resolution results
 	/// </summary>
 	public abstract class EntityFileStorageBase : EntityStorageBase
 	{
@@ -17,12 +17,12 @@ namespace DotnetSpider.DataFlow.Storage
 			new();
 
 		/// <summary>
-		/// 存储的根文件夹
+		/// Root folder of storage
 		/// </summary>
 		protected string Folder { get; }
 
 		/// <summary>
-		/// 构造方法
+		/// Construction method
 		/// </summary>
 		protected EntityFileStorageBase()
 		{
@@ -34,9 +34,9 @@ namespace DotnetSpider.DataFlow.Storage
 		}
 
 		/// <summary>
-		/// 获取存储文件夹
+		/// Get storage folder
 		/// </summary>
-		/// <param name="owner">任务标识</param>
+		/// <param name="owner">Task ID</param>
 		/// <returns></returns>
 		protected virtual string GetDataFolder(string owner)
 		{
@@ -63,11 +63,11 @@ namespace DotnetSpider.DataFlow.Storage
 		}
 
 		/// <summary>
-		/// 获取数据文件路径
+		/// Get data file path
 		/// </summary>
-		/// <param name="context">数据上下文件</param>
-		/// <param name="tableMetadata">表元数据</param>
-		/// <param name="extension">文件扩展名</param>
+		/// <param name="context">Data context conditions</param>
+		/// <param name="tableMetadata">Table metadata</param>
+		/// <param name="extension">File extension</param>
 		/// <returns></returns>
 		protected virtual string GetDataFile(DataFlowContext context, TableMetadata tableMetadata, string extension)
 		{

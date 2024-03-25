@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -143,7 +143,7 @@ namespace DotnetSpider.RabbitMQ
 			{
 				channel.Close();
 			};
-			//7. 启动消费者
+			//7. Start the consumer
 			channel.BasicConsume(consumer.Queue, false, basicConsumer);
 
 			return Task.CompletedTask;

@@ -37,15 +37,15 @@ namespace DotnetSpider.Tests
         }
 
         /// <summary>
-        /// 测试芒果数据库存储数据成功
-        /// 1. 数据库名是否正确
-        /// 2. Collection 是否正确
-        /// 3. 数据存储是否正确
+        /// Tested Mango database to store data successfully
+        /// 1. Is the database name correct?
+        /// 2. Is Collection correct?
+        /// 3. Is the data stored correctly?
         /// </summary>
         [Fact]
         public async Task Store_Should_Success()
         {
-            var mongoCollection = new Mock<IMongoCollection<BsonDocument>>();
+			var mongoCollection = new Mock<IMongoCollection<BsonDocument>>();
 
             var mongoDatabase = new Mock<IMongoDatabase>();
             mongoDatabase.Setup(d =>

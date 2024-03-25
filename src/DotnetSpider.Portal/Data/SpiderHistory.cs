@@ -8,7 +8,7 @@ namespace DotnetSpider.Portal.Data
 	public class SpiderHistory
 	{
 		/// <summary>
-		/// 主键
+		/// Primary key
 		/// </summary>
 		[Column("ID")]
 		public int Id { get; set; }
@@ -29,21 +29,21 @@ namespace DotnetSpider.Portal.Data
 		public string SpiderName { get; set; }
 
 		/// <summary>
-		/// 容器标识
+		/// Container ID
 		/// </summary>
 		[Column("CONTAINER_ID")]
 		[StringLength(100)]
 		public string ContainerId { get; set; }
 
 		/// <summary>
-		/// 容器标识
+		/// Container ID
 		/// </summary>
 		[Column("BATCH")]
 		[StringLength(36)]
 		public string Batch { get; set; }
 
 		/// <summary>
-		/// 创建时间
+		/// Creation time
 		/// </summary>
 		[Column("CREATION_TIME")]
 		[Required]

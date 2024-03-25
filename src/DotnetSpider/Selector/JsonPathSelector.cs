@@ -14,7 +14,7 @@ namespace DotnetSpider.Selector
 		private readonly string _jsonPath;
 
 		/// <summary>
-		/// 构造方法
+		/// Construction method
 		/// </summary>
 		/// <param name="jsonPath">JsonPath</param>
 		public JsonPathSelector(string jsonPath)
@@ -23,11 +23,11 @@ namespace DotnetSpider.Selector
 		}
 
 		/// <summary>
-		/// 从JSON文本中查询单个结果
-		/// 如果符合条件的结果有多个, 仅返回第一个
+		/// Query a single result from JSON text
+		/// If there are multiple results that meet the criteria, only the first one is returned
 		/// </summary>
-		/// <param name="text">需要查询的Json文本</param>
-		/// <returns>查询结果</returns>
+		/// <param name="text">Json text to be queried</param>
+		/// <returns>Query results</returns>
 		public ISelectable Select(string text)
 		{
 			if (string.IsNullOrWhiteSpace(text))
@@ -45,10 +45,10 @@ namespace DotnetSpider.Selector
 		}
 
 		/// <summary>
-		/// 从JSON文本中查询所有结果
+		/// Query all results from JSON text
 		/// </summary>
-		/// <param name="text">需要查询的Json文本</param>
-		/// <returns>查询结果</returns>
+		/// <param name="text">Json text to be queried</param>
+		/// <returns>Query results</returns>
 		public IEnumerable<ISelectable> SelectList(string text)
 		{
 			if (string.IsNullOrWhiteSpace(text))

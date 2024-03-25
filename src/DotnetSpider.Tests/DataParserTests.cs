@@ -13,7 +13,7 @@ namespace DotnetSpider.Tests
 	public partial class DataParserTests : TestBase
 	{
 		/// <summary>
-		/// 从 HTML 指定的 XPATH 元素下面查找所有的 URL
+		/// Find all URLs under the XPATH element specified in HTML
 		/// </summary>
 		[Fact]
 		public async Task XpathFollow()
@@ -35,7 +35,7 @@ namespace DotnetSpider.Tests
 		}
 
 		/// <summary>
-		/// 通过正则判断 URL 是否需要当前 DataParser 处理
+		/// Determine whether the URL needs to be processed by the current DataParser through regular expressions
 		/// </summary>
 		[Fact(DisplayName = "RegexCanParse")]
 		public async Task RequiredValidator()

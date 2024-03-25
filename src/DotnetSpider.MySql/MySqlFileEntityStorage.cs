@@ -31,9 +31,9 @@ namespace DotnetSpider.MySql
 	}
 
 	/// <summary>
-	/// 把解析到的爬虫实体数据存成 SQL 文件, 支持两种模式
-	/// LoadFile 是批量导入模式通过命令 LOAD DATA LOCAL INFILE '{filePath}' INTO TABLE `{schema}`.`{dababase}` FIELDS TERMINATED BY '$'  ENCLOSED BY '#' LINES TERMINATED BY '@END@' IGNORE 1 LINES; 还原。
-	/// InsertSql 是完整的 Insert SQL 语句, 需要一条条执行来导入数据
+	/// Save the parsed crawler entity data into a SQL file, supporting two modes
+	/// LoadFile is the batch import mode through the command LOAD DATA LOCAL INFILE '{filePath}' INTO TABLE `{schema}`.`{dababase}` FIELDS TERMINATED BY '$' ENCLOSED BY '#' LINES TERMINATED BY '@END@' IGNORE 1 
+	/// InsertSql is a complete Insert SQL statement, which needs to be executed one by one to import data.
 	/// </summary>
 	public class MySqlFileEntityStorage : EntityFileStorageBase
 	{
@@ -41,7 +41,7 @@ namespace DotnetSpider.MySql
 			new();
 
 		/// <summary>
-		/// 数据库忽略大小写
+		/// Database ignores case
 		/// </summary>
 		public bool IgnoreCase { get; set; }
 
@@ -53,9 +53,9 @@ namespace DotnetSpider.MySql
 		}
 
 		/// <summary>
-		/// 根据配置返回存储器
+		/// Returns memory based on configuration
 		/// </summary>
-		/// <param name="configuration">配置</param>
+		/// <param name="configuration">Deployment</param>
 		/// <returns></returns>
 		public static MySqlFileEntityStorage CreateFromOptions(IConfiguration configuration)
 		{
@@ -64,9 +64,9 @@ namespace DotnetSpider.MySql
 		}
 
 		/// <summary>
-		/// 构造方法
+		/// Construction method
 		/// </summary>
-		/// <param name="fileType">文件类型</param>
+		/// <param name="fileType">File type</param>
 		/// <param name="ignoreCase"></param>
 		public MySqlFileEntityStorage(MySqlFileType fileType = MySqlFileType.LoadFile, bool ignoreCase = false)
 		{

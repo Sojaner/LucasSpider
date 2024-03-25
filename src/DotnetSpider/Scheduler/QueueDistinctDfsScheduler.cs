@@ -8,7 +8,7 @@ using DotnetSpider.Scheduler.Component;
 namespace DotnetSpider.Scheduler
 {
 	/// <summary>
-	/// 基于内存的深度优先调度(去重 URL)
+	/// Memory-based depth-first scheduling (deduplicated URLs)
 	/// </summary>
 	public class QueueDistinctDfsScheduler : SchedulerBase
 	{
@@ -28,9 +28,9 @@ namespace DotnetSpider.Scheduler
 		}
 
 		/// <summary>
-		/// 如果请求未重复就添加到队列中
+		/// If the request is not repeated, add it to the queue
 		/// </summary>
-		/// <param name="request">请求</param>
+		/// <param name="request">Request</param>
 		protected override Task PushWhenNoDuplicate(Request request)
 		{
 			if (request == null)
@@ -43,10 +43,10 @@ namespace DotnetSpider.Scheduler
 		}
 
 		/// <summary>
-		/// 从队列中取出指定爬虫的指定个数请求
+		/// Remove the specified number of requests for the specified crawler from the queue
 		/// </summary>
-		/// <param name="count">出队数</param>
-		/// <returns>请求</returns>
+		/// <param name="count">Number of outputs</param>
+		/// <returns>Request</returns>
 		protected override Task<IEnumerable<Request>> ImplDequeueAsync(int count = 1)
 		{
 			var dequeueCount = count;

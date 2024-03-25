@@ -3,7 +3,7 @@ namespace DotnetSpider.Portal.ViewObject
 	public class SpiderHistoryViewObject
 	{
 		/// <summary>
-		/// 主键
+		/// Primary key
 		/// </summary>
 		public int Id { get; set; }
 
@@ -13,12 +13,12 @@ namespace DotnetSpider.Portal.ViewObject
 		public string SpiderName { get; set; }
 
 		/// <summary>
-		/// 容器标识
+		/// Container ID
 		/// </summary>
 		public string ContainerId { get; set; }
 
 		/// <summary>
-		/// 容器标识
+		/// Container ID
 		/// </summary>
 		public string Batch { get; set; }
 

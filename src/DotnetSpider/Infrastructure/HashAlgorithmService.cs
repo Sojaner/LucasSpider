@@ -14,14 +14,14 @@ namespace DotnetSpider.Infrastructure
 			var locker = false;
 			try
 			{
-				//申请获取锁
+				//Apply for a lock
 				_spin.Enter(ref locker);
 				return GetHashAlgorithm().ComputeHash(bytes);
 			}
 			finally
 			{
-				//工作完毕，或者发生异常时，检测一下当前线程是否占有锁，如果咱有了锁释放它
-				//以避免出现死锁的情况
+				//When the work is completed or an exception occurs, check whether the current thread holds the lock. If we have the lock, release it
+				//To avoid deadlock situations
 				if (locker)
 				{
 					_spin.Exit();

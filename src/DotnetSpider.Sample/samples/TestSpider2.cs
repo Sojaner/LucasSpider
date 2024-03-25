@@ -51,7 +51,7 @@ namespace DotnetSpider.Sample.samples
 
 		protected override SpiderId GenerateSpiderId()
 		{
-			return new(ObjectId.CreateId().ToString(), "测试爬虫 1");
+			return new(ObjectId.CreateId().ToString(), "Test crawler 1");
 		}
 
 		[Schema("cnblogs", "news")]
