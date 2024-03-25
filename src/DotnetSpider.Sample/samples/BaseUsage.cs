@@ -32,7 +32,7 @@ namespace DotnetSpider.Sample.samples
 				x.Speed = 500;
 				x.Depth = 1000;
 			});
-			builder.UseSerilog((_, configuration) => configuration.WriteTo.File("C:\\Users\\sojan\\Desktop\\crawler\\log.txt", LogEventLevel.Error, flushToDiskInterval: TimeSpan.FromSeconds(1)));
+			builder.UseSerilog((_, configuration) => configuration.WriteTo.File("log.txt", LogEventLevel.Information, flushToDiskInterval: TimeSpan.FromSeconds(1)));
 			builder.UseDownloader<HttpClientDownloader>();
 			builder.UseQueueDistinctBfsScheduler<HashSetDuplicateRemover>();
 			await builder.Build().RunAsync();
@@ -44,12 +44,8 @@ namespace DotnetSpider.Sample.samples
 		{
 			private readonly ConcurrentDictionary<string, string> _dictionary = new();
 
-			private int _count;
-
 			protected override Task ParseAsync(DataFlowContext context)
 			{
-				_count++;
-
 				var links = context.Selectable.Links().ToList();
 
 				var uri = context.Request.RequestUri.AbsoluteUri;
@@ -61,8 +57,6 @@ namespace DotnetSpider.Sample.samples
 
 				if (context.Selectable is HtmlSelectable)
 				{
-					//context.AddData($"URL {_count}", uri);
-					//context.AddData("Parent", _dictionary.TryGetValue(uri, out uri) ? uri : "---");
 				}
 
 				return Task.CompletedTask;
@@ -95,28 +89,6 @@ namespace DotnetSpider.Sample.samples
 			OnRequestTimeout += (sender) =>
 			{
 			};
-		}
-
-		private int _count;
-
-		protected override void ConfigureRequest(Request request)
-		{
-			/*if (_count == 500)
-			{
-				Options.Speed = 1;
-
-				Options.Batch = 1;
-			}
-			else if (_count == 600)
-			{
-				Options.Speed = 500;
-
-				Options.Batch = 500;
-			}*/
-
-			_count++;
-
-			base.ConfigureRequest(request);
 		}
 
 		protected override async Task InitializeAsync(CancellationToken stoppingToken = default)
