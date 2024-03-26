@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,11 +17,12 @@ using DotnetSpider.Infrastructure;
 using DotnetSpider.Scheduler;
 using DotnetSpider.Scheduler.Component;
 using DotnetSpider.Selector;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Playwright;
 using Serilog;
-using Serilog.Events;
 
 namespace DotnetSpider.Sample.samples
 {
@@ -32,13 +36,68 @@ namespace DotnetSpider.Sample.samples
 				x.Speed = 500;
 				x.Depth = 1000;
 			});
-			builder.UseSerilog((_, configuration) => configuration.WriteTo.File("log.txt", LogEventLevel.Information, flushToDiskInterval: TimeSpan.FromSeconds(1)));
-			builder.UseDownloader<HttpClientDownloader>();
+			builder.ConfigureServices(collection => collection.AddSingleton(async _ => await (await Playwright.CreateAsync()).Chromium.LaunchAsync()));
+			builder.UseSerilog(/*(_, configuration) => configuration.WriteTo.File("log.txt", LogEventLevel.Information, flushToDiskInterval: TimeSpan.FromSeconds(1))*/);
+			builder.UseDownloader<MyDownloader>();
 			builder.UseQueueDistinctBfsScheduler<HashSetDuplicateRemover>();
 			await builder.Build().RunAsync();
 		}
 
-		private const string Domain = "ledigajobb.se";
+		class MyDownloader(Task<IBrowser> browser):IDownloader
+		{
+			static async Task<HttpResponseMessage> ConvertIResponseToHttpResponse(IResponse playwrightResponse)
+			{
+				var httpResponse = new HttpResponseMessage((HttpStatusCode)playwrightResponse.Status)
+				{
+					Content = new System.Net.Http.ByteArrayContent(await playwrightResponse.BodyAsync()),
+					RequestMessage = new HttpRequestMessage(new HttpMethod(playwrightResponse.Request.Method), playwrightResponse.Request.Url)
+				};
+
+				foreach (var header in playwrightResponse.Headers)
+				{
+					// Playwright response headers are stored as dictionary.
+					// Convert them to HTTP headers.
+					httpResponse.Content.Headers.TryAddWithoutValidation(header.Key, header.Value);
+					httpResponse.Headers.TryAddWithoutValidation(header.Key, header.Value);
+				}
+
+				return httpResponse;
+			}
+
+			public async Task<Response> DownloadAsync(Request request)
+			{
+				var context = await (await browser).NewContextAsync();
+
+				var page = await context.NewPageAsync();
+				List<IRequest> requests = new();
+				page.Request += (_, re) => requests.Add(re);
+				await page.GotoAsync(request.RequestUri.AbsoluteUri);
+
+				await page.WaitForLoadStateAsync();
+				// requests.Where(x => x.Frame == page.MainFrame && x.IsNavigationRequest && x.RedirectedTo == null && x.ResourceType == "document")
+				IResponse re = await requests.Single(x => x.Frame == page.MainFrame && x.IsNavigationRequest && x.RedirectedTo == null && x.ResourceType == "document").ResponseAsync();
+
+				var message = await ConvertIResponseToHttpResponse(re);
+
+				var response = await message.ToResponseAsync();
+				//response.ElapsedMilliseconds = (int)elapsedMilliseconds;
+				response.RequestHash = request.Hash;
+				response.Version = message.Version;
+
+				return response;
+
+				byte[] bytes = await re.BodyAsync();
+				var html = await page.MainFrame.ContentAsync();
+
+				await context.CloseAsync();
+
+				return new Response();
+			}
+
+			public string Name => "MyDownloader";
+		}
+
+		private const string Domain = "www.ledigajobb.se";
 
 		class MyDataParser : DataParser
 		{
@@ -93,7 +152,7 @@ namespace DotnetSpider.Sample.samples
 
 		protected override async Task InitializeAsync(CancellationToken stoppingToken = default)
 		{
-			var request = new Request($"https://{Domain}/");
+			var request = new Request($"http://{Domain}/");
 			request.Headers.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36";
 			await AddRequestsAsync(request);
 			AddDataFlow(new MyDataParser());
