@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -53,12 +54,22 @@ namespace DotnetSpider.Http
 		/// <summary>
 		/// Download time
 		/// </summary>
-		public int ElapsedMilliseconds { get; set; }
+		public TimeSpan Elapsed { get; set; }
 
 		/// <summary>
 		/// Final address
 		/// </summary>
-		public string TargetUrl { get; set; }
+		public Uri TargetUrl { get; set; }
+
+		/// <summary>
+		/// Redirects before the final address
+		/// </summary>
+		public List<RedirectResponse> Redirects { get; set; }
+
+		/// <summary>
+		/// Time to download headers
+		/// </summary>
+		public TimeSpan TimeToHeaders { get; set; }
 
 		public bool IsSuccessStatusCode =>
 			StatusCode >= HttpStatusCode.OK && StatusCode <= (HttpStatusCode)299;
