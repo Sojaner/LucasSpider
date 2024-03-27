@@ -3,8 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,7 +17,6 @@ using DotnetSpider.Selector;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Playwright;
 using Serilog;
 
 namespace DotnetSpider.Sample.samples
@@ -34,85 +31,10 @@ namespace DotnetSpider.Sample.samples
 				x.Speed = 1;
 				x.Depth = 1000;
 			});
-			builder.UseSerilog(/*(_, configuration) => configuration.WriteTo.File("log.txt", LogEventLevel.Information, flushToDiskInterval: TimeSpan.FromSeconds(1))*/);
-			builder.UseDownloader<MyDownloader>();
+			builder.UseSerilog();
+			builder.UseDownloader<PlaywrightDownloader>(options => options.BrowserType = PlaywrightBrowserType.Firefox);
 			builder.UseQueueDistinctBfsScheduler<HashSetDuplicateRemover>();
 			await builder.Build().RunAsync();
-		}
-
-		class MyDownloader(IBrowser browser):IDownloader
-		{
-			static async Task<HttpResponseMessage> ConvertIResponseToHttpResponse(IResponse playwrightResponse)
-			{
-				var httpResponse = new HttpResponseMessage((HttpStatusCode)playwrightResponse.Status)
-				{
-					Content = new System.Net.Http.ByteArrayContent(await playwrightResponse.BodyAsync()),
-					RequestMessage = new HttpRequestMessage(new HttpMethod(playwrightResponse.Request.Method), playwrightResponse.Request.Url)
-				};
-
-				foreach (var header in playwrightResponse.Headers)
-				{
-					// Playwright response headers are stored as dictionary.
-					// Convert them to HTTP headers.
-					httpResponse.Content.Headers.TryAddWithoutValidation(header.Key, header.Value);
-					httpResponse.Headers.TryAddWithoutValidation(header.Key, header.Value);
-				}
-
-				return httpResponse;
-			}
-
-			private static IEnumerable<IRequest> GetRedirects(IResponse response)
-			{
-				var list = new List<IRequest>{response.Request};
-
-				var parent = response.Request.RedirectedFrom;
-
-				while (parent != null)
-				{
-					list.Add(parent);
-
-					parent = parent.RedirectedFrom;
-				}
-
-				list.Reverse();
-
-				return list;
-			}
-
-			public async Task<Response> DownloadAsync(Request request)
-			{
-				var context = await browser.NewContextAsync();
-
-				var page = await context.NewPageAsync();
-				List<IRequest> requests = new();
-				page.Request += (_, re) => requests.Add(re);
-				await page.GotoAsync(request.RequestUri.AbsoluteUri);
-
-				await page.WaitForLoadStateAsync();
-				// requests.Where(x => x.Frame == page.MainFrame && x.IsNavigationRequest && x.RedirectedTo == null && x.ResourceType == "document")
-				IResponse re = await requests.Single(x => x.Frame == page.MainFrame && x.IsNavigationRequest && x.RedirectedTo == null && x.ResourceType == "document").ResponseAsync();
-
-				var timing = re != null ? GetRedirects(re).Select(req => req.Timing.ResponseStart) : [];
-
-				var message = await ConvertIResponseToHttpResponse(re);
-
-				var response = await message.ToResponseAsync();
-				//response.ElapsedMilliseconds = (int)elapsedMilliseconds;
-				response.RequestHash = request.Hash;
-				response.Version = message.Version;
-
-				await context.CloseAsync();
-				await context.DisposeAsync();
-
-				return response;
-
-				byte[] bytes = await re.BodyAsync();
-				var html = await page.MainFrame.ContentAsync();
-
-				return new Response();
-			}
-
-			public string Name => "MyDownloader";
 		}
 
 		private const string Domain = "www.ledigajobb.se";
