@@ -15,6 +15,6 @@
 		/// <summary>
 		/// The playwright browser to use
 		/// </summary>
-		public PlaywrightBrowser Browser { get; set; } = PlaywrightBrowser.Chromium;
+		public PlaywrightBrowserType BrowserType { get; set; } = PlaywrightBrowserType.Chromium;
 	}
 }

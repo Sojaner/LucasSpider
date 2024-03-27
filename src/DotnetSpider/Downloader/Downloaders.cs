@@ -9,6 +9,7 @@ namespace DotnetSpider.Downloader
 
 		public const string PPPoEHttpClient = "DotnetSpider_PPPoE_HttpClient_Downloader";
 		public const string Puppeteer = "DotnetSpider_Puppeteer_Downloader";
+		public const string Playwright = "DotnetSpider_Playwight_Downloader";
 		public const string PPPoEPuppeteer = "DotnetSpider_PPPoE_Puppeteer_Downloader";
 		public const string File = "DotnetSpider_File_Downloader";
 		public const string Empty = "DotnetSpider_Empty_Downloader";
