@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net;
@@ -12,46 +13,52 @@ namespace DotnetSpider.Downloader
 	{
 		public async Task<Response> DownloadAsync(Request request)
 		{
-			var context = await browser.NewContextAsync();
+			await using var context = await browser.NewContextAsync();
 
 			var page = await context.NewPageAsync();
 			var requests = new List<IRequest>();
-			page.Request += (_, re) => requests.Add(re);
+			page.Request += (_, r) => requests.Add(r);
 			await page.GotoAsync(request.RequestUri.AbsoluteUri);
 
 			await page.WaitForLoadStateAsync();
-			var re = await requests.Single(req => req.Frame == page.MainFrame && req.IsNavigationRequest && req.RedirectedTo == null && req.ResourceType == "document").ResponseAsync();
+			var document = await requests
+				.Single(r => r.Frame == page.MainFrame && r.IsNavigationRequest &&
+				             r.RedirectedTo == null && r.ResourceType == "document")
+				.ResponseAsync();
 
-			var timing = re != null ? GetRedirects(re).Select(req => req.Timing.ResponseStart) : [];
+			var redirects = document != null ? await GetRedirectsAsync(document) : [];
+			var httpResponse = await ConvertIResponseToHttpResponse(document);
 
-			var message = await ConvertIResponseToHttpResponse(re);
-
-			var response = await message.ToResponseAsync();
-			//response.ElapsedMilliseconds = (int)elapsedMilliseconds;
+			var response = await httpResponse.ToResponseAsync();
+			response.Elapsed = TimeSpan.FromMilliseconds(document.Request.Timing.ResponseEnd);
 			response.RequestHash = request.Hash;
-			response.Version = message.Version;
+			response.Version = httpResponse.Version;
 
 			await context.CloseAsync();
-			await context.DisposeAsync();
 
 			return response;
 		}
 
-		private static IEnumerable<IRequest> GetRedirects(IResponse response)
+		private static async Task<IEnumerable<RedirectResponse>> GetRedirectsAsync(IResponse response)
 		{
-			var list = new List<IRequest> { response.Request };
-
+			var list = new List<RedirectResponse>();
 			var parent = response.Request.RedirectedFrom;
 
 			while (parent != null)
 			{
-				list.Add(parent);
-
+				var patchingResponse = await parent.ResponseAsync();
+				list.Add(new RedirectResponse
+				{
+					RequestUri = new Uri(parent.Url),
+					StatusCode = (HttpStatusCode?)patchingResponse?.Status,
+					ResponseTime = parent.Timing.ResponseStart >= 0 ?
+						TimeSpan.FromMilliseconds(parent.Timing.ResponseStart) :
+						null
+				});
 				parent = parent.RedirectedFrom;
 			}
 
 			list.Reverse();
-
 			return list;
 		}
 
@@ -65,8 +72,6 @@ namespace DotnetSpider.Downloader
 
 			foreach (var header in playwrightResponse.Headers)
 			{
-				// Playwright response headers are stored as dictionary.
-				// Convert them to HTTP headers.
 				httpResponse.Content.Headers.TryAddWithoutValidation(header.Key, header.Value);
 				httpResponse.Headers.TryAddWithoutValidation(header.Key, header.Value);
 			}
