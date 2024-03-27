@@ -20,11 +20,11 @@ namespace DotnetSpider.Downloader
 
 			var stopwatch = new Stopwatch();
 			stopwatch.Start();
-			response.TargetUrl = request.RequestUri.ToString();
+			response.TargetUrl = request.RequestUri;
 			response.Content = new ByteArrayContent(File.ReadAllBytes(file));
 			stopwatch.Stop();
 			response.StatusCode = HttpStatusCode.OK;
-			response.ElapsedMilliseconds = (int)stopwatch.ElapsedMilliseconds;
+			response.Elapsed = stopwatch.Elapsed;
 			return Task.FromResult(response);
 		}
 

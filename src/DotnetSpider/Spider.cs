@@ -286,13 +286,13 @@ namespace DotnetSpider
 
 									// Whether the download is successful or not is determined by the crawler, not the Agent itself.
 									await _services.StatisticsClient.IncreaseAgentSuccessAsync(response.Agent,
-										response.ElapsedMilliseconds);
+										response.Elapsed.Milliseconds);
 									await HandleResponseAsync(request, response, bytes);
 								}
 								else
 								{
 									await _services.StatisticsClient.IncreaseAgentFailureAsync(response.Agent,
-										response.ElapsedMilliseconds);
+										response.Elapsed.Milliseconds);
 									Logger.LogError(
 										$"{SpiderId} download {request.RequestUri}, {request.Hash} status code: {response.StatusCode} failed: {response.ReasonPhrase}");
 

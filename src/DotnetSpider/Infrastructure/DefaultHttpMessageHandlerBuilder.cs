@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using DotnetSpider.Downloader;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Http;
+using Microsoft.Extensions.Options;
 
 namespace DotnetSpider.Infrastructure
 {
@@ -37,6 +39,12 @@ namespace DotnetSpider.Infrastructure
 				SetServerCertificateCustomValidationCallback(Services, handler);
 				PrimaryHandler = handler;
 			}
+
+			var options = Services.GetService<IOptions<DownloaderOptions>>();
+
+			((HttpClientHandler)PrimaryHandler).AllowAutoRedirect = !(options?.Value.TrackRedirects ?? false);
+
+			((HttpClientHandler)PrimaryHandler).MaxAutomaticRedirections = options?.Value.MaximumAllowedRedirects ?? 5;
 
 			return CreateHandlerPipeline(PrimaryHandler, AdditionalHandlers);
 		}

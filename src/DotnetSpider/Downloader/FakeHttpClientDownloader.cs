@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DotnetSpider.Proxy;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace DotnetSpider.Downloader
 {
@@ -11,7 +12,8 @@ namespace DotnetSpider.Downloader
 	{
 		public FakeHttpClientDownloader(IHttpClientFactory httpClientFactory,
 			IProxyService proxyService,
-			ILogger<HttpClientDownloader> logger) : base(httpClientFactory, proxyService, logger)
+			ILogger<HttpClientDownloader> logger,
+			IOptions<DownloaderOptions> options) : base(httpClientFactory, proxyService, logger, options)
 		{
 		}
 

@@ -1,0 +1,24 @@
+﻿using System;
+using System.Net;
+
+namespace DotnetSpider.Http
+{
+	[Serializable]
+	public class RedirectResponse
+	{
+		/// <summary>
+		/// The request location that was redirected
+		/// </summary>
+		public Uri RequestUri { get; set; }
+
+		/// <summary>
+		/// The status code of the response
+		/// </summary>
+		public HttpStatusCode StatusCode { get; set; }
+
+		/// <summary>
+		/// The time it took to get the response
+		/// </summary>
+		public TimeSpan ResponseTime { get; set; }
+	}
+}
