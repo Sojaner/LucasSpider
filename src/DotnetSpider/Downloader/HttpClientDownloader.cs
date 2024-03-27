@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
@@ -7,44 +8,83 @@ using DotnetSpider.Http;
 using DotnetSpider.Infrastructure;
 using DotnetSpider.Proxy;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace DotnetSpider.Downloader
 {
 	public class HttpClientDownloader : IDownloader
 	{
 		private readonly IProxyService _proxyService;
+		private readonly int _allowedRedirects;
 		protected IHttpClientFactory HttpClientFactory { get; }
 		protected ILogger Logger { get; }
 		protected bool UseProxy { get; }
 
 		public HttpClientDownloader(IHttpClientFactory httpClientFactory,
 			IProxyService proxyService,
-			ILogger<HttpClientDownloader> logger)
+			ILogger<HttpClientDownloader> logger,
+			IOptions<DownloaderOptions> options)
 		{
 			HttpClientFactory = httpClientFactory;
 			Logger = logger;
 			_proxyService = proxyService;
+			_allowedRedirects = options.Value.MaximumAllowedRedirects;
 			UseProxy = !(_proxyService is EmptyProxyService);
 		}
 
 		public async Task<Response> DownloadAsync(Request request)
 		{
-			HttpResponseMessage httpResponseMessage = null;
-			HttpRequestMessage httpRequestMessage = null;
+			var httpResponseMessages = new List<HttpResponseMessage>();
+			var httpRequestMessages = new List<HttpRequestMessage>();
 			try
 			{
-				httpRequestMessage = request.ToHttpRequestMessage();
+				var httpRequestMessage = request.ToHttpRequestMessage();
+
+				httpRequestMessages.Add(httpRequestMessage);
 
 				var httpClient = await CreateClientAsync(request);
 
+				var redirects = 0;
+
 				var stopwatch = new Stopwatch();
-				stopwatch.Start();
 
-				httpResponseMessage = await SendAsync(httpClient, httpRequestMessage);
+				HttpStatusCode statusCode;
 
-				stopwatch.Stop();
+				long headersTime;
 
-				var elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
+				HttpResponseMessage httpResponseMessage;
+
+				var redirectResponses = new List<RedirectResponse>();
+
+				Uri targetUrl;
+
+				do
+				{
+					stopwatch.Restart();
+					httpResponseMessage = await SendAsync(httpClient, httpRequestMessage);
+					headersTime = stopwatch.ElapsedMilliseconds;
+
+					httpResponseMessages.Add(httpResponseMessage);
+					redirects++;
+					statusCode = httpResponseMessage.StatusCode;
+					targetUrl = httpResponseMessage.RequestMessage.RequestUri;
+
+					if (statusCode is HttpStatusCode.Moved or HttpStatusCode.MovedPermanently && redirects <= _allowedRedirects)
+					{
+						var location = httpResponseMessage.Headers.Location;
+						httpRequestMessage = request.Clone().ToHttpRequestMessage();
+						httpRequestMessage.RequestUri = location;
+						httpRequestMessages.Add(httpRequestMessage);
+
+						redirectResponses.Add(new RedirectResponse
+						{
+							StatusCode = statusCode,
+							ResponseTime = TimeSpan.FromMilliseconds(headersTime),
+							RequestUri = targetUrl
+						});
+					}
+
+				} while (statusCode is HttpStatusCode.Moved or HttpStatusCode.MovedPermanently && redirects <= _allowedRedirects);
 
 				var response = await HandleAsync(request, httpResponseMessage);
 				if (response != null)
@@ -54,9 +94,13 @@ namespace DotnetSpider.Downloader
 				}
 
 				response = await httpResponseMessage.ToResponseAsync();
-				response.ElapsedMilliseconds = (int)elapsedMilliseconds;
+				response.Elapsed = stopwatch.Elapsed;
 				response.RequestHash = request.Hash;
 				response.Version = httpResponseMessage.Version;
+				response.Redirects = redirectResponses;
+				response.TimeToHeaders = TimeSpan.FromMilliseconds(headersTime);
+				response.TargetUrl = targetUrl;
+				stopwatch.Stop();
 
 				return response;
 			}
@@ -73,14 +117,15 @@ namespace DotnetSpider.Downloader
 			}
 			finally
 			{
-				ObjectUtilities.DisposeSafely(Logger, httpResponseMessage, httpRequestMessage);
+				ObjectUtilities.DisposeSafely(Logger, httpRequestMessages);
+				ObjectUtilities.DisposeSafely(Logger, httpResponseMessages);
 			}
 		}
 
 		protected virtual async Task<HttpResponseMessage> SendAsync(HttpClient httpClient,
 			HttpRequestMessage httpRequestMessage)
 		{
-			return await httpClient.SendAsync(httpRequestMessage);
+			return await httpClient.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseHeadersRead);
 		}
 
 		protected virtual async Task<HttpClient> CreateClientAsync(Request request)
