@@ -42,9 +42,9 @@ namespace DotnetSpider.Infrastructure
 
 			var options = Services.GetService<IOptions<DownloaderOptions>>();
 
-			((HttpClientHandler)PrimaryHandler).AllowAutoRedirect = !(options?.Value.TrackRedirects ?? false);
+			((HttpClientHandler)PrimaryHandler).AllowAutoRedirect = options.Value.TrackRedirects;
 
-			((HttpClientHandler)PrimaryHandler).MaxAutomaticRedirections = options?.Value.MaximumAllowedRedirects ?? 5;
+			((HttpClientHandler)PrimaryHandler).MaxAutomaticRedirections = options.Value.MaximumAllowedRedirects;
 
 			return CreateHandlerPipeline(PrimaryHandler, AdditionalHandlers);
 		}
