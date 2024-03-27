@@ -30,8 +30,8 @@ namespace DotnetSpider.Sample.samples
 		{
 			var builder = Builder.CreateDefaultBuilder<BaseUsageSpider>(x =>
 			{
-				x.Batch = 500;
-				x.Speed = 500;
+				x.Batch = 1;
+				x.Speed = 1;
 				x.Depth = 1000;
 			});
 			builder.UseSerilog(/*(_, configuration) => configuration.WriteTo.File("log.txt", LogEventLevel.Information, flushToDiskInterval: TimeSpan.FromSeconds(1))*/);
@@ -101,12 +101,13 @@ namespace DotnetSpider.Sample.samples
 				response.RequestHash = request.Hash;
 				response.Version = message.Version;
 
+				await context.CloseAsync();
+				await context.DisposeAsync();
+
 				return response;
 
 				byte[] bytes = await re.BodyAsync();
 				var html = await page.MainFrame.ContentAsync();
-
-				await context.CloseAsync();
 
 				return new Response();
 			}
