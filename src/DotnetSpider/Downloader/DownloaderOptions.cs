@@ -5,11 +5,16 @@
 		/// <summary>
 		/// Should the downloader track redirects
 		/// </summary>
-		public bool TrackRedirects { get; set; }
+		public bool TrackRedirects { get; set; } = true;
 
 		/// <summary>
 		/// Maximum number of allowed redirects
 		/// </summary>
-		public int MaximumAllowedRedirects { get; set; }
+		public int MaximumAllowedRedirects { get; set; } = 5;
+
+		/// <summary>
+		/// The playwright browser to use
+		/// </summary>
+		public PlaywrightBrowser Browser { get; set; } = PlaywrightBrowser.Chromium;
 	}
 }

@@ -28,7 +28,7 @@ namespace DotnetSpider.Downloader
 			HttpClientFactory = httpClientFactory;
 			Logger = logger;
 			_proxyService = proxyService;
-			_allowedRedirects = options?.Value.MaximumAllowedRedirects ?? 5;
+			_allowedRedirects = options.Value.MaximumAllowedRedirects;
 			UseProxy = !(_proxyService is EmptyProxyService);
 		}
 
