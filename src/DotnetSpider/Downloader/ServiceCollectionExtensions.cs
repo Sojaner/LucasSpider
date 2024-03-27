@@ -55,9 +55,9 @@ namespace DotnetSpider.Downloader
 					{
 						return provider.GetService<IOptions<DownloaderOptions>>().Value.Browser switch
 						{
-							PlaywrightBrowser.Chromium => Playwright.CreateAsync().Result.Chromium,
-							PlaywrightBrowser.Firefox => Playwright.CreateAsync().Result.Firefox,
-							PlaywrightBrowser.WebKit => Playwright.CreateAsync().Result.Webkit,
+							PlaywrightBrowser.Chromium => Playwright.CreateAsync().Result.Chromium.LaunchAsync().Result,
+							PlaywrightBrowser.Firefox => Playwright.CreateAsync().Result.Firefox.LaunchAsync().Result,
+							PlaywrightBrowser.WebKit => Playwright.CreateAsync().Result.Webkit.LaunchAsync().Result,
 							_ => throw new NotSupportedException("Not supported browser")
 						};
 					});
