@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -17,7 +16,6 @@ using DotnetSpider.Infrastructure;
 using DotnetSpider.Scheduler;
 using DotnetSpider.Scheduler.Component;
 using DotnetSpider.Selector;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -36,14 +34,13 @@ namespace DotnetSpider.Sample.samples
 				x.Speed = 500;
 				x.Depth = 1000;
 			});
-			builder.ConfigureServices(collection => collection.AddSingleton(async _ => await (await Playwright.CreateAsync()).Chromium.LaunchAsync()));
 			builder.UseSerilog(/*(_, configuration) => configuration.WriteTo.File("log.txt", LogEventLevel.Information, flushToDiskInterval: TimeSpan.FromSeconds(1))*/);
-			builder.UseDownloader<HttpClientDownloader>();
+			builder.UseDownloader<MyDownloader>();
 			builder.UseQueueDistinctBfsScheduler<HashSetDuplicateRemover>();
 			await builder.Build().RunAsync();
 		}
 
-		class MyDownloader(Task<IBrowser> browser):IDownloader
+		class MyDownloader(IBrowser browser):IDownloader
 		{
 			static async Task<HttpResponseMessage> ConvertIResponseToHttpResponse(IResponse playwrightResponse)
 			{
@@ -84,7 +81,7 @@ namespace DotnetSpider.Sample.samples
 
 			public async Task<Response> DownloadAsync(Request request)
 			{
-				var context = await (await browser).NewContextAsync();
+				var context = await browser.NewContextAsync();
 
 				var page = await context.NewPageAsync();
 				List<IRequest> requests = new();
