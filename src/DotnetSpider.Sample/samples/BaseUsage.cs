@@ -38,7 +38,7 @@ namespace DotnetSpider.Sample.samples
 			});
 			builder.ConfigureServices(collection => collection.AddSingleton(async _ => await (await Playwright.CreateAsync()).Chromium.LaunchAsync()));
 			builder.UseSerilog(/*(_, configuration) => configuration.WriteTo.File("log.txt", LogEventLevel.Information, flushToDiskInterval: TimeSpan.FromSeconds(1))*/);
-			builder.UseDownloader<MyDownloader>();
+			builder.UseDownloader<HttpClientDownloader>();
 			builder.UseQueueDistinctBfsScheduler<HashSetDuplicateRemover>();
 			await builder.Build().RunAsync();
 		}
@@ -64,6 +64,24 @@ namespace DotnetSpider.Sample.samples
 				return httpResponse;
 			}
 
+			private static IEnumerable<IRequest> GetRedirects(IResponse response)
+			{
+				var list = new List<IRequest>{response.Request};
+
+				var parent = response.Request.RedirectedFrom;
+
+				while (parent != null)
+				{
+					list.Add(parent);
+
+					parent = parent.RedirectedFrom;
+				}
+
+				list.Reverse();
+
+				return list;
+			}
+
 			public async Task<Response> DownloadAsync(Request request)
 			{
 				var context = await (await browser).NewContextAsync();
@@ -76,6 +94,8 @@ namespace DotnetSpider.Sample.samples
 				await page.WaitForLoadStateAsync();
 				// requests.Where(x => x.Frame == page.MainFrame && x.IsNavigationRequest && x.RedirectedTo == null && x.ResourceType == "document")
 				IResponse re = await requests.Single(x => x.Frame == page.MainFrame && x.IsNavigationRequest && x.RedirectedTo == null && x.ResourceType == "document").ResponseAsync();
+
+				var timing = re != null ? GetRedirects(re).Select(req => req.Timing.ResponseStart) : [];
 
 				var message = await ConvertIResponseToHttpResponse(re);
 
