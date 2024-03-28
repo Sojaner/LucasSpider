@@ -68,6 +68,7 @@ namespace DotnetSpider.Downloader
 		{
 			var list = new List<RedirectResponse>();
 			var parent = response.Request.RedirectedFrom;
+			var responseStart = response.Request.Timing.ResponseStart;
 
 			while (parent != null)
 			{
@@ -78,7 +79,8 @@ namespace DotnetSpider.Downloader
 					{
 						RequestUri = new Uri(parent.Url),
 						StatusCode = (HttpStatusCode)parentResponse.Status,
-						TimeToHeaders = TimeSpan.FromMilliseconds(parent.Timing.ResponseStart)
+						TimeToHeaders = TimeSpan.FromMilliseconds(parent.Timing.ResponseStart >= 0 ?
+							parent.Timing.ResponseStart : responseStart)
 					});
 					parent = parent.RedirectedFrom;
 				}
