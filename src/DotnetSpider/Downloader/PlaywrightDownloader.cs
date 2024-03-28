@@ -1,14 +1,16 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Net;
 using System.Threading.Tasks;
 using DotnetSpider.Http;
+using Microsoft.Extensions.Options;
 using Microsoft.Playwright;
 
 namespace DotnetSpider.Downloader
 {
-	public class PlaywrightDownloader(IBrowser browser) : IDownloader
+	public class PlaywrightDownloader(IBrowser browser, IOptions<DownloaderOptions> options) : IDownloader
 	{
 		public async Task<Response> DownloadAsync(Request request)
 		{
@@ -22,31 +24,38 @@ namespace DotnetSpider.Downloader
 
 				var page = await context.NewPageAsync();
 				var requests = new List<IRequest>();
-				page.Request += (_, r) => requests.Add(r);
+				page.Request += onRequest;
+				var stopwatch = Stopwatch.StartNew();
 				await page.GotoAsync(request.RequestUri.AbsoluteUri);
+				stopwatch.Stop();
 
 				await page.WaitForLoadStateAsync();
-				var document = await requests
-					.Single(r => r.Frame == page.MainFrame && r.IsNavigationRequest &&
-					             r.RedirectedTo == null && r.ResourceType == "document")
-					.ResponseAsync();
+				page.Request -= onRequest;
+				var document = await (requests
+					.SingleOrDefault(r => r.Frame == page.MainFrame && r.IsNavigationRequest &&
+					                      r.RedirectedTo == null && r.ResourceType == "document")?
+					.ResponseAsync() ?? Task.FromResult<IResponse>(null));
 
 				if (document == null)
 				{
-					throw new Exception("No Response");
+					return Response.CreateFailedResponse(ResponseReasonPhraseConstants.NoResponse, request.Hash);
 				}
 
-				var redirects = await GetRedirectsAsync(document);
+				var redirects = (await GetRedirectsAsync(document)).ToList();
 				var httpResponse = await ConvertIResponseToHttpResponse(document);
 
 				var response = await httpResponse.ToResponseAsync();
 				response.Elapsed = TimeSpan.FromMilliseconds(document.Request.Timing.ResponseEnd);
 				response.RequestHash = request.Hash;
 				response.Version = httpResponse.Version;
+				response.Redirects = options.Value.TrackRedirects ? redirects : [];
+				response.TimeToHeaders = TimeSpan.FromMilliseconds(document.Request.Timing.ResponseStart);
+				response.TargetUrl = new Uri(document.Url);
 
 				await context.CloseAsync();
 
 				return response;
+				void onRequest(object _, IRequest r) => requests.Add(r);
 			}
 			catch (Exception e)
 			{
@@ -62,11 +71,11 @@ namespace DotnetSpider.Downloader
 
 			while (parent != null)
 			{
-				var patchingResponse = await parent.ResponseAsync();
+				var parentResponse = await parent.ResponseAsync();
 				list.Add(new RedirectResponse
 				{
 					RequestUri = new Uri(parent.Url),
-					StatusCode = (HttpStatusCode)(patchingResponse?.Status ?? 0),
+					StatusCode = (HttpStatusCode)(parentResponse?.Status ?? 0),
 					ResponseTime = parent.Timing.ResponseStart >= 0 ?
 						TimeSpan.FromMilliseconds(parent.Timing.ResponseStart) :
 						null
