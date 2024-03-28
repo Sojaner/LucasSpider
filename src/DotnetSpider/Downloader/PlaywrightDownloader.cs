@@ -72,13 +72,20 @@ namespace DotnetSpider.Downloader
 			while (parent != null)
 			{
 				var parentResponse = await parent.ResponseAsync();
-				list.Add(new RedirectResponse
+				if (parentResponse != null)
 				{
-					RequestUri = new Uri(parent.Url),
-					StatusCode = (HttpStatusCode)(parentResponse?.Status ?? 0),
-					TimeToHeaders = TimeSpan.FromMilliseconds(parent.Timing.ResponseStart)
-				});
-				parent = parent.RedirectedFrom;
+					list.Add(new RedirectResponse
+					{
+						RequestUri = new Uri(parent.Url),
+						StatusCode = (HttpStatusCode)parentResponse.Status,
+						TimeToHeaders = TimeSpan.FromMilliseconds(parent.Timing.ResponseStart)
+					});
+					parent = parent.RedirectedFrom;
+				}
+				else
+				{
+					break;
+				}
 			}
 
 			list.Reverse();
