@@ -149,9 +149,11 @@ namespace DotnetSpider.Http
 		public static Response CreateFailedResponse(Exception exception, string requestHash)
 		{
 			var isTimeout = exception is TaskCanceledException or TimeoutException;
+			var isHttpRequestException = exception is HttpRequestException;
 			var message = exception.Message;
 			var isRedirects = _redirectsRegex.IsMatch(message);
-			return CreateFailedResponse(isTimeout ? ResponseReasonPhraseConstants.ConnectionTimedOut : isRedirects ? ResponseReasonPhraseConstants.TooManyRedirects : message, requestHash);
+			return CreateFailedResponse(isTimeout ? ResponseReasonPhraseConstants.ConnectionTimedOut : isRedirects ?
+				ResponseReasonPhraseConstants.TooManyRedirects : isHttpRequestException ? ResponseReasonPhraseConstants.NoResponse : message, requestHash);
 		}
 
 		public static Response CreateFailedResponse(string message, string requestHash)
