@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using DotnetSpider.DataFlow;
 using DotnetSpider.DataFlow.Parser;
 using DotnetSpider.Downloader;
-using DotnetSpider.Http;
 using DotnetSpider.Infrastructure;
 using DotnetSpider.Scheduler;
 using DotnetSpider.Scheduler.Component;
@@ -29,15 +28,18 @@ namespace DotnetSpider.Sample.samples
 			{
 				x.Batch = 1;
 				x.Speed = 1;
-				x.Depth = 1000;
+				x.Depth = 1;
+				x.DefaultTimeout = 5000;
+				x.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36";
+				x.RetriedTimes = 0;
 			});
 			builder.UseSerilog();
-			builder.UseDownloader<PlaywrightDownloader>(options => options.BrowserType = PlaywrightBrowserType.Firefox);
+			builder.UseDownloader<PlaywrightDownloader>(options => options.BrowserName = PlaywrightBrowserName.Chromium);
 			builder.UseQueueDistinctBfsScheduler<HashSetDuplicateRemover>();
 			await builder.Build().RunAsync();
 		}
 
-		private const string Domain = "www.ledigajobb.se";
+		private const string Domain = "httpstat.us";
 
 		class MyDataParser : DataParser
 		{
@@ -80,21 +82,20 @@ namespace DotnetSpider.Sample.samples
 			ILogger<Spider> logger) : base(
 			options, services, logger)
 		{
-			OnRequestError += async (sender, args) =>
+			OnRequestError += async (r, re) =>
 			{
 				await Task.CompletedTask;
 			};
 
-			OnRequestTimeout += (sender) =>
+			OnRequestTimeout += _ =>
 			{
 			};
 		}
 
 		protected override async Task InitializeAsync(CancellationToken stoppingToken = default)
 		{
-			var request = new Request($"http://{Domain}/");
-			request.Headers.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36";
-			await AddRequestsAsync(request);
+			//await AddRequestsAsync("https://httpstat.us/200?sleep=10000");
+			await AddRequestsAsync("https://httpstat.us/504");
 			AddDataFlow(new MyDataParser());
 			AddDataFlow(new ConsoleStorage());
 		}
