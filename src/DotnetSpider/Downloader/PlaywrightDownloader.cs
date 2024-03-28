@@ -13,30 +13,46 @@ namespace DotnetSpider.Downloader
 	{
 		public async Task<Response> DownloadAsync(Request request)
 		{
-			await using var context = await browser.NewContextAsync();
+			try
+			{
+				await using var context = await browser.NewContextAsync(new BrowserNewContextOptions
+				{
+					UserAgent = request.Headers.UserAgent
+				});
+				context.SetDefaultNavigationTimeout(request.Timeout);
 
-			var page = await context.NewPageAsync();
-			var requests = new List<IRequest>();
-			page.Request += (_, r) => requests.Add(r);
-			await page.GotoAsync(request.RequestUri.AbsoluteUri);
+				var page = await context.NewPageAsync();
+				var requests = new List<IRequest>();
+				page.Request += (_, r) => requests.Add(r);
+				await page.GotoAsync(request.RequestUri.AbsoluteUri);
 
-			await page.WaitForLoadStateAsync();
-			var document = await requests
-				.Single(r => r.Frame == page.MainFrame && r.IsNavigationRequest &&
-				             r.RedirectedTo == null && r.ResourceType == "document")
-				.ResponseAsync();
+				await page.WaitForLoadStateAsync();
+				var document = await requests
+					.Single(r => r.Frame == page.MainFrame && r.IsNavigationRequest &&
+					             r.RedirectedTo == null && r.ResourceType == "document")
+					.ResponseAsync();
 
-			var redirects = document != null ? await GetRedirectsAsync(document) : [];
-			var httpResponse = await ConvertIResponseToHttpResponse(document);
+				if (document == null)
+				{
+					throw new Exception("No Response");
+				}
 
-			var response = await httpResponse.ToResponseAsync();
-			response.Elapsed = TimeSpan.FromMilliseconds(document.Request.Timing.ResponseEnd);
-			response.RequestHash = request.Hash;
-			response.Version = httpResponse.Version;
+				var redirects = await GetRedirectsAsync(document);
+				var httpResponse = await ConvertIResponseToHttpResponse(document);
 
-			await context.CloseAsync();
+				var response = await httpResponse.ToResponseAsync();
+				response.Elapsed = TimeSpan.FromMilliseconds(document.Request.Timing.ResponseEnd);
+				response.RequestHash = request.Hash;
+				response.Version = httpResponse.Version;
 
-			return response;
+				await context.CloseAsync();
+
+				return response;
+			}
+			catch (Exception e)
+			{
+				return Response.CreateFailedResponse(e, request.Hash);
+			}
 		}
 
 		private static async Task<IEnumerable<RedirectResponse>> GetRedirectsAsync(IResponse response)
@@ -50,7 +66,7 @@ namespace DotnetSpider.Downloader
 				list.Add(new RedirectResponse
 				{
 					RequestUri = new Uri(parent.Url),
-					StatusCode = (HttpStatusCode?)patchingResponse?.Status,
+					StatusCode = (HttpStatusCode)(patchingResponse?.Status ?? 0),
 					ResponseTime = parent.Timing.ResponseStart >= 0 ?
 						TimeSpan.FromMilliseconds(parent.Timing.ResponseStart) :
 						null

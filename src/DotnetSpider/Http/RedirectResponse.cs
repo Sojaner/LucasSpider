@@ -14,7 +14,7 @@ namespace DotnetSpider.Http
 		/// <summary>
 		/// The status code of the response
 		/// </summary>
-		public HttpStatusCode? StatusCode { get; set; }
+		public HttpStatusCode StatusCode { get; set; }
 
 		/// <summary>
 		/// The time it took to get the response

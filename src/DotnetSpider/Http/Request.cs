@@ -28,7 +28,7 @@ namespace DotnetSpider.Http
 		private IDictionary<string, object> _properties;
 
 		/// <summary>
-		/// Requested hash
+		/// Request hash
 		/// </summary>
 		public string Hash { get; set; }
 
@@ -38,8 +38,9 @@ namespace DotnetSpider.Http
 		public string Owner { get; set; }
 
 		/// <summary>
-		/// Requested Timeout time
+		/// Request timeout in milliseconds
 		/// </summary>
+		/// <remarks>The timeout cannot be shorter than 2000 milliseconds<br/>Default is <b>30000</b></remarks>
 		public int Timeout { get; set; } = 30000;
 
 		/// <summary>

@@ -23,7 +23,7 @@ namespace DotnetSpider
 		public int EmptySleepTime { get; set; } = 60;
 
 		/// <summary>
-		/// Crawler collection speed, 1 means one request per second, 0.5 means 0.5 requests per second, 5 means 5 requests per second
+		/// Crawler collection speed, 1 means one request per second, 0.5 means 1 requests every other seconds, 5 means 5 requests per second
 		/// </summary>
 		public double Speed { get; set; } = 1;
 
@@ -46,5 +46,17 @@ namespace DotnetSpider
 		/// The time interval for getting new codes
 		/// </summary>
 		public int RefreshProxy { get; set; } = 30;
+
+		/// <summary>
+		/// The default request timeout in milliseconds
+		/// </summary>
+		/// <remarks>This can be overriden per request through overriding the <b>ConfigureRequest</b> method or directly providing preconfigured requests to the <b>AddRequestsAsync</b> method<br/>The timeout cannot be shorter than 2000 milliseconds<br/>Default is <b>30000</b></remarks>
+		public int DefaultTimeout { get; set; } = 30000;
+
+		/// <summary>
+		/// The user agent to use for requests
+		/// </summary>
+		/// <remarks>This can be overriden per request through overriding the <b>ConfigureRequest</b> method or directly providing preconfigured requests to the <b>AddRequestsAsync</b> method<br/>Default is <b>null</b></remarks>
+		public string UserAgent { get; set; } = null;
 	}
 }

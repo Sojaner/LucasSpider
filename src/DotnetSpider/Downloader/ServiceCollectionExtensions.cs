@@ -53,11 +53,11 @@ namespace DotnetSpider.Downloader
 				{
 					collection.AddSingleton(provider =>
 					{
-						return provider.GetService<IOptions<DownloaderOptions>>().Value.BrowserType switch
+						return provider.GetService<IOptions<DownloaderOptions>>().Value.BrowserName switch
 						{
-							PlaywrightBrowserType.Chromium => Playwright.CreateAsync().Result.Chromium.LaunchAsync().Result,
-							PlaywrightBrowserType.Firefox => Playwright.CreateAsync().Result.Firefox.LaunchAsync().Result,
-							PlaywrightBrowserType.WebKit => Playwright.CreateAsync().Result.Webkit.LaunchAsync().Result,
+							PlaywrightBrowserName.Chromium => Playwright.CreateAsync().Result.Chromium.LaunchAsync().Result,
+							PlaywrightBrowserName.Firefox => Playwright.CreateAsync().Result.Firefox.LaunchAsync().Result,
+							PlaywrightBrowserName.WebKit => Playwright.CreateAsync().Result.Webkit.LaunchAsync().Result,
 							_ => throw new NotSupportedException("Not supported browser")
 						};
 					});

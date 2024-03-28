@@ -3,7 +3,7 @@
 	/// <summary>
 	/// The playwright browser to use
 	/// </summary>
-	public enum PlaywrightBrowserType
+	public enum PlaywrightBrowserName
 	{
 		Chromium,
 		Firefox,
