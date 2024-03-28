@@ -68,7 +68,7 @@ namespace DotnetSpider.Downloader
 		{
 			var list = new List<RedirectResponse>();
 			var parent = response.Request.RedirectedFrom;
-			var responseStart = response.Request.Timing.ResponseStart;
+			var responseStart = response.Request.Timing.ResponseStart; // This is a fallback for WebKit browser since it doesn't have response start time in the redirect chain
 
 			while (parent != null)
 			{
