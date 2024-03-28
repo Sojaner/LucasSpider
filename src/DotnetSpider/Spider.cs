@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -79,6 +80,11 @@ namespace DotnetSpider
 				throw new SpiderException("Speed should not be larger than 500");
 			}
 
+			if (Options.DefaultTimeout < 2000)
+			{
+				throw new SpiderException("The DefaultTimeout cannot be shorter than 2000 milliseconds");
+			}
+
 			_services = services;
 			_requestedQueue = new RequestedQueue();
 			_requestSuppliers = new List<IRequestSupplier>();
@@ -155,7 +161,7 @@ namespace DotnetSpider
 				return 0;
 			}
 
-			return await AddRequestsAsync(requests.Select(x => new Request(x)));
+			return await AddRequestsAsync(requests.Select(uri => new Request(uri) { Timeout = Options.DefaultTimeout, Headers = { UserAgent = Options.UserAgent }}));
 		}
 
 		protected async Task<int> AddRequestsAsync(params Request[] requests)

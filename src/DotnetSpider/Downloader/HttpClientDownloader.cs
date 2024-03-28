@@ -106,14 +106,7 @@ namespace DotnetSpider.Downloader
 			}
 			catch (Exception e)
 			{
-				Logger.LogError($"{request.RequestUri} download failed: {e}");
-				return new Response
-				{
-					RequestHash = request.Hash,
-					StatusCode = HttpStatusCode.Gone,
-					ReasonPhrase = e.ToString(),
-					Version = HttpVersion.Version11
-				};
+				return Response.CreateFailedResponse(e, request.Hash);
 			}
 			finally
 			{
@@ -146,7 +139,17 @@ namespace DotnetSpider.Downloader
 				name = request.RequestUri.Host;
 			}
 
-			return HttpClientFactory.CreateClient(name);
+			var client = HttpClientFactory.CreateClient(name);
+
+			client.Timeout = TimeSpan.FromMilliseconds(request.Timeout);
+
+			if (!string.IsNullOrEmpty(request.Headers.UserAgent))
+			{
+				client.DefaultRequestHeaders.UserAgent.ParseAdd(request.Headers.UserAgent);
+			}
+			
+
+			return client;
 		}
 
 		protected virtual Task<Response> HandleAsync(Request request, HttpResponseMessage responseMessage)

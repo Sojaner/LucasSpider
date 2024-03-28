@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DotnetSpider.Http
 {
@@ -40,10 +41,14 @@ namespace DotnetSpider.Http
 		}
 
 		/// <summary>
-		/// Return status code
+		/// Response status code
 		/// </summary>
+		/// <remarks>The <b>StatusCode</b> will be <b>4</b> in case of a <b>Connection Timeout</b>, and <b>0</b> in case of <b>No Response</b></remarks>
 		public HttpStatusCode StatusCode { get; set; }
 
+		/// <summary>
+		/// Response reason phrase
+		/// </summary>
 		public string ReasonPhrase { get; set; }
 
 		/// <summary>
@@ -136,6 +141,18 @@ namespace DotnetSpider.Http
 			HeaderUtilities.DumpHeaders(sb, _trailingHeaders);
 
 			return sb.ToString();
+		}
+
+		public static Response CreateFailedResponse(Exception e, string requestHash)
+		{
+			var isTimeout = e is TaskCanceledException or TimeoutException;
+			return new Response
+			{
+				RequestHash = requestHash,
+				StatusCode = (HttpStatusCode)(isTimeout ? 4 : 0),
+				ReasonPhrase = isTimeout ? "Request Timeout" : e.ToString(),
+				Version = HttpVersion.Version11
+			};
 		}
 	}
 }
