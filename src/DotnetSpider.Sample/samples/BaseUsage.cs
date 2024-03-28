@@ -34,7 +34,7 @@ namespace DotnetSpider.Sample.samples
 				x.RetriedTimes = 0;
 			});
 			builder.UseSerilog();
-			builder.UseDownloader<PlaywrightDownloader>(options => options.BrowserName = PlaywrightBrowserName.Chromium);
+			builder.UseDownloader<HttpClientDownloader>(options => options.BrowserName = PlaywrightBrowserName.WebKit);
 			builder.UseQueueDistinctBfsScheduler<HashSetDuplicateRemover>();
 			await builder.Build().RunAsync();
 		}
@@ -95,7 +95,7 @@ namespace DotnetSpider.Sample.samples
 		protected override async Task InitializeAsync(CancellationToken stoppingToken = default)
 		{
 			//await AddRequestsAsync("https://httpstat.us/200?sleep=10000");
-			await AddRequestsAsync("https://httpstat.us/504");
+			await AddRequestsAsync($"http://{Domain}");
 			AddDataFlow(new MyDataParser());
 			AddDataFlow(new ConsoleStorage());
 		}
