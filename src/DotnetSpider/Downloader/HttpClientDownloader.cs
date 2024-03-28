@@ -74,7 +74,7 @@ namespace DotnetSpider.Downloader
 						redirectResponses.Add(new RedirectResponse
 						{
 							StatusCode = statusCode,
-							ResponseTime = TimeSpan.FromMilliseconds(headersTime),
+							TimeToHeaders = TimeSpan.FromMilliseconds(headersTime),
 							RequestUri = targetUrl
 						});
 					}
