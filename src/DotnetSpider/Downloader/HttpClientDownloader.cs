@@ -39,24 +39,16 @@ namespace DotnetSpider.Downloader
 			try
 			{
 				var httpRequestMessage = request.ToHttpRequestMessage();
-
 				httpRequestMessages.Add(httpRequestMessage);
 
 				var httpClient = await CreateClientAsync(request);
-
 				var redirects = 0;
-
 				var stopwatch = new Stopwatch();
-
-				HttpStatusCode statusCode;
-
 				long headersTime;
-
 				HttpResponseMessage httpResponseMessage;
-
 				var redirectResponses = new List<RedirectResponse>();
-
 				Uri targetUrl;
+				bool redirected;
 
 				do
 				{
@@ -64,14 +56,17 @@ namespace DotnetSpider.Downloader
 					httpResponseMessage = await SendAsync(httpClient, httpRequestMessage);
 					headersTime = stopwatch.ElapsedMilliseconds;
 
+					var statusCode = httpResponseMessage.StatusCode;
+					var location = httpResponseMessage.Headers.Location;
+
 					httpResponseMessages.Add(httpResponseMessage);
 					redirects++;
-					statusCode = httpResponseMessage.StatusCode;
 					targetUrl = httpResponseMessage.RequestMessage.RequestUri;
+					redirected = (statusCode is >= (HttpStatusCode)301 and <= (HttpStatusCode)308) &&
+					             location != null;
 
-					if (statusCode is HttpStatusCode.Moved or HttpStatusCode.MovedPermanently && redirects <= _allowedRedirects)
+					if (redirected && redirects <= _allowedRedirects)
 					{
-						var location = httpResponseMessage.Headers.Location;
 						httpRequestMessage = request.Clone().ToHttpRequestMessage();
 						httpRequestMessage.RequestUri = location;
 						httpRequestMessages.Add(httpRequestMessage);
@@ -79,12 +74,16 @@ namespace DotnetSpider.Downloader
 						redirectResponses.Add(new RedirectResponse
 						{
 							StatusCode = statusCode,
-							ResponseTime = TimeSpan.FromMilliseconds(headersTime),
+							TimeToHeaders = TimeSpan.FromMilliseconds(headersTime),
 							RequestUri = targetUrl
 						});
 					}
+					else if (redirected && redirects > _allowedRedirects)
+					{
+						return Response.CreateFailedResponse(ResponseReasonPhraseConstants.TooManyRedirects, request.Hash);
+					}
 
-				} while (statusCode is HttpStatusCode.Moved or HttpStatusCode.MovedPermanently && redirects <= _allowedRedirects);
+				} while (redirected);
 
 				var response = await HandleAsync(request, httpResponseMessage);
 				if (response != null)
@@ -94,26 +93,20 @@ namespace DotnetSpider.Downloader
 				}
 
 				response = await httpResponseMessage.ToResponseAsync();
+				stopwatch.Stop();
+
 				response.Elapsed = stopwatch.Elapsed;
 				response.RequestHash = request.Hash;
 				response.Version = httpResponseMessage.Version;
 				response.Redirects = redirectResponses;
 				response.TimeToHeaders = TimeSpan.FromMilliseconds(headersTime);
 				response.TargetUrl = targetUrl;
-				stopwatch.Stop();
 
 				return response;
 			}
 			catch (Exception e)
 			{
-				Logger.LogError($"{request.RequestUri} download failed: {e}");
-				return new Response
-				{
-					RequestHash = request.Hash,
-					StatusCode = HttpStatusCode.Gone,
-					ReasonPhrase = e.ToString(),
-					Version = HttpVersion.Version11
-				};
+				return Response.CreateFailedResponse(e, request.Hash);
 			}
 			finally
 			{
@@ -146,7 +139,14 @@ namespace DotnetSpider.Downloader
 				name = request.RequestUri.Host;
 			}
 
-			return HttpClientFactory.CreateClient(name);
+			var client = HttpClientFactory.CreateClient(name);
+			client.Timeout = TimeSpan.FromMilliseconds(request.Timeout);
+			if (!string.IsNullOrEmpty(request.Headers.UserAgent))
+			{
+				client.DefaultRequestHeaders.UserAgent.ParseAdd(request.Headers.UserAgent);
+			}
+			
+			return client;
 		}
 
 		protected virtual Task<Response> HandleAsync(Request request, HttpResponseMessage responseMessage)

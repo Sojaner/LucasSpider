@@ -42,7 +42,7 @@ namespace DotnetSpider.Infrastructure
 
 			var options = Services.GetService<IOptions<DownloaderOptions>>();
 
-			((HttpClientHandler)PrimaryHandler).AllowAutoRedirect = options.Value.TrackRedirects;
+			((HttpClientHandler)PrimaryHandler).AllowAutoRedirect = !options.Value.TrackRedirects;
 
 			((HttpClientHandler)PrimaryHandler).MaxAutomaticRedirections = options.Value.MaximumAllowedRedirects;
 
