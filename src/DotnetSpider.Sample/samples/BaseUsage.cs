@@ -34,12 +34,12 @@ namespace DotnetSpider.Sample.samples
 				x.RetriedTimes = 0;
 			});
 			builder.UseSerilog();
-			builder.UseDownloader<HttpClientDownloader>(options => options.BrowserName = PlaywrightBrowserName.WebKit);
+			builder.UseDownloader<PlaywrightDownloader>(options => options.BrowserName = PlaywrightBrowserName.WebKit);
 			builder.UseQueueDistinctBfsScheduler<HashSetDuplicateRemover>();
 			await builder.Build().RunAsync();
 		}
 
-		private const string Domain = "httpstat.us";
+		private const string Domain = "www.ledigajobb.nu";
 
 		class MyDataParser : DataParser
 		{
@@ -72,8 +72,8 @@ namespace DotnetSpider.Sample.samples
 
 			public override Task InitializeAsync()
 			{
-				AddRequiredValidator(request => request.RequestUri.Scheme is "http" or "https" && !MimeTypePredictor.IsKnownExtension(request.RequestUri) && request.RequestUri.DnsSafeHost == Domain);
-				AddFollowRequestQuerier(Selectors.XPath("//a")); // //a[not(@rel='nofollow')]
+				//AddRequiredValidator(request => request.RequestUri.Scheme is "http" or "https" && !MimeTypePredictor.IsKnownExtension(request.RequestUri) && request.RequestUri.DnsSafeHost == Domain);
+				//AddFollowRequestQuerier(Selectors.XPath("//a")); // //a[not(@rel='nofollow')]
 				return Task.CompletedTask;
 			}
 		}
