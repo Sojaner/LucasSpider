@@ -8,7 +8,7 @@ namespace DotnetSpider.Http
 	{
 		public static async Task<Response> ToResponseAsync(this HttpResponseMessage httpResponseMessage)
 		{
-			var response = new Response { StatusCode = httpResponseMessage.StatusCode };
+			var response = new Response { StatusCode = httpResponseMessage.StatusCode, ReasonPhrase = httpResponseMessage.ReasonPhrase };
 
 			foreach (var header in httpResponseMessage.Headers)
 			{

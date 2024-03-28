@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -63,10 +64,9 @@ namespace DotnetSpider.Downloader
 			}
 		}
 
-		private static IEnumerable<IRequest> GetRedirects(IResponse response)
+		private static async Task<IEnumerable<RedirectResponse>> GetRedirectsAsync(IResponse response)
 		{
-			var list = new List<IRequest> { response.Request };
-
+			var list = new List<RedirectResponse>();
 			var parent = response.Request.RedirectedFrom;
 
 			while (parent != null)
@@ -84,7 +84,6 @@ namespace DotnetSpider.Downloader
 			}
 
 			list.Reverse();
-
 			return list;
 		}
 
@@ -98,8 +97,6 @@ namespace DotnetSpider.Downloader
 
 			foreach (var header in playwrightResponse.Headers)
 			{
-				// Playwright response headers are stored as dictionary.
-				// Convert them to HTTP headers.
 				httpResponse.Content.Headers.TryAddWithoutValidation(header.Key, header.Value);
 				httpResponse.Headers.TryAddWithoutValidation(header.Key, header.Value);
 			}
