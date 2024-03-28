@@ -76,9 +76,7 @@ namespace DotnetSpider.Downloader
 				{
 					RequestUri = new Uri(parent.Url),
 					StatusCode = (HttpStatusCode)(parentResponse?.Status ?? 0),
-					ResponseTime = parent.Timing.ResponseStart >= 0 ?
-						TimeSpan.FromMilliseconds(parent.Timing.ResponseStart) :
-						null
+					TimeToHeaders = TimeSpan.FromMilliseconds(parent.Timing.ResponseStart)
 				});
 				parent = parent.RedirectedFrom;
 			}

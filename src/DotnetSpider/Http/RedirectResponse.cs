@@ -19,6 +19,6 @@ namespace DotnetSpider.Http
 		/// <summary>
 		/// The time it took to get the response
 		/// </summary>
-		public TimeSpan? ResponseTime { get; set; }
+		public TimeSpan TimeToHeaders { get; set; }
 	}
 }
