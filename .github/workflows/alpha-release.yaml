@@ -26,6 +26,7 @@ jobs:
     uses: ./.github/workflows/test-job.yaml
     with:
       stage: alpha
+    secrets: inherit
 
   publish:
     name: Publish
@@ -33,6 +34,7 @@ jobs:
     uses: ./.github/workflows/publish-job.yaml
     with:
       stage: alpha
+    secrets: inherit
 
   release:
     name: Release
