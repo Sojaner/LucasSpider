@@ -9,7 +9,7 @@ echo TZ=Europe/Stockholm > .env & docker-compose -f docker-compose.yaml -f socat
 # Windows/Linux
 ```shell
 # Set the proper TZ or skip to use the default (Asia/Shanghai)
-echo TZ=Europe/Stockholm > .env & docker-compose -f docker-compose.yaml -d
+echo TZ=Europe/Stockholm > .env & docker-compose -f docker-compose.yaml up -d
 ```
 
 `docker-compose` command for starting the `agent` and `portal` containers:
