@@ -27,7 +27,10 @@ jobs:
 
       - id: test
         run: |
-          cd .
+          cd ./docker-compose
+          echo TZ=Europe/Stockholm > .env
+          docker-compose -f docker-compose.yaml -d
+          cd ../src/DotnetSpider.Tests
           path="$(pwd)/test-results" && echo "::set-output name=path::$path"
           dotnet test --logger "trx;logfilename=$path/test-reports.trx"
 
