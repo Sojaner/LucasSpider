@@ -20,6 +20,13 @@ jobs:
           submodules: recursive
           token: ${{ github.TOKEN }}
 
+      - name: Start containers
+        run: |
+          cd ./docker-compose
+          echo TZ=Europe/Stockholm > .env
+          docker-compose -f docker-compose.yaml -d
+          cd ..
+
       - uses: actions/setup-dotnet@v2
         with:
           dotnet-version: |
