@@ -18,7 +18,7 @@ jobs:
         with:
           stage: beta
           reference: ${{ github.event.inputs.reference }}
-          token: ${{ github.TOKEN }}
+          token: ${{ github.token }}
 
   publish:
     name: Publish Package
