@@ -451,6 +451,8 @@ namespace LucasSpider
 								speed = Options.Speed;
 
 								bucket = CreateBucket(speed);
+
+								Logger.LogError($"{SpiderId} speed changed to {speed}");
 							}
 
 							if (!await PublishRequestMessagesAsync(request))
