@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -78,6 +77,11 @@ namespace LucasSpider
 			if (Options.Speed > 500)
 			{
 				throw new SpiderException("Speed should not be larger than 500");
+			}
+
+			if (Options.Speed < 0.01)
+			{
+				throw new SpiderException("Speed should not be smaller than 0.01");
 			}
 
 			if (Options.DefaultTimeout < 2000)
@@ -448,11 +452,13 @@ namespace LucasSpider
 							// Since the maximum speed is 500, the smallest division is 0.002, so the comparison is accurate to 0.001
 							if (Math.Abs(speed - Options.Speed) > 0.001)
 							{
+								var oldSpeed = speed;
+
 								speed = Options.Speed;
 
 								bucket = CreateBucket(speed);
 
-								Logger.LogError($"{SpiderId} speed changed to {speed}");
+								Logger.LogInformation($"{SpiderId} speed changed from {oldSpeed} to {speed}");
 							}
 
 							if (!await PublishRequestMessagesAsync(request))
