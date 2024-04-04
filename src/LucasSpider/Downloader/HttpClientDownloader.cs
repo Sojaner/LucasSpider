@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using LucasSpider.Extensions;
 using LucasSpider.Http;
 using LucasSpider.Infrastructure;
 using LucasSpider.Proxy;
@@ -68,7 +69,7 @@ namespace LucasSpider.Downloader
 					if (redirected && redirects <= _allowedRedirects)
 					{
 						httpRequestMessage = ((Request)request.Clone()).ToHttpRequestMessage();
-						httpRequestMessage.RequestUri = location;
+						httpRequestMessage.RequestUri = location.ToAbsoluteLocation(request.RequestUri);
 						httpRequestMessages.Add(httpRequestMessage);
 
 						redirectResponses.Add(new RedirectResponse
