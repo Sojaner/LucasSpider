@@ -1,6 +1,8 @@
+using System;
+
 namespace LucasSpider
 {
-	public class SpiderOptions
+	public class SpiderOptions: ICloneable
 	{
 		/// <summary>
 		/// Request queue count limit
@@ -58,5 +60,10 @@ namespace LucasSpider
 		/// </summary>
 		/// <remarks>This can be overriden per request through overriding the <b>ConfigureRequest</b> method or directly providing preconfigured requests to the <b>AddRequestsAsync</b> method<br/>Default is <b>null</b></remarks>
 		public string UserAgent { get; set; } = null;
+
+		public object Clone()
+		{
+			return MemberwiseClone();
+		}
 	}
 }

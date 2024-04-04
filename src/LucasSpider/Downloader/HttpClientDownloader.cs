@@ -67,7 +67,7 @@ namespace LucasSpider.Downloader
 
 					if (redirected && redirects <= _allowedRedirects)
 					{
-						httpRequestMessage = request.Clone().ToHttpRequestMessage();
+						httpRequestMessage = ((Request)request.Clone()).ToHttpRequestMessage();
 						httpRequestMessage.RequestUri = location;
 						httpRequestMessages.Add(httpRequestMessage);
 

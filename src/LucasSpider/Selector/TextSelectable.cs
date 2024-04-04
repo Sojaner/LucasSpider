@@ -87,5 +87,10 @@ namespace LucasSpider.Selector
 			selector.NotNull(nameof(selector));
 			return selector.SelectList(_text);
 		}
+
+		public override object Clone()
+		{
+			return new TextSelectable(_text);
+		}
 	}
 }

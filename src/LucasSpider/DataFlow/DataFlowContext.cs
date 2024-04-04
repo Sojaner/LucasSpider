@@ -11,7 +11,7 @@ namespace LucasSpider.DataFlow
 	/// <summary>
 	/// Data flow processor context
 	/// </summary>
-	public class DataFlowContext : IDisposable
+	public class DataFlowContext : IDisposable, ICloneable
 	{
 		private readonly Dictionary<string, dynamic> _properties = new();
 		private readonly Dictionary<object, dynamic> _data = new();
@@ -88,7 +88,7 @@ namespace LucasSpider.DataFlow
 		public Request CreateNewRequest(Uri uri)
 		{
 			uri.NotNull(nameof(uri));
-			var request = Request.Clone();
+			var request = (Request)Request.Clone();
 			request.RequestedTimes = 0;
 			request.Depth += 1;
 			request.Hash = null;
@@ -196,6 +196,36 @@ namespace LucasSpider.DataFlow
 
 			ObjectUtilities.DisposeSafely(Request);
 			ObjectUtilities.DisposeSafely(Response);
+		}
+
+		public object Clone()
+		{
+			var messageBytes = new byte[MessageBytes.Length];
+
+			Array.Copy(MessageBytes, messageBytes, MessageBytes.Length);
+
+			var context = new DataFlowContext(ServiceProvider, (SpiderOptions)Options.Clone(), (Request)Request.Clone(), (Response)Response.Clone())
+			{
+				Selectable = (ISelectable)Selectable.Clone(),
+				MessageBytes = messageBytes
+			};
+
+			foreach (var kv in _properties)
+			{
+				context.Add(kv.Key, kv.Value);
+			}
+
+			foreach (var kv in _data)
+			{
+				context.AddData(kv.Key, kv.Value);
+			}
+
+			foreach (var request in FollowRequests)
+			{
+				context.AddFollowRequests((Request)request.Clone());
+			}
+
+			return context;
 		}
 	}
 }

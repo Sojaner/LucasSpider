@@ -4,7 +4,7 @@ using System.Net;
 namespace LucasSpider.Http
 {
 	[Serializable]
-	public class RedirectResponse
+	public class RedirectResponse: ICloneable
 	{
 		/// <summary>
 		/// The request location that was redirected
@@ -20,5 +20,13 @@ namespace LucasSpider.Http
 		/// The time it took to get the response
 		/// </summary>
 		public TimeSpan TimeToHeaders { get; set; }
+
+		public object Clone()
+		{
+			return new RedirectResponse
+			{
+				TimeToHeaders = TimeToHeaders, RequestUri = RequestUri, StatusCode = StatusCode
+			};
+		}
 	}
 }

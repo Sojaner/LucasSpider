@@ -100,6 +100,11 @@ namespace LucasSpider.Selector
 			return selector.SelectList(_node.OuterHtml);
 		}
 
+		public override object Clone()
+		{
+			return new HtmlSelectable(_node);
+		}
+
 		public override SelectableType Type => SelectableType.Html;
 	}
 }

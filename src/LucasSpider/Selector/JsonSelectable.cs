@@ -48,6 +48,11 @@ namespace LucasSpider.Selector
             return selector.SelectList(_token.ToString());
         }
 
+        public override object Clone()
+        {
+			return new JsonSelectable(_token);
+        }
+
         public override SelectableType Type => SelectableType.Json;
     }
 }

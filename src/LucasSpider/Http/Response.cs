@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace LucasSpider.Http
 {
 	[Serializable]
-	public class Response : IDisposable
+	public class Response : IDisposable, ICloneable
 	{
 		private ResponseHeaders _headers;
 		private Version _version;
@@ -168,6 +168,40 @@ namespace LucasSpider.Http
 				ReasonPhrase = message,
 				Version = HttpVersion.Version11
 			};
+		}
+
+		public object Clone()
+		{
+			var response = new Response
+			{
+				Agent = Agent,
+				RequestHash = RequestHash,
+				Version = Version,
+				StatusCode = StatusCode,
+				ReasonPhrase = ReasonPhrase,
+				Content = (ByteArrayContent)((Content as IHttpContent)?.Clone()),
+				Elapsed = Elapsed,
+				TargetUrl = TargetUrl,
+				Redirects = [],
+				TimeToHeaders = TimeToHeaders
+			};
+
+			foreach (var kv in Headers)
+			{
+				response.Headers.Add(kv.Key, kv.Value);
+			}
+
+			foreach (var kv in TrailingHeaders)
+			{
+				response.TrailingHeaders.Add(kv.Key, kv.Value);
+			}
+
+			foreach (var redirect in Redirects)
+			{
+				response.Redirects.Add((RedirectResponse)redirect.Clone());
+			}
+
+			return response;
 		}
 	}
 }

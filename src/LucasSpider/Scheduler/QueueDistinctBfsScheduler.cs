@@ -54,7 +54,7 @@ namespace LucasSpider.Scheduler
 				_requests.RemoveRange(0, requests.Length);
 			}
 
-			return Task.FromResult(requests.Select(x => x.Clone()));
+			return Task.FromResult(requests.Select(x => (Request)x.Clone()));
 		}
 	}
 }

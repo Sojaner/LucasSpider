@@ -14,7 +14,7 @@ namespace LucasSpider.Http
 	/// Request
 	/// </summary>
 	[Serializable]
-	public class Request : IDisposable
+	public class Request : IDisposable, ICloneable
 	{
 		private static HashSet<string> _hashBodyMethods = new() { "DELETE", "POST", "PATCH", "PUT" };
 
@@ -243,7 +243,7 @@ namespace LucasSpider.Http
 		}
 
 
-		public Request Clone()
+		public object Clone()
 		{
 			var request = new Request
 			{

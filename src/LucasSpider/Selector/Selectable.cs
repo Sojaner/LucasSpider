@@ -76,5 +76,7 @@ namespace LucasSpider.Selector
         /// <param name="selector">Queryer</param>
         /// <returns>Query interface</returns>
         public abstract IEnumerable<ISelectable> SelectList(ISelector selector);
+
+        public abstract object Clone();
     }
 }

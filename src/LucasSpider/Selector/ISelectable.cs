@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -6,7 +7,7 @@ namespace LucasSpider.Selector
     /// <summary>
     /// Query interface
     /// </summary>
-    public interface ISelectable
+    public interface ISelectable: ICloneable
     {
         SelectableType Type { get; }
 
