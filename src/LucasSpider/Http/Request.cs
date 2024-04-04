@@ -59,6 +59,11 @@ namespace LucasSpider.Http
 		public int Depth { get; set; }
 
 		/// <summary>
+		/// The speed of crawler at the time of request
+		/// </summary>
+		public double Speed { get; set; }
+
+		/// <summary>
 		/// Creation time
 		/// </summary>
 		public long Timestamp { get; set; }

@@ -91,6 +91,7 @@ namespace LucasSpider.DataFlow
 			var request = (Request)Request.Clone();
 			request.RequestedTimes = 0;
 			request.Depth += 1;
+			request.Speed = Options.Speed;
 			request.Hash = null;
 			request.Timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 			request.RequestUri = uri;

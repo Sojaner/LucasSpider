@@ -4,6 +4,7 @@ namespace LucasSpider.Selector
     {
         Text,
         Html,
-        Json
+        Json,
+		NoContent
     }
 }
