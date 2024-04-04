@@ -21,7 +21,7 @@ namespace LucasSpider.Scheduler
 		}
 
 		/// <summary>
-		/// Reset deduplicator
+		/// Reset duplicate remover
 		/// </summary>
 		public virtual async Task ResetDuplicateCheckAsync()
 		{

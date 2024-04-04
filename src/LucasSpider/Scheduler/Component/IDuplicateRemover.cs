@@ -7,10 +7,10 @@ namespace LucasSpider.Scheduler.Component
 	public interface IDuplicateRemover : IDisposable
 	{
 		/// <summary>
-		/// Check whether the request is duplicate.
+		/// Check whether the request is duplicate
 		/// </summary>
 		/// <param name="request">Request</param>
-		/// <returns>Whether the request is duplicate.</returns>
+		/// <returns>Whether the request is duplicate</returns>
 		Task<bool> IsDuplicateAsync(Request request);
 
 		/// <summary>
@@ -20,7 +20,7 @@ namespace LucasSpider.Scheduler.Component
 		Task InitializeAsync(string spiderId);
 
 		/// <summary>
-		/// Get total
+		/// Get total count of requests
 		/// </summary>
 		Task<long> GetTotalAsync();
 
@@ -28,5 +28,12 @@ namespace LucasSpider.Scheduler.Component
 		/// Reset duplicate check.
 		/// </summary>
 		Task ResetDuplicateCheckAsync();
+
+		/// <summary>
+		/// Remove request from duplicate remover
+		/// </summary>
+		/// <param name="request">Request to be removed</param>
+		/// <returns>Where the request was removed from the checks</returns>
+		Task ResetDuplicateCheckForRequestAsync(Request request);
 	}
 }

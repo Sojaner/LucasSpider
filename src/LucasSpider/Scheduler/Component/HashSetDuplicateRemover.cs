@@ -25,7 +25,7 @@ namespace LucasSpider.Scheduler.Component
 
 			if (request.Owner != _spiderId)
 			{
-				throw new SpiderException("The identity of the crawler to which the request belongs is inconsistent with the identity of the crawler to which the deduplicator belongs.");
+				throw new SpiderException("The identity of the crawler to which the request belongs is inconsistent with the identity of the crawler to which the duplicate remover belongs.");
 			}
 
 			var isDuplicate = _dict.TryAdd(request.Hash, null);
@@ -45,11 +45,24 @@ namespace LucasSpider.Scheduler.Component
 		}
 
 		/// <summary>
-		/// Reset deduplicator
+		/// Reset duplicate remover
 		/// </summary>
 		public Task ResetDuplicateCheckAsync()
 		{
 			_dict.Clear();
+			return Task.CompletedTask;
+		}
+
+		public Task ResetDuplicateCheckForRequestAsync(Request request)
+		{
+			request.NotNull(nameof(request));
+			request.Owner.NotNullOrWhiteSpace(nameof(request.Owner));
+
+			if (request.Owner != _spiderId)
+			{
+				throw new SpiderException("The identity of the crawler to which the request belongs is inconsistent with the identity of the crawler to which the duplicate remover belongs.");
+			}
+
 			return Task.CompletedTask;
 		}
 

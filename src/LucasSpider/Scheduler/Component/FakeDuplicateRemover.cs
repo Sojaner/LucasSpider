@@ -36,6 +36,11 @@ namespace LucasSpider.Scheduler.Component
 			return Task.CompletedTask;
 		}
 
+		public Task ResetDuplicateCheckForRequestAsync(Request request)
+		{
+			return Task.CompletedTask;
+		}
+
 		public Task InitializeAsync(string spiderId)
 		{
 			return Task.CompletedTask;

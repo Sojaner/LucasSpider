@@ -27,6 +27,11 @@ namespace LucasSpider.Scheduler.Component
 			return Task.CompletedTask;
 		}
 
+		public Task ResetDuplicateCheckForRequestAsync(Request request)
+		{
+			throw new System.NotImplementedException();
+		}
+
 		/// <summary>
 		/// Construction method
 		/// </summary>
