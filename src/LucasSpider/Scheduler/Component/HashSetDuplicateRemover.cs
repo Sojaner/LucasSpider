@@ -63,6 +63,8 @@ namespace LucasSpider.Scheduler.Component
 				throw new SpiderException("The identity of the crawler to which the request belongs is inconsistent with the identity of the crawler to which the duplicate remover belongs.");
 			}
 
+			_dict.TryRemove(request.Hash, out _);
+
 			return Task.CompletedTask;
 		}
 
