@@ -265,7 +265,8 @@ namespace LucasSpider.Http
 				RequestedTimes = RequestedTimes,
 				Hash = Hash,
 				Version = Version,
-				Timeout = Timeout
+				Timeout = Timeout,
+				Speed = Speed
 			};
 			foreach (var kv in Properties)
 			{
