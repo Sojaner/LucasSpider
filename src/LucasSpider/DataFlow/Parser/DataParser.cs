@@ -144,7 +144,7 @@ namespace LucasSpider.DataFlow.Parser
 				}
 				else if (string.IsNullOrWhiteSpace(context.Response.ReadAsString()))
 				{
-					context.Selectable = new NoContentSelectable();
+					context.Selectable = new NotSelectable();
 				}
 				else
 				{

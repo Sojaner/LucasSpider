@@ -4,11 +4,11 @@ using System.Text.RegularExpressions;
 
 namespace LucasSpider.Selector
 {
-	public class NoContentSelectable: ISelectable
+	public class NotSelectable: ISelectable
 	{
 		public object Clone()
 		{
-			return new NoContentSelectable();
+			return new NotSelectable();
 		}
 
 		public SelectableType Type => SelectableType.NoContent;
