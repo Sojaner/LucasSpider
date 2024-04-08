@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 #if NETSTANDARD2_0
 using System.Threading;
 #endif
 using System.Threading.Tasks;
 using HWT;
 using LucasSpider.Http;
+using Microsoft.Extensions.Logging;
 
 namespace LucasSpider.Infrastructure
 {
@@ -13,6 +16,7 @@ namespace LucasSpider.Infrastructure
 	{
 		private readonly ConcurrentDictionary<string, Request> _dict;
 		private readonly HashedWheelTimer _timer;
+		private readonly List<TimeoutTask> _tasks;
 		private ConcurrentBag<Request> _queue;
 
 		public RequestedQueue()
@@ -21,6 +25,7 @@ namespace LucasSpider.Infrastructure
 			_queue = new ConcurrentBag<Request>();
 			_timer = new HashedWheelTimer(TimeSpan.FromSeconds(1)
 				, 100000);
+			_tasks = new List<TimeoutTask>();
 		}
 
 		public int Count => _dict.Count;
@@ -37,7 +42,9 @@ namespace LucasSpider.Infrastructure
 				return false;
 			}
 
-			_timer.NewTimeout(new TimeoutTask(this, request.Hash),
+			var task = new TimeoutTask(this, request.Hash);
+			_tasks.Add(task);
+			_timer.NewTimeout(task,
 				TimeSpan.FromMilliseconds(request.Timeout));
 			return true;
 		}
@@ -67,7 +74,7 @@ namespace LucasSpider.Infrastructure
 			}
 		}
 
-		private class TimeoutTask : ITimerTask
+		private class TimeoutTask : ITimerTask, IDisposable
 		{
 			private readonly string _hash;
 			private readonly RequestedQueue _requestedQueue;
@@ -83,6 +90,11 @@ namespace LucasSpider.Infrastructure
 				_requestedQueue.Timeout(_hash);
 				return Task.CompletedTask;
 			}
+
+			public void Dispose()
+			{
+				_requestedQueue?.Dispose();
+			}
 		}
 
 		public void Dispose()
@@ -95,6 +107,7 @@ namespace LucasSpider.Infrastructure
 #endif
 			_timer.Stop();
 			_timer.Dispose();
+			_tasks.ForEach(task => ObjectUtilities.DisposeSafely(task));
 		}
 	}
 }
