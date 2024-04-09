@@ -152,13 +152,9 @@ namespace LucasSpider.DataFlow.Parser
 					{
 						context.Selectable = new JsonSelectable(token);
 					}
-					else if (text.TryParseXmlDocument(out var xmlDocument))
-					{
-						context.Selectable = new XmlSelectable(xmlDocument);
-					}
 					else
 					{
-						context.Selectable = new TextSelectable(text);
+						context.Selectable = text.TryParseXmlDocument(out var xmlDocument) ? new XmlSelectable(xmlDocument) : new TextSelectable(text);
 					}
 				}
 			}

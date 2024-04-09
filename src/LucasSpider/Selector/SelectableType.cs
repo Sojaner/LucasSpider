@@ -6,6 +6,6 @@ namespace LucasSpider.Selector
         Html,
         Json,
 		Xml,
-		NotSelectable
+		None
     }
 }
