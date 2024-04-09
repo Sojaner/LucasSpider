@@ -5,6 +5,6 @@ namespace LucasSpider.Selector
         Text,
         Html,
         Json,
-		NoContent
+		NotSelectable
     }
 }

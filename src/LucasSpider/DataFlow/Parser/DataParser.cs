@@ -10,6 +10,7 @@ using LucasSpider.Selector;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using LucasSpider.Extensions;
 
 namespace LucasSpider.DataFlow.Parser
 {
@@ -142,27 +143,35 @@ namespace LucasSpider.DataFlow.Parser
 				{
 					context.Selectable = SelectableBuilder(context);
 				}
-				else if (string.IsNullOrWhiteSpace(context.Response.ReadAsString()))
-				{
-					context.Selectable = new NotSelectable();
-				}
 				else
 				{
-					var text = context.Response.ReadAsString().TrimStart();
-					if (text.StartsWith("<!DOCTYPE html", StringComparison.InvariantCultureIgnoreCase) || text.StartsWith("<html", StringComparison.InvariantCultureIgnoreCase))
-					{
-						context.Selectable = CreateHtmlSelectable(context, text);
-					}
-					else
+					context.Selectable = new NotSelectable();
+					var text = context.Response.ReadAsString();
+					var contentType = context.Response.Content?.Headers?.ContentType;
+					if (text != null)
 					{
 						try
 						{
-							var token = (JObject)JsonConvert.DeserializeObject(text);
-							context.Selectable = new JsonSelectable(token);
+							if ((contentType != null && contentType.Contains(MediaTypeNames.Text.Html, StringComparison.OrdinalIgnoreCase)) ||
+								    text.TrimStart().StartsWith("<!DOCTYPE html", StringComparison.InvariantCultureIgnoreCase) ||
+								    text.TrimStart().StartsWith("<html", StringComparison.InvariantCultureIgnoreCase))
+							{
+								context.Selectable = CreateHtmlSelectable(context, text);
+							}
+							else if ((contentType == null || contentType.Contains(MediaTypeNames.Application.Json, StringComparison.OrdinalIgnoreCase)) && text.TryParseJToken(out var token))
+							{
+								context.Selectable = new JsonSelectable(token);
+							}
+							else if (contentType != null && (contentType.Contains(MediaTypeNames.Text.Plain, StringComparison.OrdinalIgnoreCase) ||
+									contentType.Contains(MediaTypeNames.Text.RichText, StringComparison.OrdinalIgnoreCase) ||
+									contentType.Contains(MediaTypeNames.Text.Xml, StringComparison.OrdinalIgnoreCase)))
+							{
+								context.Selectable = new TextSelectable(text);
+							}
 						}
 						catch
 						{
-							context.Selectable = new TextSelectable(text);
+							Logger.LogError("Parsing selectable failed for request {Hash}.", context.Request.Hash);
 						}
 					}
 				}
@@ -200,6 +209,29 @@ namespace LucasSpider.DataFlow.Parser
 		{
 			return _requiredValidator.Count <= 0 ||
 			       _requiredValidator.Any(validator => validator(request));
+		}
+
+		private static class MediaTypeNames
+		{
+			public static class Text
+			{
+				public const string Html = System.Net.Mime.MediaTypeNames.Text.Html;
+
+				public const string Plain = System.Net.Mime.MediaTypeNames.Text.Plain;
+
+				public const string Xml = System.Net.Mime.MediaTypeNames.Text.Xml;
+
+				public const string RichText = System.Net.Mime.MediaTypeNames.Text.RichText;
+			}
+
+			public static class Application
+			{
+#if NETSTANDARD2_0
+				public const string Json = "application/json";
+#else
+				public const string Json = System.Net.Mime.MediaTypeNames.Application.Json;
+#endif
+			}
 		}
 	}
 }

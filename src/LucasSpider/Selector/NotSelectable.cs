@@ -11,7 +11,7 @@ namespace LucasSpider.Selector
 			return new NotSelectable();
 		}
 
-		public SelectableType Type => SelectableType.NoContent;
+		public SelectableType Type => SelectableType.NotSelectable;
 
 		public ISelectable XPath(string xpath)
 		{
