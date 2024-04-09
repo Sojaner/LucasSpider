@@ -1,6 +1,6 @@
 # LucasSpider
 
-免责申明：本框架是为了帮助开发人员简化开发流程、提高开发效率，请勿使用此框架做任何违法国家法律的事情，使用者所做任何事情也与本框架的作者无关。
+Disclaimer: This framework is to help developers simplify the development process and improve development efficiency. Please do not use this framework to do anything that violates national laws. Anything the user does has nothing to do with the author of this framework.
 
 [![Build Status](https://dev.azure.com/zlzforever/LucasSpider/_apis/build/status/dotnetcore.LucasSpider?branchName=master)](https://dev.azure.com/zlzforever/LucasSpider/_build/latest?definitionId=3&branchName=master)
 [![NuGet](https://img.shields.io/nuget/vpre/LucasSpider.svg)](https://www.nuget.org/packages/LucasSpider)

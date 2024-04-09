@@ -125,7 +125,7 @@ namespace LucasSpider.Tests
 			request.Content = (new ByteArrayContent(list.ToArray()));
 
 
-			var r1 = request.Clone();
+			var r1 = (Request)request.Clone();
 			Assert.Equal("PUT", r1.Method);
 
 			// Assert.Equal("Agent", r1.Agent);
@@ -153,7 +153,7 @@ namespace LucasSpider.Tests
 
 			request.Content = (new StringContent("{}", Encoding.UTF8, "application/json"));
 
-			var r1 = request.Clone();
+			var r1 = (Request)request.Clone();
 			Assert.Equal("PUT", r1.Method);
 			Assert.Equal("UserAgent", r1.Headers.UserAgent);
 			Assert.Equal("Accept", r1.Headers.Accept);
