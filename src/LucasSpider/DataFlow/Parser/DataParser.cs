@@ -8,8 +8,6 @@ using LucasSpider.DataFlow.Storage;
 using LucasSpider.Http;
 using LucasSpider.Selector;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using LucasSpider.Extensions;
 
 namespace LucasSpider.DataFlow.Parser
@@ -145,35 +143,22 @@ namespace LucasSpider.DataFlow.Parser
 				}
 				else
 				{
-					context.Selectable = new NotSelectable();
 					var text = context.Response.ReadAsString();
-					var contentType = context.Response.Content?.Headers?.ContentType;
-					var hasEncoding = context.Response.HasEncoding();
-					if (text != null)
+					if (text.TrimStart().StartsWith("<!DOCTYPE html", StringComparison.InvariantCultureIgnoreCase) || text.TrimStart().StartsWith("<html", StringComparison.InvariantCultureIgnoreCase))
 					{
-						try
-						{
-							if (text.TrimStart().StartsWith("<!DOCTYPE html", StringComparison.InvariantCultureIgnoreCase) || text.TrimStart().StartsWith("<html", StringComparison.InvariantCultureIgnoreCase))
-							{
-								context.Selectable = CreateHtmlSelectable(context, text);
-							}
-							else if (text.TryParseJToken(out var token))
-							{
-								context.Selectable = new JsonSelectable(token);
-							}
-							else if (text.TryParseXmlDocument(out var xmlDocument))
-							{
-								context.Selectable = new XmlSelectable(xmlDocument);
-							}
-							else if (hasEncoding || (contentType != null && contentType.Contains("text/", StringComparison.InvariantCultureIgnoreCase)))
-							{
-								context.Selectable = new TextSelectable(text);
-							}
-						}
-						catch
-						{
-							Logger.LogError("Parsing selectable failed for request {Hash}.", context.Request.Hash);
-						}
+						context.Selectable = CreateHtmlSelectable(context, text);
+					}
+					else if (text.TryParseJToken(out var token))
+					{
+						context.Selectable = new JsonSelectable(token);
+					}
+					else if (text.TryParseXmlDocument(out var xmlDocument))
+					{
+						context.Selectable = new XmlSelectable(xmlDocument);
+					}
+					else
+					{
+						context.Selectable = new TextSelectable(text);
 					}
 				}
 			}
