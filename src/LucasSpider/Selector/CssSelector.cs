@@ -42,22 +42,30 @@ namespace LucasSpider.Selector
         {
             if (string.IsNullOrWhiteSpace(text))
             {
-                return null;
+                return new NotSelectable();
             }
 
             var document = new HtmlDocument {OptionAutoCloseOnEnd = true};
             document.LoadHtml(text);
             var node = document.DocumentNode.QuerySelector(_selector);
 
-            if (HasAttribute)
-            {
-                return new TextSelectable(node.Attributes[_attrName]?.Value?.Trim());
-            }
-            else
-            {
-                return new HtmlSelectable(node);
-            }
-        }
+			if (node == null)
+			{
+				return new NotSelectable();
+			}
+
+			if (HasAttribute)
+			{
+				var value = node.Attributes[_attrName]?.Value?.Trim();
+				return value != null ? new TextSelectable(value) : new NotSelectable();
+			}
+			else
+			{
+				return node.NodeType == HtmlNodeType.Text
+					? node.InnerText != null ? new TextSelectable(node.InnerText) : new NotSelectable()
+					: new HtmlSelectable(node);
+			}
+		}
 
         /// <summary>
         /// Query the node, and the query result is all elements that meet the query conditions.
@@ -73,15 +81,24 @@ namespace LucasSpider.Selector
             var document = new HtmlDocument {OptionAutoCloseOnEnd = true};
             document.LoadHtml(text);
             var nodes = document.DocumentNode.QuerySelectorAll(_selector);
-            if (HasAttribute)
-            {
-                return nodes.Select(x => new TextSelectable(x.Attributes[_attrName]?.Value?.Trim()));
-            }
-            else
-            {
-                return nodes.Select(node => new HtmlSelectable(node));
-            }
-        }
+			if (nodes == null)
+			{
+				return null;
+			}
+
+			if (HasAttribute)
+			{
+				return nodes.Select(x => (ISelectable)(x.Attributes[_attrName]?.Value?.Trim() is var value
+					? value != null ? new TextSelectable(value) : new NotSelectable()
+					: new NotSelectable()));
+			}
+			else
+			{
+				return nodes.Select(node => (ISelectable)(node.NodeType == HtmlNodeType.Text
+					? node.InnerText != null ? new TextSelectable(node.InnerText) : new NotSelectable()
+					: new HtmlSelectable(node)));
+			}
+		}
 
         /// <summary>
         /// Determine whether the query contains attributes

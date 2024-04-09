@@ -101,6 +101,11 @@ namespace LucasSpider.Http
 			return null;
 		}
 
+		public static bool HasEncoding(this Response response)
+		{
+			return response.Content.Headers.GetEncodingFromContentType() != null || response.Content.Bytes.GetEncodingFromMetaTag() != null;
+		}
+
 		public static Encoding GetEncoding(this ByteArrayContent content)
 		{
 			var encoding = content.Headers.GetEncodingFromContentType();

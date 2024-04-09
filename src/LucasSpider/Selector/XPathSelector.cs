@@ -41,7 +41,7 @@ namespace LucasSpider.Selector
         {
             if (string.IsNullOrWhiteSpace(text))
             {
-                return null;
+                return new NotSelectable();
             }
 
             var document = new HtmlDocument {OptionAutoCloseOnEnd = true};
@@ -50,16 +50,19 @@ namespace LucasSpider.Selector
 
             if (node == null)
             {
-                return null;
+                return new NotSelectable();
             }
 
             if (HasAttribute)
             {
-                return new TextSelectable(node.Attributes[_attrName]?.Value?.Trim());
+	            var value = node.Attributes[_attrName]?.Value?.Trim();
+	            return value != null ? new TextSelectable(value) : new NotSelectable();
             }
             else
             {
-                return new HtmlSelectable(node);
+	            return node.NodeType == HtmlNodeType.Text
+		            ? node.InnerText != null ? new TextSelectable(node.InnerText) : new NotSelectable()
+					: new HtmlSelectable(node);
             }
         }
 
@@ -70,6 +73,10 @@ namespace LucasSpider.Selector
         /// <returns>Query results</returns>
         public IEnumerable<ISelectable> SelectList(string text)
         {
+			if (string.IsNullOrWhiteSpace(text))
+			{
+				return null;
+			}
             var document = new HtmlDocument {OptionAutoCloseOnEnd = true};
             document.LoadHtml(text);
             var nodes = document.DocumentNode.SelectNodes(_xpath);
@@ -80,11 +87,15 @@ namespace LucasSpider.Selector
 
             if (HasAttribute)
             {
-                return nodes.Select(x => new TextSelectable(x.Attributes[_attrName]?.Value?.Trim()));
+                return nodes.Select(x => (ISelectable)(x.Attributes[_attrName]?.Value?.Trim() is var value
+		                ? value != null ? new TextSelectable(value) : new NotSelectable()
+		                : new NotSelectable()));
             }
             else
             {
-                return nodes.Select(node => new HtmlSelectable(node));
+                return nodes.Select(node => (ISelectable)(node.NodeType == HtmlNodeType.Text
+	                ? node.InnerText != null ? new TextSelectable(node.InnerText) : new NotSelectable()
+	                : new HtmlSelectable(node)));
             }
         }
 

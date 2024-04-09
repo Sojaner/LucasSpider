@@ -86,7 +86,7 @@ namespace LucasSpider.Selector
 		public override ISelectable Select(ISelector selector)
 		{
 			selector.NotNull(nameof(selector));
-			return selector.Select(_node.OuterHtml);
+			return selector.Select(_node?.OuterHtml);
 		}
 
 		/// <summary>
@@ -97,12 +97,12 @@ namespace LucasSpider.Selector
 		public override IEnumerable<ISelectable> SelectList(ISelector selector)
 		{
 			selector.NotNull(nameof(selector));
-			return selector.SelectList(_node.OuterHtml);
+			return selector.SelectList(_node?.OuterHtml);
 		}
 
 		public override object Clone()
 		{
-			return new HtmlSelectable(_node);
+			return new HtmlSelectable(_node?.Clone());
 		}
 
 		public override SelectableType Type => SelectableType.Html;

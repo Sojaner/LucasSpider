@@ -148,23 +148,24 @@ namespace LucasSpider.DataFlow.Parser
 					context.Selectable = new NotSelectable();
 					var text = context.Response.ReadAsString();
 					var contentType = context.Response.Content?.Headers?.ContentType;
+					var hasEncoding = context.Response.HasEncoding();
 					if (text != null)
 					{
 						try
 						{
-							if ((contentType != null && contentType.Contains(MediaTypeNames.Text.Html, StringComparison.OrdinalIgnoreCase)) ||
-								    text.TrimStart().StartsWith("<!DOCTYPE html", StringComparison.InvariantCultureIgnoreCase) ||
-								    text.TrimStart().StartsWith("<html", StringComparison.InvariantCultureIgnoreCase))
+							if (text.TrimStart().StartsWith("<!DOCTYPE html", StringComparison.InvariantCultureIgnoreCase) || text.TrimStart().StartsWith("<html", StringComparison.InvariantCultureIgnoreCase))
 							{
 								context.Selectable = CreateHtmlSelectable(context, text);
 							}
-							else if ((contentType == null || contentType.Contains(MediaTypeNames.Application.Json, StringComparison.OrdinalIgnoreCase)) && text.TryParseJToken(out var token))
+							else if (text.TryParseJToken(out var token))
 							{
 								context.Selectable = new JsonSelectable(token);
 							}
-							else if (contentType != null && (contentType.Contains(MediaTypeNames.Text.Plain, StringComparison.OrdinalIgnoreCase) ||
-									contentType.Contains(MediaTypeNames.Text.RichText, StringComparison.OrdinalIgnoreCase) ||
-									contentType.Contains(MediaTypeNames.Text.Xml, StringComparison.OrdinalIgnoreCase)))
+							else if (text.TryParseXmlDocument(out var xmlDocument))
+							{
+								context.Selectable = new XmlSelectable(xmlDocument);
+							}
+							else if (hasEncoding || (contentType != null && contentType.Contains("text/", StringComparison.InvariantCultureIgnoreCase)))
 							{
 								context.Selectable = new TextSelectable(text);
 							}
@@ -209,29 +210,6 @@ namespace LucasSpider.DataFlow.Parser
 		{
 			return _requiredValidator.Count <= 0 ||
 			       _requiredValidator.Any(validator => validator(request));
-		}
-
-		private static class MediaTypeNames
-		{
-			public static class Text
-			{
-				public const string Html = System.Net.Mime.MediaTypeNames.Text.Html;
-
-				public const string Plain = System.Net.Mime.MediaTypeNames.Text.Plain;
-
-				public const string Xml = System.Net.Mime.MediaTypeNames.Text.Xml;
-
-				public const string RichText = System.Net.Mime.MediaTypeNames.Text.RichText;
-			}
-
-			public static class Application
-			{
-#if NETSTANDARD2_0
-				public const string Json = "application/json";
-#else
-				public const string Json = System.Net.Mime.MediaTypeNames.Application.Json;
-#endif
-			}
 		}
 	}
 }
