@@ -1,9 +1,11 @@
 using System;
+using System.Text.Json.Serialization;
 
 namespace LucasSpider.Http
 {
 	public class ByteArrayContent : IHttpContent
 	{
+		[JsonInclude]
 		private ContentHeaders _headers;
 		private bool _disposed;
 

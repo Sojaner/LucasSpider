@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json.Serialization;
 using LucasSpider.Extensions;
 using LucasSpider.Infrastructure;
 using MessagePack;
-using Newtonsoft.Json;
 
 namespace LucasSpider.Http
 {
@@ -18,14 +18,21 @@ namespace LucasSpider.Http
 	{
 		private static HashSet<string> _hashBodyMethods = new() { "DELETE", "POST", "PATCH", "PUT" };
 
-		private string _method;
-		private Uri _requestUri;
+		[JsonInclude]
 		private RequestHeaders _headers;
+		[JsonInclude]
 		private Version _version;
+		[JsonInclude]
+		private string _method;
+		[JsonInclude]
+		private Uri _requestUri;
+		[JsonInclude]
 		private object _content;
 
-		private bool _disposed;
+		[JsonInclude]
 		private IDictionary<string, object> _properties;
+
+		private bool _disposed;
 
 		/// <summary>
 		/// Request hash
@@ -92,7 +99,7 @@ namespace LucasSpider.Http
 			}
 		}
 
-		[JsonIgnore]
+		[Newtonsoft.Json.JsonIgnore]
 		public object Content
 		{
 			get => _content;
@@ -126,7 +133,7 @@ namespace LucasSpider.Http
 
 		public IDictionary<string, object> Properties => _properties ??= new Dictionary<string, object>();
 
-		[IgnoreMember, JsonIgnore]
+		[IgnoreMember, Newtonsoft.Json.JsonIgnore]
 		// ReSharper disable once InconsistentNaming
 		public string PPPoERegex
 		{

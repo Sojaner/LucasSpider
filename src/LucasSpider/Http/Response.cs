@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -11,8 +12,11 @@ namespace LucasSpider.Http
 	[Serializable]
 	public class Response : IDisposable, ICloneable
 	{
-		private ResponseHeaders _headers;
+		[JsonInclude]
 		private Version _version;
+		[JsonInclude]
+		private ResponseHeaders _headers;
+		[JsonInclude]
 		private ResponseHeaders _trailingHeaders;
 		private bool _disposed;
 
