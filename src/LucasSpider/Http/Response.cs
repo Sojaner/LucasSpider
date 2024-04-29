@@ -82,7 +82,7 @@ namespace LucasSpider.Http
 		public TimeSpan TimeToHeaders { get; set; }
 
 		public bool IsSuccessStatusCode =>
-			StatusCode >= HttpStatusCode.OK && StatusCode <= (HttpStatusCode)299;
+			StatusCode is >= HttpStatusCode.OK and <= (HttpStatusCode)299;
 
 		public Response EnsureSuccessStatusCode()
 		{
