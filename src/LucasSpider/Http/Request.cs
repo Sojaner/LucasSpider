@@ -317,10 +317,10 @@ namespace LucasSpider.Http
 				throw new ArgumentNullException(nameof(method));
 			}
 
-			/*if (requestUri != null && requestUri.IsAbsoluteUri && !UriUtilities.IsHttpUri(requestUri))
+			if (requestUri != null && requestUri.IsAbsoluteUri && !UriUtilities.IsHttpUri(requestUri))
 			{
-				throw new ArgumentException("http base address is required", nameof(requestUri));
-			}*/
+				throw new ArgumentException("HTTP based URI is required", nameof(requestUri));
+			}
 
 			_properties = new Dictionary<string, object>();
 			_method = method;
