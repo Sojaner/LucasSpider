@@ -24,6 +24,8 @@ namespace LucasSpider.Http
 
 		public ResponseHeaders TrailingHeaders => _trailingHeaders ??= new ResponseHeaders();
 
+		public Encoding Encoding => IsSuccessStatusCode ? Content.GetEncoding() : null;
+
 		public string Agent { get; set; }
 
 		/// <summary>
@@ -168,7 +170,7 @@ namespace LucasSpider.Http
 			return new Response
 			{
 				RequestHash = requestHash,
-				StatusCode = (HttpStatusCode)(isTimeout ? 4 : isRedirects ? 1 : 0),
+				StatusCode = (HttpStatusCode)(isTimeout ? ExtraHttpStatusCode.Timeout : isRedirects ? ExtraHttpStatusCode.TooManyRedirects : ExtraHttpStatusCode.ConnectionError),
 				ReasonPhrase = message,
 				Version = HttpVersion.Version11
 			};
