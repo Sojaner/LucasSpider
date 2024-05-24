@@ -21,11 +21,16 @@ namespace LucasSpider.Http
 		/// </summary>
 		public TimeSpan TimeToHeaders { get; set; }
 
+		/// <summary>
+		/// The order of the redirect in the chain
+		/// </summary>
+		public int Order { get; set; }
+
 		public object Clone()
 		{
 			return new RedirectResponse
 			{
-				TimeToHeaders = TimeToHeaders, RequestUri = RequestUri, StatusCode = StatusCode
+				TimeToHeaders = TimeToHeaders, RequestUri = RequestUri, StatusCode = StatusCode, Order = Order
 			};
 		}
 	}

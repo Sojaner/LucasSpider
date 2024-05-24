@@ -76,7 +76,8 @@ namespace LucasSpider.Downloader
 						{
 							StatusCode = statusCode,
 							TimeToHeaders = TimeSpan.FromMilliseconds(headersTime),
-							RequestUri = targetUrl
+							RequestUri = targetUrl,
+							Order = redirects - 1
 						});
 					}
 					else if (redirected && redirects > _allowedRedirects)

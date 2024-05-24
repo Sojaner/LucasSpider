@@ -70,6 +70,7 @@ namespace LucasSpider.Downloader
 			var parent = response.Request.RedirectedFrom;
 			var responseStart = response.Request.Timing.ResponseStart; // This is a fallback for WebKit browser since it doesn't have response start time in the redirect chain
 
+			var order = 0;
 			while (parent != null)
 			{
 				var parentResponse = await parent.ResponseAsync();
@@ -80,7 +81,8 @@ namespace LucasSpider.Downloader
 						RequestUri = new Uri(parent.Url),
 						StatusCode = (HttpStatusCode)parentResponse.Status,
 						TimeToHeaders = TimeSpan.FromMilliseconds(parent.Timing.ResponseStart >= 0 ?
-							parent.Timing.ResponseStart : responseStart)
+							parent.Timing.ResponseStart : responseStart),
+						Order = order
 					});
 					parent = parent.RedirectedFrom;
 				}
@@ -88,6 +90,8 @@ namespace LucasSpider.Downloader
 				{
 					break;
 				}
+
+				order++;
 			}
 
 			list.Reverse();
