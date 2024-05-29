@@ -12,6 +12,11 @@ namespace LucasSpider.Http
 		public Uri RequestUri { get; set; }
 
 		/// <summary>
+		/// The target location of the redirect
+		/// </summary>
+		public Uri TargetUri { get; set; }
+
+		/// <summary>
 		/// The status code of the response
 		/// </summary>
 		public HttpStatusCode StatusCode { get; set; }
@@ -30,7 +35,7 @@ namespace LucasSpider.Http
 		{
 			return new RedirectResponse
 			{
-				TimeToHeaders = TimeToHeaders, RequestUri = RequestUri, StatusCode = StatusCode, Order = Order
+				TimeToHeaders = TimeToHeaders, RequestUri = RequestUri, TargetUri = TargetUri, StatusCode = StatusCode, Order = Order
 			};
 		}
 	}
