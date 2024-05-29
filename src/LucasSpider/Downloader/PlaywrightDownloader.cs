@@ -74,11 +74,13 @@ namespace LucasSpider.Downloader
 			while (parent != null)
 			{
 				var parentResponse = await parent.ResponseAsync();
-				if (parentResponse != null)
+				var redirectedTo = parent.RedirectedTo;
+				if (parentResponse != null && redirectedTo != null)
 				{
 					list.Add(new RedirectResponse
 					{
 						RequestUri = new Uri(parent.Url),
+						TargetUri = new Uri(redirectedTo.Url),
 						StatusCode = (HttpStatusCode)parentResponse.Status,
 						TimeToHeaders = TimeSpan.FromMilliseconds(parent.Timing.ResponseStart >= 0 ?
 							parent.Timing.ResponseStart : responseStart),
