@@ -118,10 +118,10 @@ namespace LucasSpider.Downloader
 			}
 		}
 
-		protected virtual async Task<HttpResponseMessage> SendAsync(HttpClient httpClient,
+		protected virtual Task<HttpResponseMessage> SendAsync(HttpClient httpClient,
 			HttpRequestMessage httpRequestMessage)
 		{
-			return await httpClient.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseHeadersRead);
+			return httpClient.SendAsync(httpRequestMessage, HttpCompletionOption.ResponseHeadersRead);
 		}
 
 		protected virtual async Task<HttpClient> CreateClientAsync(Request request)
