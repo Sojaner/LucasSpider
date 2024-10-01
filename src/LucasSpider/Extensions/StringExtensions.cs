@@ -42,5 +42,11 @@ namespace LucasSpider.Extensions
 				return false;
 			}
 		}
+
+		public static bool IsHtmlContent(this string content)
+		{
+			return content.TrimStart().StartsWith("<!DOCTYPE html", StringComparison.InvariantCultureIgnoreCase) ||
+			       content.TrimStart().StartsWith("<html", StringComparison.InvariantCultureIgnoreCase);
+		}
 	}
 }

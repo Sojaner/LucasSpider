@@ -137,6 +137,7 @@ namespace LucasSpider.DataFlow.Parser
 
 			if (context.Selectable == null)
 			{
+				context.Selectable = null;
 				if (SelectableBuilder != null)
 				{
 					context.Selectable = SelectableBuilder(context);
@@ -144,11 +145,11 @@ namespace LucasSpider.DataFlow.Parser
 				else
 				{
 					var text = context.Response.ReadAsString();
-					if (text.TrimStart().StartsWith("<!DOCTYPE html", StringComparison.InvariantCultureIgnoreCase) || text.TrimStart().StartsWith("<html", StringComparison.InvariantCultureIgnoreCase))
+					if (text.IsHtmlContent())
 					{
 						context.Selectable = CreateHtmlSelectable(context, text);
 					}
-					else
+					else if (context.Response.Content.HasContent() && context.Response.Content.IsTextContent())
 					{
 						context.Selectable = text.TryParseJToken(out var token) ? new JsonSelectable(token) : text.TryParseXmlDocument(out var xmlDocument) ? new XmlSelectable(xmlDocument) : new TextSelectable(text);
 					}
