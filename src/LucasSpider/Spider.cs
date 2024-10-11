@@ -672,9 +672,9 @@ namespace LucasSpider
 
 		public override void Dispose()
 		{
-			ObjectUtilities.DisposeSafely(Logger, _requestedQueue);
-			ObjectUtilities.DisposeSafely(Logger, _dataFlows);
-			ObjectUtilities.DisposeSafely(Logger, _services);
+			ObjectUtilities.DisposeSafelyAndLog(Logger, _requestedQueue);
+			ObjectUtilities.DisposeSafelyAndLog(Logger, _dataFlows);
+			ObjectUtilities.DisposeSafelyAndLog(Logger, _services);
 
 			base.Dispose();
 

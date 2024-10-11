@@ -113,8 +113,8 @@ namespace LucasSpider.Downloader
 			}
 			finally
 			{
-				ObjectUtilities.DisposeSafely(Logger, httpRequestMessages);
-				ObjectUtilities.DisposeSafely(Logger, httpResponseMessages);
+				ObjectUtilities.DisposeSafelyAndLog(Logger, httpRequestMessages);
+				ObjectUtilities.DisposeSafelyAndLog(Logger, httpResponseMessages);
 			}
 		}
 

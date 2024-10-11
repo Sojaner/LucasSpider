@@ -7,13 +7,13 @@ namespace LucasSpider.Infrastructure
 {
 	public class ObjectUtilities
 	{
-		public static void DisposeSafely(params object[] objs)
+		public static void DisposeSafely(params IDisposable[] objs)
 		{
 			foreach (var obj in objs)
 			{
 				try
 				{
-					(obj as IDisposable)?.Dispose();
+					obj?.Dispose();
 				}
 				catch (Exception)
 				{
@@ -22,18 +22,30 @@ namespace LucasSpider.Infrastructure
 			}
 		}
 
-		public static void DisposeSafely(ILogger logger, params object[] objs)
+		public static void DisposeSafely(IDisposable obj)
 		{
-			DisposeSafely(logger, objs.AsEnumerable());
+			try
+			{
+				obj?.Dispose();
+			}
+			catch (Exception)
+			{
+				// ignored
+			}
 		}
 
-		public static void DisposeSafely(ILogger logger, IEnumerable<object> objs)
+		public static void DisposeSafelyAndLog(ILogger logger, params IDisposable[] objs)
+		{
+			DisposeSafelyAndLog(logger, objs.AsEnumerable());
+		}
+
+		public static void DisposeSafelyAndLog(ILogger logger, IEnumerable<IDisposable> objs)
 		{
 			foreach (var obj in objs)
 			{
 				try
 				{
-					(obj as IDisposable)?.Dispose();
+					obj?.Dispose();
 				}
 				catch (Exception e)
 				{
