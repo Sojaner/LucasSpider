@@ -141,10 +141,16 @@ namespace LucasSpider.Agent
 						var topic = string.Format(Topics.Spider, request.Owner);
 						await _messageQueue.PublishAsBytesAsync(topic, response);
 
-						_logger.LogInformation(
-							_messageQueue.IsDistributed
-								? $"Agent {_options.AgentName} download {request.RequestUri}, {request.Hash} for {request.Owner} completed"
-								: $"{request.Owner} download {request.RequestUri}, {request.Hash} completed");
+						if (_messageQueue.IsDistributed)
+						{
+							_logger.LogInformation("Agent {AgentName} download {RequestUri}, {Hash} for {Owner} completed",
+								_options.AgentName, request.RequestUri, request.Hash, request.Owner);
+						}
+						else
+						{
+							_logger.LogInformation("{Owner} download {RequestUri}, {Hash} completed",
+								request.Owner, request.RequestUri, request.Hash);
+						}
 					}).ConfigureAwait(false).GetAwaiter();
 					break;
 				default:
