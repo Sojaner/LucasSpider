@@ -16,7 +16,7 @@ namespace LucasSpider.Infrastructure
 			}
 
 			Id = id;
-			Name = name;
+			Name = name ?? id;
 		}
 
 		public override string ToString()
