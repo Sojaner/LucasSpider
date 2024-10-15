@@ -450,7 +450,7 @@ namespace LucasSpider
 
 							// If the speed is changed, the bucket needs to be recreated
 							// Since the maximum speed is 500, the smallest division is 0.002, so the comparison is accurate to 0.001
-							if (Math.Abs(speed - Options.Speed) > 0.001)
+							if (Math.Abs(Math.Round(speed, 3) - Math.Round(Options.Speed, 3)) > 0.001)
 							{
 								var oldSpeed = speed;
 
