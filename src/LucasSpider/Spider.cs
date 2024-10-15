@@ -305,7 +305,7 @@ namespace LucasSpider
 								{
 									await _services.StatisticsClient.IncreaseAgentFailureAsync(response.Agent,
 										response.Elapsed.Milliseconds);
-									Logger.LogError(
+									Logger.LogWarning(
 										"{SpiderId} download {RequestUri}, {Hash} status code: {StatusCode} failed: {ReasonPhrase}",
 										SpiderId, request.RequestUri, request.Hash, response.StatusCode, response.ReasonPhrase);
 
