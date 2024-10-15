@@ -90,13 +90,14 @@ namespace LucasSpider.Statistics
 						var speed = (decimal)(statistics.Success /
 						                      (now - (statistics.Start ?? now.AddMinutes(-1))).TotalSeconds);
 						_logger.LogInformation(
-							$"{print.SpiderId} total {statistics.Total}, speed: {decimal.Round(speed, 2)}, success {statistics.Success}, failure {statistics.Failure}, left {left}");
+							"{SpiderId} total {Total}, speed: {Speed}, success {Success}, failure {Failure}, left {left}",
+							print.SpiderId, statistics.Total, decimal.Round(speed, 2), statistics.Success, statistics.Failure, left);
 					}
 				}
 				else
 				{
 					var log = Encoding.UTF8.GetString(JsonSerializer.SerializeToUtf8Bytes(message));
-					_logger.LogWarning($"Not supported message: {log}");
+					_logger.LogWarning("Not supported message: {log}", log);
 				}
 			};
 			await _messageQueue.ConsumeAsync(_consumer, stoppingToken);

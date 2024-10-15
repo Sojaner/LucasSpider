@@ -267,8 +267,9 @@ namespace LucasSpider
 				{
 					case Messages.Spider.Exit exit:
 						{
+							var exitJson = System.Text.Json.JsonSerializer.Serialize(exit);
 							Logger.LogInformation(
-								$"{SpiderId} received exit message {System.Text.Json.JsonSerializer.Serialize(exit)}");
+								"{SpiderId} received exit message {exitJson}", SpiderId, exitJson);
 							if (exit.SpiderId == SpiderId.Id)
 							{
 								await ExitAsync();
@@ -291,7 +292,8 @@ namespace LucasSpider
 									if (IsDistributed)
 									{
 										Logger.LogInformation(
-											$"{SpiderId} download {request.RequestUri}, {request.Hash} via {request.Agent} success");
+											"{SpiderId} download {RequestUri}, {Hash} via {Agent} success",
+											SpiderId, request.RequestUri, request.Hash, request.Agent);
 									}
 
 									// Whether the download is successful or not is determined by the crawler, not the Agent itself.
@@ -304,7 +306,8 @@ namespace LucasSpider
 									await _services.StatisticsClient.IncreaseAgentFailureAsync(response.Agent,
 										response.Elapsed.Milliseconds);
 									Logger.LogError(
-										$"{SpiderId} download {request.RequestUri}, {request.Hash} status code: {response.StatusCode} failed: {response.ReasonPhrase}");
+										"{SpiderId} download {RequestUri}, {Hash} status code: {StatusCode} failed: {ReasonPhrase}",
+										SpiderId, request.RequestUri, request.Hash, response.StatusCode, response.ReasonPhrase);
 
 									request.RequestedTimes += 1;
 									await AddRequestsAsync(request);
@@ -316,8 +319,9 @@ namespace LucasSpider
 							break;
 						}
 					default:
+						var json = System.Text.Json.JsonSerializer.Serialize(message);
 						Logger.LogError(
-							$"{SpiderId} received error message {System.Text.Json.JsonSerializer.Serialize(message)}");
+							"{SpiderId} received error message {json}", SpiderId, json);
 						break;
 				}
 			};
@@ -514,7 +518,7 @@ namespace LucasSpider
 				request.RequestedTimes += 1;
 
 				Logger.LogWarning(
-					$"{SpiderId} request {request.RequestUri}, {request.Hash} timed out");
+					"{SpiderId} request {RequestUri}, {Hash} timed out", SpiderId, request.RequestUri, request.Hash);
 			}
 
 			await AddRequestsAsync(timeoutRequests);
@@ -624,7 +628,7 @@ namespace LucasSpider
 					else
 					{
 						Logger.LogWarning(
-							$"{SpiderId} enqueuing request: {request.RequestUri}, {request.Hash} failed");
+							"{SpiderId} enqueuing request: {RequestUri}, {Hash} failed", SpiderId, request.RequestUri, request.Hash);
 					}
 				}
 			}
@@ -643,7 +647,8 @@ namespace LucasSpider
 				}
 
 				Logger.LogInformation(
-					$"{SpiderId} loaded request from {requestSupplier.GetType().Name} {_requestSuppliers.IndexOf(requestSupplier)}/{_requestSuppliers.Count}");
+					"{SpiderId} loaded request from {Name} {Index}/{Count}",
+					SpiderId, requestSupplier.GetType().Name, _requestSuppliers.IndexOf(requestSupplier), _requestSuppliers.Count);
 			}
 		}
 
@@ -671,7 +676,7 @@ namespace LucasSpider
 					catch (Exception e)
 					{
 						Logger.LogError(
-							$"{SpiderId} initializing dataFlow {dataFlow.GetType().Name} failed: {e}");
+							"{SpiderId} initializing dataFlow {Name} failed: {e}", SpiderId, dataFlow.GetType().Name, e);
 						_services.ApplicationLifetime.StopApplication();
 					}
 				}

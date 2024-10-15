@@ -40,7 +40,8 @@ namespace LucasSpider.Downloader
 			if (!string.IsNullOrWhiteSpace(validResult))
 			{
 				Logger.LogError(
-					$"{request.RequestUri} download failed, because content contains {validResult}");
+					"{RequestUri} download failed, because content contains {validResult}",
+					request.RequestUri, validResult);
 				response = new Response
 				{
 					RequestHash = request.Hash,
