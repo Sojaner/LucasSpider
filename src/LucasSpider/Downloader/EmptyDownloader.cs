@@ -23,7 +23,7 @@ namespace LucasSpider.Downloader
 			Interlocked.Increment(ref _downloadCount);
 			if ((_downloadCount % 100) == 0)
 			{
-				Logger.LogInformation($"download {_downloadCount} already");
+				Logger.LogInformation("download {downloadCount} already", _downloadCount);
 			}
 
 			var response = new Response

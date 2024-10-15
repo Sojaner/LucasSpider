@@ -87,7 +87,7 @@ namespace LucasSpider.Proxy
 			{
 				if (await _proxyValidator.IsAvailable(proxy) && _dict.TryAdd(proxy, new ProxyEntry(proxy)))
 				{
-					_logger.LogInformation($"proxy {proxy} is available");
+					_logger.LogInformation("proxy {proxy} is available", proxy);
 					_queue.Enqueue(_dict[proxy]);
 					cnt++;
 				}

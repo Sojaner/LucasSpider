@@ -212,7 +212,7 @@ namespace LucasSpider.DataFlow.Parser
 							}
 							catch (Exception e)
 							{
-								Logger.LogError($"Data formatting failed: {e}");
+								Logger.LogError("Data formatting failed: {e}", e);
 							}
 #endif
 						}

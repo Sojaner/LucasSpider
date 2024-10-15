@@ -49,7 +49,7 @@ namespace LucasSpider.Infrastructure
 				}
 				catch (Exception e)
 				{
-					logger.LogWarning($"Dispose {obj} failed: {e}");
+					logger.LogWarning("Dispose {obj} failed: {e}", obj, e);
 				}
 			}
 		}
