@@ -133,7 +133,7 @@ namespace LucasSpider
 
 			Dispose();
 
-			Logger.LogInformation($"{SpiderId} stopped");
+			Logger.LogInformation("{SpiderId} stopped", SpiderId);
 		}
 
 		/// <summary>
@@ -229,7 +229,7 @@ namespace LucasSpider
 		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 		{
 			SpiderId = GenerateSpiderId();
-			Logger.LogInformation($"Initializing spider {SpiderId}, {SpiderId.Name}");
+			Logger.LogInformation("Initializing spider {SpiderId}, {SpiderId.Name}", SpiderId, SpiderId.Name);
 			await _services.StatisticsClient.StartAsync(SpiderId.Id, SpiderId.Name);
 			await _services.Scheduler.InitializeAsync(SpiderId.Id);
 			await InitializeAsync(stoppingToken);
@@ -244,7 +244,7 @@ namespace LucasSpider
 		{
 			var topic = string.Format(Topics.Spider, SpiderId.Id);
 
-			Logger.LogInformation($"{SpiderId} register topic {topic}");
+			Logger.LogInformation("{SpiderId} register topic {topic}", SpiderId, topic);
 			_consumer = new AsyncMessageConsumer<byte[]>(topic);
 			_consumer.Received += async bytes =>
 			{
@@ -259,7 +259,7 @@ namespace LucasSpider
 				}
 				catch (Exception e)
 				{
-					Logger.LogError($"Deserializing message failed: {e}");
+					Logger.LogError("Deserializing message failed: {e}", e);
 					return;
 				}
 
@@ -351,7 +351,7 @@ namespace LucasSpider
 			// DataFlow can abort the crawler program by throwing ExitException
 			catch (ExitException ee)
 			{
-				Logger.LogError($"Exit: {ee}");
+				Logger.LogError("Exit: {ee}", ee);
 				await ExitAsync();
 			}
 			catch (Exception e)
@@ -360,7 +360,8 @@ namespace LucasSpider
 				// if download correct content, parser or storage failed by network or something else
 				// retry it until trigger retryTimes limitation
 				await AddRequestsAsync(request);
-				Logger.LogError($"{SpiderId} handle {System.Text.Json.JsonSerializer.Serialize(request)} failed: {e}");
+				var json = System.Text.Json.JsonSerializer.Serialize(request);
+				Logger.LogError("{SpiderId} handle {json} failed: {e}", SpiderId, json, e);
 			}
 			finally
 			{
@@ -383,13 +384,18 @@ namespace LucasSpider
 			return _dataParsers.Count > 0 && _dataParsers.Any(x => x.IsValidRequest(request));
 		}
 
+		private double GetSpeed()
+		{
+			return Options.Speed < 0.001 ? 0.001 : Options.Speed > 500 ? 500 : Options.Speed;
+		}
+
 		private async Task RunAsync(CancellationToken stoppingToken)
 		{
 			try
 			{
 				var sleepTimeLimit = Options.EmptySleepTime * 1000;
 
-				var speed = Options.Speed;
+				var speed = GetSpeed();
 				var bucket = CreateBucket(speed);
 				var sleepTime = 0;
 				var batch = (int)Options.Batch;
@@ -448,17 +454,19 @@ namespace LucasSpider
 								await Task.Delay(waitTimeMillis, default);
 							}
 
+							var optionsSpeed = Math.Round(GetSpeed(), 3);
+
 							// If the speed is changed, the bucket needs to be recreated
 							// Since the maximum speed is 500, the smallest division is 0.002, so the comparison is accurate to 0.001
-							if (Math.Abs(Math.Round(speed, 3) - Math.Round(Options.Speed, 3)) > 0.001)
+							if (Math.Abs(speed - optionsSpeed) > 0.001)
 							{
 								var oldSpeed = speed;
 
-								speed = Options.Speed;
+								speed = optionsSpeed;
 
 								bucket = CreateBucket(speed);
 
-								Logger.LogInformation($"{SpiderId} speed changed from {oldSpeed} to {speed}");
+								Logger.LogInformation("{SpiderId} speed changed from {oldSpeed} to {speed}", SpiderId, oldSpeed, speed);
 							}
 
 							if (!await PublishRequestMessagesAsync(request))
@@ -485,7 +493,7 @@ namespace LucasSpider
 			}
 			catch (Exception e)
 			{
-				Logger.LogError($"{SpiderId} exited with exception: {e}");
+				Logger.LogError("{SpiderId} exited with exception: {e}", SpiderId, e);
 			}
 			finally
 			{
@@ -643,12 +651,12 @@ namespace LucasSpider
 		{
 			if (_dataFlows.Count == 0)
 			{
-				Logger.LogWarning($"{SpiderId} has no dataFlow");
+				Logger.LogWarning("{SpiderId} has no dataFlow", SpiderId);
 			}
 			else
 			{
 				var dataFlowInfo = string.Join(" -> ", _dataFlows.Select(x => x.GetType().Name));
-				Logger.LogInformation($"{SpiderId} DataFlows: {dataFlowInfo}");
+				Logger.LogInformation("{SpiderId} DataFlows: {dataFlowInfo}", SpiderId, dataFlowInfo);
 				foreach (var dataFlow in _dataFlows)
 				{
 					dataFlow.SetLogger(Logger);

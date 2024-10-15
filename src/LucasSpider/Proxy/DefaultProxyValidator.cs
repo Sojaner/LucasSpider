@@ -48,7 +48,7 @@ namespace LucasSpider.Proxy
 			}
 			catch
 			{
-				_logger.LogWarning($"proxy {proxy} is not available");
+				_logger.LogWarning("proxy {proxy} is not available", proxy);
 				return false;
 			}
 		}

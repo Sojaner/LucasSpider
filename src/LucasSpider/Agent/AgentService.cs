@@ -112,7 +112,7 @@ namespace LucasSpider.Agent
 			}
 			catch (Exception e)
 			{
-				_logger.LogError($"Deserializing message failed: {e}");
+				_logger.LogError("Deserializing message failed: {e}", e);
 				return;
 			}
 
@@ -150,7 +150,7 @@ namespace LucasSpider.Agent
 				default:
 					{
 						var msg = JsonSerializer.Serialize(message);
-						_logger.LogWarning($"Message not supported: {msg}");
+						_logger.LogWarning("Message not supported: {msg}", msg);
 						break;
 					}
 			}

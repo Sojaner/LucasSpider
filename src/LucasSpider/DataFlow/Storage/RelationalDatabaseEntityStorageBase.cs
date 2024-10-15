@@ -170,7 +170,7 @@ namespace LucasSpider.DataFlow.Storage
 					}
 					catch (Exception ex)
 					{
-						Logger.LogError($"Attempt to insert data failed: {ex}");
+						Logger?.LogError("Attempt to insert data failed: {ex}", ex);
 
 						// Network exceptions require retrying and do not require Rollback
 						if (!(ex.InnerException is EndOfStreamException))
@@ -269,7 +269,7 @@ namespace LucasSpider.DataFlow.Storage
 			}
 			catch
 			{
-				Logger.LogError($"Unable to open database connection: {connectionString}.");
+				Logger.LogError("Unable to open database connection: {connectionString}.", connectionString);
 			}
 
 			return null;

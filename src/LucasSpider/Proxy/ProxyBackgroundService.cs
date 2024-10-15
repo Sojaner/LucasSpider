@@ -43,14 +43,14 @@ namespace LucasSpider.Proxy
 						var cnt = await _pool.AddAsync(proxies);
 						if (cnt > 0)
 						{
-							_logger.LogInformation($"Find new {cnt} proxies");
+							_logger.LogInformation("Find new {cnt} proxies", cnt);
 						}
 
 						await Task.Delay(interval, default);
 					}
 					catch (Exception e)
 					{
-						_logger.LogError($"Get proxies failed: {e}");
+						_logger.LogError("Get proxies failed: {e}", e);
 						failedNum++;
 						if (failedNum > 5)
 						{
