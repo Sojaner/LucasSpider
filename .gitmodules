@@ -1,0 +1,3 @@
+[submodule "src/HashedWheelTimer"]
+	path = src/HashedWheelTimer
+	url = https://github.com/Sojaner/HashedWheelTimer.git
