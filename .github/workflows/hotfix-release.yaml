@@ -24,9 +24,6 @@ jobs:
     name: Test
     needs: [startup]
     uses: ./.github/workflows/test-job.yaml
-    with:
-      stage: production
-    secrets: inherit
 
   publish:
     name: Publish Package
