@@ -43,7 +43,7 @@ public class NotSelectable : ISelectable
 		throw new NotImplementedException();
 	}
 
-	public string Value => null;
+	public string Value => throw new NotImplementedException();
 
 	public ISelectable Select(ISelector selector)
 	{

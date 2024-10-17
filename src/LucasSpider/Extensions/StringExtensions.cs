@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
@@ -48,10 +49,15 @@ namespace LucasSpider.Extensions
 		public static bool IsHtmlContent(this string content)
 		{
 			return content.TrimStart().StartsWith("<!DOCTYPE html", StringComparison.InvariantCultureIgnoreCase) ||
-			       content.TrimStart().StartsWith("<html", StringComparison.InvariantCultureIgnoreCase) || content.HasHtmlElements();
+			       content.TrimStart().StartsWith("<html", StringComparison.InvariantCultureIgnoreCase) || content.HasKnownHtmlElements();
 		}
 
-		public static bool HasHtmlElements(this string input)
+		public static HashSet<string> KnownHtmlElements { get; } = new (StringComparer.OrdinalIgnoreCase)
+		{
+			"html", "head", "title", "base", "link", "meta", "style", "script", "noscript", "template", "body", "section", "nav", "article", "aside", "h1", "h2", "h3", "h4", "h5", "h6", "header", "footer", "address", "main", "p", "hr", "pre", "blockquote", "ol", "ul", "li", "dl", "dt", "dd", "figure", "figcaption", "div", "a", "em", "strong", "small", "s", "cite", "q", "dfn", "abbr", "data", "time", "code", "var", "samp", "kbd", "sub", "sup", "i", "b", "u", "mark", "ruby", "rt", "rp", "bdi", "bdo", "span", "br", "wbr", "ins", "del", "picture", "source", "img", "iframe", "embed", "object", "param", "video", "audio", "track", "map", "area", "table", "caption", "colgroup", "col", "tbody", "thead", "tfoot", "tr", "td", "th", "form", "label", "input", "button", "select", "datalist", "optgroup", "option", "textarea", "output", "progress", "meter", "fieldset", "legend", "details", "summary", "dialog", "script", "noscript", "template", "slot", "canvas", "table", "caption", "colgroup", "col", "tbody", "thead", "tfoot", "tr", "td", "th", "form", "label", "input", "button", "select", "datalist", "optgroup", "option", "textarea", "output", "progress", "meter", "fieldset", "legend", "details", "summary", "dialog", "script", "noscript", "template", "slot", "canvas", "a", "abbr", "address", "area", "article", "aside", "audio", "b", "base", "bdi"
+		};
+
+		public static bool HasKnownHtmlElements(this string input)
 		{
 			// Load the input string into an HtmlDocument
 			var doc = new HtmlDocument();
@@ -59,7 +65,7 @@ namespace LucasSpider.Extensions
 
 			// Check if the document contains any element nodes
 			return doc.DocumentNode.Descendants()
-				.Any(node => node.NodeType == HtmlNodeType.Element);
+				.Any(node => node.NodeType == HtmlNodeType.Element && KnownHtmlElements.Contains(node.Name));
 		}
 	}
 }
