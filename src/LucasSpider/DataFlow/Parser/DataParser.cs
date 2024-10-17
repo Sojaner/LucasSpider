@@ -142,7 +142,7 @@ namespace LucasSpider.DataFlow.Parser
 				{
 					context.Selectable = SelectableBuilder(context);
 				}
-				else
+				else if (context.Response.Content.IsTextData())
 				{
 					var text = context.Response.ReadAsString();
 					if (text.IsHtmlContent())
