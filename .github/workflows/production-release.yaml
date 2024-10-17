@@ -19,6 +19,7 @@ jobs:
           stage: production
           reference: ${{ github.event.inputs.reference }}
           token: ${{ github.token }}
+          check_issues: false
 
   publish:
     name: Publish Package
