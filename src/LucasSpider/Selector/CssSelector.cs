@@ -42,7 +42,7 @@ namespace LucasSpider.Selector
         {
             if (string.IsNullOrWhiteSpace(text))
             {
-                return null;
+                return new NotSelectable();
             }
 
             var document = new HtmlDocument {OptionAutoCloseOnEnd = true};
@@ -51,18 +51,18 @@ namespace LucasSpider.Selector
 
 			if (node == null)
 			{
-				return null;
+				return new NotSelectable();
 			}
 
 			if (HasAttribute)
 			{
 				var value = node.Attributes[_attrName]?.Value?.Trim();
-				return value != null ? new TextSelectable(value) : null;
+				return value != null ? new TextSelectable(value) : new NotSelectable();
 			}
 			else
 			{
 				return node.NodeType == HtmlNodeType.Text
-					? node.InnerText != null ? new TextSelectable(node.InnerText) : null
+					? node.InnerText != null ? new TextSelectable(node.InnerText) : new NotSelectable()
 					: new HtmlSelectable(node);
 			}
 		}
@@ -89,13 +89,13 @@ namespace LucasSpider.Selector
 			if (HasAttribute)
 			{
 				return nodes.Select(x => (ISelectable)(x.Attributes[_attrName]?.Value?.Trim() is var value
-					? value != null ? new TextSelectable(value) : null
-					: null));
+					? value != null ? new TextSelectable(value) : new NotSelectable()
+					: new NotSelectable()));
 			}
 			else
 			{
 				return nodes.Select(node => (ISelectable)(node.NodeType == HtmlNodeType.Text
-					? node.InnerText != null ? new TextSelectable(node.InnerText) : null
+					? node.InnerText != null ? new TextSelectable(node.InnerText) : new NotSelectable()
 					: new HtmlSelectable(node)));
 			}
 		}

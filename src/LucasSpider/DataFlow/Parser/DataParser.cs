@@ -137,7 +137,7 @@ namespace LucasSpider.DataFlow.Parser
 
 			if (context.Selectable == null)
 			{
-				context.Selectable = null;
+				context.Selectable = new NotSelectable();
 				if (SelectableBuilder != null)
 				{
 					context.Selectable = SelectableBuilder(context);

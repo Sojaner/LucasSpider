@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
 
 namespace LucasSpider.Extensions
@@ -46,7 +48,18 @@ namespace LucasSpider.Extensions
 		public static bool IsHtmlContent(this string content)
 		{
 			return content.TrimStart().StartsWith("<!DOCTYPE html", StringComparison.InvariantCultureIgnoreCase) ||
-			       content.TrimStart().StartsWith("<html", StringComparison.InvariantCultureIgnoreCase);
+			       content.TrimStart().StartsWith("<html", StringComparison.InvariantCultureIgnoreCase) || content.HasHtmlElements();
+		}
+
+		public static bool HasHtmlElements(this string input)
+		{
+			// Load the input string into an HtmlDocument
+			var doc = new HtmlDocument();
+			doc.LoadHtml(input);
+
+			// Check if the document contains any element nodes
+			return doc.DocumentNode.Descendants()
+				.Any(node => node.NodeType == HtmlNodeType.Element);
 		}
 	}
 }
