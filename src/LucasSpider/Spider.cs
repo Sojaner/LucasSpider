@@ -33,6 +33,8 @@ namespace LucasSpider
 		private readonly DependenceServices _services;
 		private readonly string _defaultDownloader;
 		private readonly IList<DataParser> _dataParsers;
+		private int _requestsCount;
+		private int _responseCount;
 
 		/// <summary>
 		/// Request Timeout event
@@ -369,6 +371,8 @@ namespace LucasSpider
 			}
 			finally
 			{
+				_responseCount++;
+
 				ObjectUtilities.DisposeSafely(context);
 			}
 		}
@@ -482,6 +486,11 @@ namespace LucasSpider
 
 						end = DateTime.Now;
 					}
+					else if(_responseCount < _requestsCount)
+					{
+						// We haven't received all the responses yet, so we need to wait
+						await Task.Delay(10, default);
+					}
 					else
 					{
 						OnSchedulerEmpty?.Invoke();
@@ -515,6 +524,8 @@ namespace LucasSpider
 
 			foreach (var request in timeoutRequests)
 			{
+				_responseCount++;
+
 				request.RequestedTimes += 1;
 
 				Logger.LogWarning(
@@ -533,7 +544,7 @@ namespace LucasSpider
 		{
 			if (sleepTime > sleepTimeLimit)
 			{
-				Logger.LogInformation($"Exit: {(int)totalSeconds} seconds");
+				Logger.LogInformation("Exit: {Seconds} seconds", (int)totalSeconds);
 				return false;
 			}
 			else
@@ -623,6 +634,8 @@ namespace LucasSpider
 
 					if (_requestedQueue.Enqueue(request))
 					{
+						_requestsCount++;
+
 						await _services.MessageQueue.PublishAsBytesAsync(topic, request);
 					}
 					else
