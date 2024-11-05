@@ -489,7 +489,7 @@ namespace LucasSpider
 					else if(_responseCount < _requestsCount)
 					{
 						// We haven't received all the responses yet, so we need to wait
-						await Task.Delay(10, stoppingToken);
+						await Task.Delay(10, default);
 					}
 					else
 					{
