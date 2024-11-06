@@ -35,6 +35,7 @@ namespace LucasSpider
 		private readonly IList<DataParser> _dataParsers;
 		private int _requestsCount;
 		private int _responseCount;
+		private DateTime? _lastRequestTime;
 
 		/// <summary>
 		/// Request Timeout event
@@ -482,11 +483,13 @@ namespace LucasSpider
 								Logger.LogError("Exit by publish request message failed");
 								break;
 							}
+
+							_lastRequestTime = DateTime.Now;
 						}
 
 						end = DateTime.Now;
 					}
-					else if(_responseCount < _requestsCount)
+					else if(DownloadsRemaining())
 					{
 						// We haven't received all the responses yet, so we need to wait
 						await Task.Delay(10, default);
@@ -512,6 +515,25 @@ namespace LucasSpider
 			{
 				await ExitAsync();
 			}
+		}
+
+		private bool DownloadsRemaining()
+		{
+			// From the moment of the last request, wait for the timeout period per each remaining request
+			// plus 15 seconds that is needed for DNS lookup to make sure we don't exit too early
+			// See the documentation for more information: https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpclient.timeout?view=net-8.0#remarks
+			// Note: This big timeout practically never happens since the requests start timing out eventually, but it will prevent the spider from exiting too early and living forever
+			var timeout = (15000 + Options.DefaultTimeout) * Math.Max(1, _requestsCount - _responseCount);
+
+			Console.WriteLine($"Timeout: {timeout}, Requests: {_requestsCount}, Responses: {_responseCount}");
+
+			var timeoutPeriodPassed = _lastRequestTime.HasValue && (DateTime.Now - _lastRequestTime.Value).TotalMilliseconds > timeout;
+
+			var allResponsesReceived = _responseCount >= _requestsCount;
+
+			var downloadsCompleted = allResponsesReceived || timeoutPeriodPassed;
+
+			return !downloadsCompleted;
 		}
 
 		private async Task<bool> HandleTimeoutRequestAsync()
