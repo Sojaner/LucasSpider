@@ -525,8 +525,6 @@ namespace LucasSpider
 			// Note: This big timeout practically never happens since the requests start timing out eventually, but it will prevent the spider from exiting too early and living forever
 			var timeout = (15000 + Options.DefaultTimeout) * Math.Max(1, _requestsCount - _responseCount);
 
-			Console.WriteLine($"Timeout: {timeout}, Requests: {_requestsCount}, Responses: {_responseCount}");
-
 			var timeoutPeriodPassed = _lastRequestTime.HasValue && (DateTime.Now - _lastRequestTime.Value).TotalMilliseconds > timeout;
 
 			var allResponsesReceived = _responseCount >= _requestsCount;
