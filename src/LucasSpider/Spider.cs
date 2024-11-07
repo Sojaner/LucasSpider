@@ -232,7 +232,7 @@ namespace LucasSpider
 		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 		{
 			SpiderId = GenerateSpiderId();
-			Logger.LogInformation("Initializing spider {SpiderId}, {SpiderId.Name}", SpiderId, SpiderId.Name);
+			Logger.LogInformation("Initializing spider {SpiderId}, {Name}", SpiderId, SpiderId.Name);
 			await _services.StatisticsClient.StartAsync(SpiderId.Id, SpiderId.Name);
 			await _services.Scheduler.InitializeAsync(SpiderId.Id);
 			await InitializeAsync(stoppingToken);
