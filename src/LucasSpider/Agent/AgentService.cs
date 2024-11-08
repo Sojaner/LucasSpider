@@ -12,7 +12,6 @@ using LucasSpider.Statistics;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using IMessageQueue = LucasSpider.MessageQueue.IMessageQueue;
 using MessageQueue_IMessageQueue = LucasSpider.MessageQueue.IMessageQueue;
 
 namespace LucasSpider.Agent
@@ -47,10 +46,18 @@ namespace LucasSpider.Agent
 
 		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 		{
-			_logger.LogDebug(
-				_messageQueue.IsDistributed
-					? $"Agent {_options.AgentId}, {_options.AgentName} is starting"
-					: "Agent is starting");
+			if (!string.IsNullOrEmpty(_options.AgentId) && !string.IsNullOrEmpty(_options.AgentName) && _options.AgentId != _options.AgentName)
+			{
+				_logger.LogDebug("Agent {AgentId}, {AgentName} is starting", _options.AgentId, _options.AgentName);
+			}
+			else if (!string.IsNullOrEmpty(_options.AgentId))
+			{
+				_logger.LogDebug("Agent {AgentId} is starting", _options.AgentId);
+			}
+			else
+			{
+				_logger.LogDebug("Agent is starting");
+			}
 
 			await _statisticsClient.RegisterAgentAsync(_options.AgentId, _options.AgentName);
 
@@ -86,9 +93,18 @@ namespace LucasSpider.Agent
 				}, stoppingToken).ConfigureAwait(true).GetAwaiter();
 			}
 
-			_logger.LogInformation(_messageQueue.IsDistributed
-				? $"Agent {_options.AgentId}, {_options.AgentName} started"
-				: "Agent started");
+			if (!string.IsNullOrEmpty(_options.AgentId) && !string.IsNullOrEmpty(_options.AgentName) && _options.AgentId != _options.AgentName)
+			{
+				_logger.LogDebug("Agent {AgentId}, {AgentName} started", _options.AgentId, _options.AgentName);
+			}
+			else if (!string.IsNullOrEmpty(_options.AgentId))
+			{
+				_logger.LogDebug("Agent {AgentId} started", _options.AgentId);
+			}
+			else
+			{
+				_logger.LogDebug("Agent started");
+			}
 		}
 
 		private async Task RegisterAgentAsync(string topic, CancellationToken stoppingToken)
@@ -164,7 +180,7 @@ namespace LucasSpider.Agent
 
 		private async Task HeartbeatAsync()
 		{
-			_logger.LogInformation($"Heartbeat {_options.AgentId}, {_options.AgentName}");
+			_logger.LogInformation("Heartbeat {AgentId}, {AgentName}", _options.AgentId, _options.AgentName);
 
 			await _messageQueue.PublishAsBytesAsync(Topics.AgentCenter,
 				new Messages.Agent.Heartbeat
@@ -178,8 +194,18 @@ namespace LucasSpider.Agent
 
 		public override async Task StopAsync(CancellationToken cancellationToken)
 		{
-			_logger.LogInformation(
-				_messageQueue.IsDistributed ? $"Agent {_options.AgentId} is stopping" : "Agent is stopping");
+			if (!string.IsNullOrEmpty(_options.AgentId) && !string.IsNullOrEmpty(_options.AgentName) && _options.AgentId != _options.AgentName)
+			{
+				_logger.LogDebug("Agent {AgentId}, {AgentName} is stopping", _options.AgentId, _options.AgentName);
+			}
+			else if (!string.IsNullOrEmpty(_options.AgentId))
+			{
+				_logger.LogDebug("Agent {AgentId} is stopping", _options.AgentId);
+			}
+			else
+			{
+				_logger.LogDebug("Agent is stopping");
+			}
 
 			foreach (var consumer in _consumers)
 			{
@@ -188,7 +214,18 @@ namespace LucasSpider.Agent
 
 			await base.StopAsync(cancellationToken);
 
-			_logger.LogInformation(_messageQueue.IsDistributed ? $"Agent {_options.AgentId} stopped" : "Agent stopped");
+			if (!string.IsNullOrEmpty(_options.AgentId) && !string.IsNullOrEmpty(_options.AgentName) && _options.AgentId != _options.AgentName)
+			{
+				_logger.LogDebug("Agent {AgentId}, {AgentName} stopped", _options.AgentId, _options.AgentName);
+			}
+			else if (!string.IsNullOrEmpty(_options.AgentId))
+			{
+				_logger.LogDebug("Agent {AgentId} stopped", _options.AgentId);
+			}
+			else
+			{
+				_logger.LogDebug("Agent stopped");
+			}
 		}
 	}
 }

@@ -33,6 +33,7 @@ namespace LucasSpider
 		private readonly DependenceServices _services;
 		private readonly string _defaultDownloader;
 		private readonly IList<DataParser> _dataParsers;
+		private readonly HashSet<string> _hosts;
 		private int _requestsCount;
 		private int _responseCount;
 		private DateTime? _lastRequestTime;
@@ -97,6 +98,7 @@ namespace LucasSpider
 			_requestSuppliers = new List<IRequestSupplier>();
 			_dataFlows = new List<IDataFlow>();
 			_dataParsers = new List<DataParser>();
+			_hosts = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
 			_defaultDownloader = _services.HostBuilderContext.Properties.ContainsKey(Const.DefaultDownloader)
 				? _services.HostBuilderContext.Properties[Const.DefaultDownloader]?.ToString()
@@ -136,7 +138,7 @@ namespace LucasSpider
 
 			Dispose();
 
-			Logger.LogInformation("{SpiderId} stopped", SpiderId);
+			Logger.LogInformation("Spider {SpiderId} stopped", SpiderId);
 		}
 
 		/// <summary>
@@ -232,7 +234,14 @@ namespace LucasSpider
 		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 		{
 			SpiderId = GenerateSpiderId();
-			Logger.LogInformation("Initializing spider {SpiderId}, {Name}", SpiderId, SpiderId.Name);
+			if (SpiderId.Id != SpiderId.Name)
+			{
+				Logger.LogInformation("Initializing spider {SpiderId}, {Name}", SpiderId, SpiderId.Name);
+			}
+			else
+			{
+				Logger.LogInformation("Initializing spider {SpiderId}", SpiderId);
+			}
 			await _services.StatisticsClient.StartAsync(SpiderId.Id, SpiderId.Name);
 			await _services.Scheduler.InitializeAsync(SpiderId.Id);
 			await InitializeAsync(stoppingToken);
@@ -288,6 +297,8 @@ namespace LucasSpider
 
 							if (request != null)
 							{
+								_responseCount++;
+							
 								if (response.StatusCode.IsSuccessStatusCode())
 								{
 									request.Agent = response.Agent;
@@ -358,7 +369,7 @@ namespace LucasSpider
 			// DataFlow can abort the crawler program by throwing ExitException
 			catch (ExitException ee)
 			{
-				Logger.LogError("Exit: {ee}", ee);
+				Logger.LogError("{SpiderId} exit: {ee}", SpiderId, ee);
 				await ExitAsync();
 			}
 			catch (Exception e)
@@ -372,8 +383,6 @@ namespace LucasSpider
 			}
 			finally
 			{
-				_responseCount++;
-
 				ObjectUtilities.DisposeSafely(context);
 			}
 		}
@@ -449,6 +458,9 @@ namespace LucasSpider
 
 						foreach (var request in requests)
 						{
+							var host = request.RequestUri.GetComponents(UriComponents.Host, UriFormat.SafeUnescaped);
+							_hosts.Add(host);
+
 							ConfigureRequest(request);
 
 							// If there is no Parser that can handle this request, there is no need to download it.
@@ -520,10 +532,10 @@ namespace LucasSpider
 		private bool DownloadsRemaining()
 		{
 			// From the moment of the last request, wait for the timeout period per each remaining request
-			// plus 15 seconds that is needed for DNS lookup to make sure we don't exit too early
+			// plus 15 seconds per unique host that is needed for DNS lookup to make sure we have breath time for the DNS lookup.
 			// See the documentation for more information: https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpclient.timeout?view=net-8.0#remarks
 			// Note: This big timeout practically never happens since the requests start timing out eventually, but it will prevent the spider from exiting too early and living forever
-			var timeout = (15000 + Options.DefaultTimeout) * Math.Max(1, _requestsCount - _responseCount);
+			var timeout = (15000 * _hosts.Count) + (Options.DefaultTimeout * Math.Max(1, _requestsCount - _responseCount));
 
 			var timeoutPeriodPassed = _lastRequestTime.HasValue && (DateTime.Now - _lastRequestTime.Value).TotalMilliseconds > timeout;
 
@@ -564,7 +576,7 @@ namespace LucasSpider
 		{
 			if (sleepTime > sleepTimeLimit)
 			{
-				Logger.LogInformation("Exit: {Seconds} seconds", (int)totalSeconds);
+				Logger.LogInformation("{SpiderId} exit: {Seconds} seconds", SpiderId, (int)totalSeconds);
 				return false;
 			}
 			else
