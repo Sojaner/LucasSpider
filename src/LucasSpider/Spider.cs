@@ -297,8 +297,6 @@ namespace LucasSpider
 
 							if (request != null)
 							{
-								_responseCount++;
-							
 								if (response.StatusCode.IsSuccessStatusCode())
 								{
 									request.Agent = response.Agent;
@@ -328,6 +326,8 @@ namespace LucasSpider
 
 									OnRequestError?.Invoke(request, response);
 								}
+
+								_responseCount++;
 							}
 
 							break;
@@ -556,12 +556,11 @@ namespace LucasSpider
 
 			foreach (var request in timeoutRequests)
 			{
-				_responseCount++;
-
 				request.RequestedTimes += 1;
 
-				Logger.LogWarning(
-					"{SpiderId} request {RequestUri}, {Hash} timed out", SpiderId, request.RequestUri, request.Hash);
+                Logger.LogWarning("{SpiderId} request {RequestUri}, {Hash} timed out", SpiderId, request.RequestUri, request.Hash);
+
+				_responseCount++;
 			}
 
 			await AddRequestsAsync(timeoutRequests);
