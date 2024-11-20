@@ -8,7 +8,6 @@ using LucasSpider.MessageQueue;
 using LucasSpider.Statistics.Store;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using IMessageQueue = LucasSpider.MessageQueue.IMessageQueue;
 using MessageQueue_IMessageQueue = LucasSpider.MessageQueue.IMessageQueue;
 
 namespace LucasSpider.Statistics
@@ -37,67 +36,74 @@ namespace LucasSpider.Statistics
 			_consumer = new AsyncMessageConsumer<byte[]>(Topics.Statistics);
 			_consumer.Received += async bytes =>
 			{
-				var message = await bytes.DeserializeAsync(stoppingToken);
-				if (message == null)
+				try
 				{
-					_logger.LogWarning("Received empty message");
-					return;
-				}
-
-				if (message is Messages.Statistics.Success success)
-				{
-					await _statisticsStore.IncreaseSuccessAsync(success.SpiderId);
-				}
-				else if (message is Messages.Statistics.Start start)
-				{
-					await _statisticsStore.StartAsync(start.SpiderId, start.SpiderName);
-				}
-				else if (message is Messages.Statistics.Failure failure)
-				{
-					await _statisticsStore.IncreaseFailureAsync(failure.SpiderId);
-				}
-				else if (message is Messages.Statistics.Total total)
-				{
-					await _statisticsStore.IncreaseTotalAsync(total.SpiderId, total.Count);
-				}
-				else if (message is Messages.Statistics.Exit exit)
-				{
-					await _statisticsStore.ExitAsync(exit.SpiderId);
-				}
-				else if (message is Messages.Statistics.RegisterAgent registerAgent)
-				{
-					await _statisticsStore.RegisterAgentAsync(registerAgent.AgentId, registerAgent.AgentName);
-				}
-				else if (message is Messages.Statistics.AgentSuccess agentSuccess)
-				{
-					await _statisticsStore.IncreaseAgentSuccessAsync(agentSuccess.AgentId,
-						agentSuccess.ElapsedMilliseconds);
-				}
-				else if (message is Messages.Statistics.AgentFailure agentFailure)
-				{
-					await _statisticsStore.IncreaseAgentFailureAsync(agentFailure.AgentId,
-						agentFailure.ElapsedMilliseconds);
-				}
-				else if (message is Messages.Statistics.Print print)
-				{
-					var statistics = await _statisticsStore.GetSpiderStatisticsAsync(print.SpiderId);
-					if (statistics != null)
+					var message = await bytes.DeserializeAsync(stoppingToken);
+					if (message == null)
 					{
-						var left = statistics.Total >= statistics.Success
-							? (statistics.Total - statistics.Success - statistics.Failure).ToString()
-							: "unknown";
-						var now = DateTimeOffset.Now;
-						var speed = (decimal)(statistics.Success /
-						                      (now - (statistics.Start ?? now.AddMinutes(-1))).TotalSeconds);
-						_logger.LogInformation(
-							"{SpiderId} total {Total}, speed: {Speed}, success {Success}, failure {Failure}, left {left}",
-							print.SpiderId, statistics.Total, decimal.Round(speed, 2), statistics.Success, statistics.Failure, left);
+						_logger.LogWarning("Received empty message");
+						return;
+					}
+
+					if (message is Messages.Statistics.Success success)
+					{
+						await _statisticsStore.IncreaseSuccessAsync(success.SpiderId);
+					}
+					else if (message is Messages.Statistics.Start start)
+					{
+						await _statisticsStore.StartAsync(start.SpiderId, start.SpiderName);
+					}
+					else if (message is Messages.Statistics.Failure failure)
+					{
+						await _statisticsStore.IncreaseFailureAsync(failure.SpiderId);
+					}
+					else if (message is Messages.Statistics.Total total)
+					{
+						await _statisticsStore.IncreaseTotalAsync(total.SpiderId, total.Count);
+					}
+					else if (message is Messages.Statistics.Exit exit)
+					{
+						await _statisticsStore.ExitAsync(exit.SpiderId);
+					}
+					else if (message is Messages.Statistics.RegisterAgent registerAgent)
+					{
+						await _statisticsStore.RegisterAgentAsync(registerAgent.AgentId, registerAgent.AgentName);
+					}
+					else if (message is Messages.Statistics.AgentSuccess agentSuccess)
+					{
+						await _statisticsStore.IncreaseAgentSuccessAsync(agentSuccess.AgentId,
+							agentSuccess.ElapsedMilliseconds);
+					}
+					else if (message is Messages.Statistics.AgentFailure agentFailure)
+					{
+						await _statisticsStore.IncreaseAgentFailureAsync(agentFailure.AgentId,
+							agentFailure.ElapsedMilliseconds);
+					}
+					else if (message is Messages.Statistics.Print print)
+					{
+						var statistics = await _statisticsStore.GetSpiderStatisticsAsync(print.SpiderId);
+						if (statistics != null)
+						{
+							var left = statistics.Total >= statistics.Success
+								? (statistics.Total - statistics.Success - statistics.Failure).ToString()
+								: "unknown";
+							var now = DateTimeOffset.Now;
+							var speed = (decimal)(statistics.Success /
+												  (now - (statistics.Start ?? now.AddMinutes(-1))).TotalSeconds);
+							_logger.LogInformation(
+								"{SpiderId} total {Total}, speed: {Speed}, success {Success}, failure {Failure}, left {left}",
+								print.SpiderId, statistics.Total, decimal.Round(speed, 2), statistics.Success, statistics.Failure, left);
+						}
+					}
+					else
+					{
+						var log = Encoding.UTF8.GetString(JsonSerializer.SerializeToUtf8Bytes(message));
+						_logger.LogWarning("Not supported message: {log}", log);
 					}
 				}
-				else
+				catch (Exception ex)
 				{
-					var log = Encoding.UTF8.GetString(JsonSerializer.SerializeToUtf8Bytes(message));
-					_logger.LogWarning("Not supported message: {log}", log);
+					_logger.LogError(ex, "Error processing message");
 				}
 			};
 			await _messageQueue.ConsumeAsync(_consumer, stoppingToken);
