@@ -15,10 +15,6 @@ If you want to get the latest beta packages, you should add the myget feed:
 <add key="myget.org" value="https://www.myget.org/F/zlzforever/api/v3/index.json" protocolVersion="3" />
 ````
 
-### DESIGN
-
-![DESIGN IMAGE](https://github.com/dotnetcore/LucasSpider/blob/master/images/%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86%E7%B3%BB%E7%BB%9F.png?raw=true)
-
 ### DEVELOP ENVIROMENT
 
 1. Visual Studio 2017 (15.3 or later) or Jetbrains Rider

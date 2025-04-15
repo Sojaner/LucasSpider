@@ -1,9 +1,0 @@
-version: '3'
-
-services:
-  lucasspider.portal:
-    image: 'lucasspider/portal:latest'
-    restart: always
-    container_name: lucasspider.portal
-    ports:
-      - '7896:7896'
