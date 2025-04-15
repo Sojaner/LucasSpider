@@ -3,7 +3,6 @@
 Disclaimer: This framework is to help developers simplify the development process and improve development efficiency. Please do not use this framework to do anything that violates national laws. Anything the user does has nothing to do with the author of this framework.
 
 [![NuGet](https://img.shields.io/nuget/vpre/LucasSpider.svg)](https://www.nuget.org/packages/LucasSpider)
-[![GitHub license](https://img.shields.io/github/license/dotnetcore/LucasSpider.svg)](https://github.com/dotnetcore/LucasSpider/blob/main/LICENSE.txt)
 
 LucasSpider, a .NET Standard web crawling library. It is a lightweight, efficient, and fast high-level web crawling & scraping framework.
 
