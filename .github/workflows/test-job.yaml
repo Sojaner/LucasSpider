@@ -27,7 +27,7 @@ jobs:
 
       - id: test
         run: |
-          cd ../src/LucasSpider.Tests
+          cd src/LucasSpider.Tests
           path="$(pwd)/test-results" && echo "::set-output name=path::$path"
           dotnet test --logger "trx;logfilename=$path/test-reports.trx"
 
