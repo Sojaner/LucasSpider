@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using LucasSpider.RabbitMQ;
 using LucasSpider.Scheduler;
 using LucasSpider.Scheduler.Component;
 using Microsoft.Extensions.Hosting;
@@ -40,7 +39,6 @@ namespace LucasSpider.Spiders
 
 				var builder = Builder.CreateBuilder(type);
 				builder.UseSerilog();
-				builder.UseRabbitMQ();
 				builder.UseQueueDistinctBfsScheduler<HashSetDuplicateRemover>();
 				await builder.Build().RunAsync();
 			}

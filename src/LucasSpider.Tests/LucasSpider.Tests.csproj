@@ -20,9 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LucasSpider.Mongo\LucasSpider.Mongo.csproj" />
-    <ProjectReference Include="..\LucasSpider.MySql\LucasSpider.MySql.csproj" />
-    <ProjectReference Include="..\LucasSpider.RabbitMQ\LucasSpider.RabbitMQ.csproj" />
     <ProjectReference Include="..\LucasSpider\LucasSpider.csproj" />
   </ItemGroup>
 
@@ -34,9 +31,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="test.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
