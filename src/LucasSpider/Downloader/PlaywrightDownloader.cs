@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Net;
+using System.Net.Mime;
+using System.Text;
 using System.Threading.Tasks;
 using LucasSpider.Http;
 using Microsoft.Extensions.Options;
@@ -43,7 +45,7 @@ namespace LucasSpider.Downloader
 				}
 
 				var redirects = (await GetRedirectsAsync(document)).ToList();
-				var httpResponse = await ConvertIResponseToHttpResponse(document);
+				var httpResponse = await ConvertIResponseToHttpResponse(document, page);
 
 				var response = await httpResponse.ToResponseAsync();
 				response.Elapsed = TimeSpan.FromMilliseconds(document.Request.Timing.ResponseEnd);
@@ -100,11 +102,11 @@ namespace LucasSpider.Downloader
 			return list;
 		}
 
-		private static async Task<HttpResponseMessage> ConvertIResponseToHttpResponse(IResponse playwrightResponse)
+		private static async Task<HttpResponseMessage> ConvertIResponseToHttpResponse(IResponse playwrightResponse, IPage page)
 		{
 			var httpResponse = new HttpResponseMessage((HttpStatusCode)playwrightResponse.Status)
 			{
-				Content = new System.Net.Http.ByteArrayContent(await playwrightResponse.BodyAsync()),
+				Content = new System.Net.Http.StringContent(await page.ContentAsync(), Encoding.UTF8, MediaTypeNames.Text.Html),
 				RequestMessage = new HttpRequestMessage(new HttpMethod(playwrightResponse.Request.Method), playwrightResponse.Request.Url)
 			};
 
