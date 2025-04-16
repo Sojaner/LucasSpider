@@ -61,6 +61,11 @@ namespace LucasSpider
 		/// <remarks>This can be overriden per request through overriding the <b>ConfigureRequest</b> method or directly providing preconfigured requests to the <b>AddRequestsAsync</b> method<br/>Default is <b>null</b></remarks>
 		public string UserAgent { get; set; } = null;
 
+		/// <summary>
+		/// Allow scheduling of duplicate requests if the previous request is already completed
+		/// </summary>
+		public bool AllowDuplicatedCompletedRequests { get; set; } = false;
+
 		public object Clone()
 		{
 			return MemberwiseClone();

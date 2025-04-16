@@ -28,6 +28,15 @@ namespace LucasSpider.Scheduler
 			await DuplicateRemover.ResetDuplicateCheckAsync();
 		}
 
+		/// <summary>
+		/// Reset duplicate remover for the specified request
+		/// </summary>
+		/// <param name="request"></param>
+		public virtual async Task ResetDuplicateCheckForRequestAsync(Request request)
+		{
+			await DuplicateRemover.ResetDuplicateCheckForRequestAsync(request);
+		}
+
 		public virtual Task SuccessAsync(Request request)
 		{
 			return Task.CompletedTask;
