@@ -327,6 +327,11 @@ namespace LucasSpider
 									OnRequestError?.Invoke(request, response);
 								}
 
+								if (Options.AllowDuplicatedCompletedRequests)
+								{
+									await _services.Scheduler.ResetDuplicateCheckForRequestAsync(request);
+								}
+
 								_responseCount++;
 							}
 
@@ -559,6 +564,11 @@ namespace LucasSpider
 				request.RequestedTimes += 1;
 
                 Logger.LogWarning("{SpiderId} request {RequestUri}, {Hash} timed out", SpiderId, request.RequestUri, request.Hash);
+
+                if (Options.AllowDuplicatedCompletedRequests)
+                {
+	                await _services.Scheduler.ResetDuplicateCheckForRequestAsync(request);
+                }
 
 				_responseCount++;
 			}

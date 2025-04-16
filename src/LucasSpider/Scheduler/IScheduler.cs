@@ -42,6 +42,13 @@ namespace LucasSpider.Scheduler
 		Task ResetDuplicateCheckAsync();
 
 		/// <summary>
+		/// Reset the duplicate check for the specified request
+		/// </summary>
+		/// <param name="request"></param>
+		/// <returns></returns>
+		Task ResetDuplicateCheckForRequestAsync(Request request);
+
+		/// <summary>
 		/// Tag request successful
 		/// </summary>
 		/// <param name="request"></param>
