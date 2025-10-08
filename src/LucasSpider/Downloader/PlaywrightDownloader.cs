@@ -7,18 +7,29 @@ using System.Net;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+using LucasSpider.Extensions;
 using LucasSpider.Http;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Playwright;
 
 namespace LucasSpider.Downloader
 {
-	public class PlaywrightDownloader(IBrowser browser, IOptions<DownloaderOptions> options) : IDownloader
+	public class PlaywrightDownloader(IBrowser browser, IOptions<DownloaderOptions> options, ILogger<PlaywrightDownloader> logger) : IDownloader
 	{
 		public async Task<Response> DownloadAsync(Request request)
 		{
+			var trackingId = Guid.NewGuid();
+			var url = request.RequestUri.AbsoluteUri;
 			try
 			{
+				logger.LogWithProperties(l => l.LogDebug("{Downloader} for {Owner} requesting {RequestUri}",
+						nameof(PlaywrightDownloader), request.Owner, url),
+					("Url", url),
+					("ServiceEventName", "Downloader"),
+					("ServiceEventType", "RequestSent"),
+					("TrackingId", trackingId));
+
 				await using var context = await browser.NewContextAsync(new BrowserNewContextOptions
 				{
 					UserAgent = request.Headers.UserAgent
@@ -41,7 +52,14 @@ namespace LucasSpider.Downloader
 
 				if (document == null)
 				{
-					return Response.CreateFailedResponse(ResponseReasonPhraseConstants.NoResponse, request.Hash);
+					var failedResponse = Response.CreateFailedResponse(ResponseReasonPhraseConstants.NoResponse, request.Hash);
+					logger.LogWithProperties(l => l.LogWarning("{Downloader} for {Owner} got no response for {RequestUri} with {StatusCode}",
+							nameof(PlaywrightDownloader), request.Owner, url, failedResponse.StatusCode),
+						("Url", url),
+						("ServiceEventName", "Downloader"),
+						("ServiceEventType", "NoResponse"),
+						("TrackingId", trackingId));
+					return failedResponse;
 				}
 
 				var redirects = (await GetRedirectsAsync(document)).ToList();
@@ -57,12 +75,27 @@ namespace LucasSpider.Downloader
 
 				await context.CloseAsync();
 
+				logger.LogWithProperties(l => l.LogInformation("{Downloader} for {Owner} received {RequestUri} with {StatusCode}",
+						nameof(PlaywrightDownloader), request.Owner, url, response.StatusCode),
+					("Url", url),
+					("ServiceEventName", "Downloader"),
+					("Redirects", redirects),
+					("ServiceEventType", "ResponseReceived"),
+					("TrackingId", trackingId));
+
 				return response;
 				void onRequest(object _, IRequest r) => requests.Add(r);
 			}
 			catch (Exception e)
 			{
-				return Response.CreateFailedResponse(e, request.Hash);
+				var failedResponse = Response.CreateFailedResponse(e, request.Hash);
+				logger.LogWithProperties(l => l.LogInformation("{Downloader} for {Owner} failed for {RequestUri} with {StatusCode}",
+						nameof(PlaywrightDownloader), request.Owner, url, failedResponse.StatusCode),
+					("Url", url),
+					("ServiceEventName", "Downloader"),
+					("ServiceEventType", "FailedResponse"),
+					("TrackingId", trackingId));
+				return failedResponse;
 			}
 		}
 
