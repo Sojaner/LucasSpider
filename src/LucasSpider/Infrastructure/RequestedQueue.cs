@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 #if NETSTANDARD2_0
 using System.Threading;
 #endif
@@ -24,6 +26,8 @@ namespace LucasSpider.Infrastructure
 		}
 
 		public int Count => _dict.Count;
+
+		public IReadOnlyList<Uri> Uris => _dict.Values.Select(x => x.RequestUri).ToList();
 
 		public bool Enqueue(Request request)
 		{
