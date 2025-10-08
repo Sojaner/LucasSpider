@@ -50,9 +50,22 @@ namespace LucasSpider.Downloader
 				var redirectResponses = new List<RedirectResponse>();
 				Uri targetUrl;
 				bool redirected;
+				var firstInChain = true;
+				var originalUrl = httpRequestMessage.RequestUri.AbsoluteUri;
+				var trackingId = Guid.NewGuid();
 
 				do
 				{
+					var url = httpRequestMessage.RequestUri.AbsoluteUri;
+					Logger.LogWithProperties(l => l.LogDebug("{Downloader} for {Owner} requesting {RequestUri}",
+							nameof(HttpClientDownloader), request.Owner, url),
+						("Url", url),
+						("OriginalUrl", originalUrl),
+						("FirstInChain", firstInChain),
+						("ServiceEventName", "Downloader"),
+						("ServiceEventType", "RequestSent"),
+						("TrackingId", trackingId));
+
 					stopwatch.Restart();
 					httpResponseMessage = await SendAsync(httpClient, httpRequestMessage);
 					headersTime = stopwatch.ElapsedMilliseconds;
@@ -83,8 +96,28 @@ namespace LucasSpider.Downloader
 					}
 					else if (redirected && redirects > _allowedRedirects)
 					{
+						Logger.LogWithProperties(l => l.LogWarning("{Downloader} for {Owner} got too many redirects for {RequestUri}",
+								nameof(HttpClientDownloader), request.Owner, url),
+								("Url", url),
+								("OriginalUrl", originalUrl),
+								("RedirectCount", redirects),
+								("ServiceEventName", "Downloader"),
+								("ServiceEventType", "ResponseReceived"),
+								("TrackingId", trackingId));
+
 						return Response.CreateFailedResponse(ResponseReasonPhraseConstants.TooManyRedirects, request.Hash);
 					}
+
+					firstInChain = false;
+
+					Logger.LogWithProperties(l => l.LogDebug("{Downloader} for {Owner} received {RequestUri} with {StatusCode}",
+							nameof(HttpClientDownloader), request.Owner, url, statusCode),
+						("Url", url),
+						("OriginalUrl", originalUrl),
+						("Redirected", redirected),
+						("ServiceEventName", "Downloader"),
+						("ServiceEventType", "ResponseReceived"),
+						("TrackingId", trackingId));
 
 				} while (redirected);
 

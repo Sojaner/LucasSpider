@@ -291,6 +291,18 @@ namespace LucasSpider
 						}
 					case Response response:
 						{
+							var duplicatedUrls = _requestedQueue.Uris.Select(uri => uri.AbsoluteUri)
+								.GroupBy(url => url).Where(grouping => grouping.Count() > 1)
+								.Select(grouping => new {Url = grouping.Key, Count = grouping.Count()}).ToList();
+							if (duplicatedUrls.Any())
+							{
+								Logger.LogWithProperties(logger => logger.LogWarning("{SpiderId} has duplicated URLs", SpiderId),
+									("ServiceEventName", "Spider"),
+									("ServiceEventType", "DuplicatedUrl"),
+									("Urls", duplicatedUrls.Select(arg => arg.Url)),
+									("UrlCounts", string.Join(", ", duplicatedUrls.Select(arg => $"{arg.Url} ({arg.Count})"))));
+							}
+
 							// 1. Remove the request from the request queue
 							// 2. If it is a timeout request, it cannot be obtained through Dequeue, but will be obtained through _requestedQueue.GetAllTimeoutList()
 							var request = _requestedQueue.Dequeue(response.RequestHash);
