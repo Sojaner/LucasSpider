@@ -24,6 +24,7 @@ jobs:
     name: Test
     needs: [startup]
     uses: ./.github/workflows/test-job.yaml
+    secrets: inherit
 
   publish:
     name: Publish
