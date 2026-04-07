@@ -16,13 +16,13 @@ jobs:
     steps:
       - uses: NoorDigitalAgency/release-lookup@main
         with:
-          token: ${{ github.token }}
+          token: ${{ secrets.REPOSITORY_PAT }}
 
       - uses: actions/checkout@v3
         with:
           ref: ${{ env.RELEASE_REFERENCE }}
           submodules: recursive
-          token: ${{ github.token }}
+          token: ${{ secrets.REPOSITORY_PAT }}
 
       - uses: actions/setup-dotnet@v2
         with:

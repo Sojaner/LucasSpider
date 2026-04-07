@@ -43,7 +43,7 @@ namespace LucasSpider.Downloader
 				await page.GotoAsync(request.RequestUri.AbsoluteUri);
 				stopwatch.Stop();
 
-				await page.WaitForLoadStateAsync();
+				await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 				page.Request -= onRequest;
 				var document = await (requests
 					.SingleOrDefault(r => r.Frame == page.MainFrame && r.IsNavigationRequest &&
@@ -63,7 +63,7 @@ namespace LucasSpider.Downloader
 				}
 
 				var redirects = (await GetRedirectsAsync(document)).ToList();
-				var httpResponse = await ConvertIResponseToHttpResponse(document, page);
+				var httpResponse = await ConvertIResponseToHttpResponse(document, page, options.Value.RenderShadowRoots);
 
 				var response = await httpResponse.ToResponseAsync();
 				response.Elapsed = TimeSpan.FromMilliseconds(document.Request.Timing.ResponseEnd);
@@ -137,11 +137,11 @@ namespace LucasSpider.Downloader
 			return list;
 		}
 
-		private static async Task<HttpResponseMessage> ConvertIResponseToHttpResponse(IResponse playwrightResponse, IPage page)
+		private static async Task<HttpResponseMessage> ConvertIResponseToHttpResponse(IResponse playwrightResponse, IPage page, bool renderShadowRoots)
 		{
 			var httpResponse = new HttpResponseMessage((HttpStatusCode)playwrightResponse.Status)
 			{
-				Content = new System.Net.Http.StringContent(await page.ContentAsync(), Encoding.UTF8, MediaTypeNames.Text.Html),
+				Content = new System.Net.Http.StringContent(renderShadowRoots ? await page.ContentDeepAsync() : await page.ContentAsync(), Encoding.UTF8, MediaTypeNames.Text.Html),
 				RequestMessage = new HttpRequestMessage(new HttpMethod(playwrightResponse.Request.Method), playwrightResponse.Request.Url)
 			};
 

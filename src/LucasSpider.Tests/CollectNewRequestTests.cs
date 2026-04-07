@@ -45,9 +45,9 @@ public class CollectNewRequestTests
 				{
 					var url = request.RequestUri.ToString();
 					CompletedUrls.Add(url);
-					if (url == "http://baidu.com/")
+					if (url == "http://httpforever.com/")
 					{
-						context.AddFollowRequests(new[] { new Uri("http://cnblogs.com") });
+						context.AddFollowRequests(new[] { new Uri("https://example.com/") });
 					}
 				}
 
@@ -69,7 +69,7 @@ public class CollectNewRequestTests
 
 		protected override async Task InitializeAsync(CancellationToken stoppingToken = default)
 		{
-			await AddRequestsAsync(new Request("http://baidu.com"));
+			await AddRequestsAsync(new Request("http://httpforever.com/"));
 			AddDataFlow(new MyDataParser());
 		}
 	}
