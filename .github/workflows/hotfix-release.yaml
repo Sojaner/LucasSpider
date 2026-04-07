@@ -17,7 +17,7 @@ jobs:
         with:
           stage: production
           reference: ${{ github.event.inputs.reference }}
-          token: ${{ github.token }}
+          token: ${{ secrets.REPOSITORY_PAT }}
           hotfix: true
 
   test:
@@ -40,11 +40,11 @@ jobs:
     steps:
       - uses: NoorDigitalAgency/release-lookup@main
         with:
-          token: ${{ github.token }}
+          token: ${{ secrets.REPOSITORY_PAT }}
       - uses: NoorDigitalAgency/release-publish@main
         with:
           stage: production
-          token: ${{ github.token }}
+          token: ${{ secrets.REPOSITORY_PAT }}
 
   post-hotfox:
     name: Post Hotfix
