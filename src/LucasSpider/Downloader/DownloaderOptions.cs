@@ -19,5 +19,11 @@
 		/// </summary>
 		/// <remarks>Default is <b>Chromium</b></remarks>
 		public PlaywrightBrowserName BrowserName { get; set; } = PlaywrightBrowserName.Chromium;
+
+		/// <summary>
+		/// Should the playwright downloader render shadow roots
+		/// </summary>
+		/// <remarks>Default is <b>false</b></remarks>
+		public bool RenderShadowRoots { get; set; }
 	}
 }
