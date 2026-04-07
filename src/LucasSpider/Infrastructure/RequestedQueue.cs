@@ -41,7 +41,9 @@ namespace LucasSpider.Infrastructure
 				return false;
 			}
 
-			_timer.NewTimeout(new TimeoutTask(this, request.Hash),
+			// Pass the Timestamp to the timeout task so it can verify
+			// that the request in the dict is the same one it was created for.
+			_timer.NewTimeout(new TimeoutTask(this, request.Hash, request.Timestamp),
 				TimeSpan.FromMilliseconds(request.Timeout));
 			return true;
 		}
@@ -63,28 +65,39 @@ namespace LucasSpider.Infrastructure
 			return data;
 		}
 
-		private void Timeout(string hash)
+		private void Timeout(string hash, long timestamp)
 		{
-			if (_dict.TryRemove(hash, out var request))
+			// Only remove the request if it's the same instance that was enqueued
+			// when this timer was created (identified by matching timestamp).
+			// This prevents a stale timer from removing a different request that
+			// reused the same hash after the original was dequeued.
+			if (!_dict.TryGetValue(hash, out var request) || request.Timestamp != timestamp)
 			{
-				_queue.Add(request);
+				return;
+			}
+
+			if (_dict.TryRemove(hash, out var removedRequest))
+			{
+				_queue.Add(removedRequest);
 			}
 		}
 
 		private class TimeoutTask : ITimerTask
 		{
 			private readonly string _hash;
+			private readonly long _timestamp;
 			private readonly RequestedQueue _requestedQueue;
 
-			public TimeoutTask(RequestedQueue requestedQueue, string hash)
+			public TimeoutTask(RequestedQueue requestedQueue, string hash, long timestamp)
 			{
 				_hash = hash;
+				_timestamp = timestamp;
 				_requestedQueue = requestedQueue;
 			}
 
 			public Task RunAsync(ITimeout timeout)
 			{
-				_requestedQueue.Timeout(_hash);
+				_requestedQueue.Timeout(_hash, _timestamp);
 				return Task.CompletedTask;
 			}
 		}
@@ -102,3 +115,4 @@ namespace LucasSpider.Infrastructure
 		}
 	}
 }
+

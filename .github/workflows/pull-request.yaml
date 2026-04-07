@@ -8,3 +8,4 @@ on:
 jobs:
   test:
     uses: ./.github/workflows/test-job.yaml
+    secrets: inherit

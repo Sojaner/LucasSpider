@@ -18,12 +18,13 @@ jobs:
         with:
           stage: alpha
           reference: ${{ github.event.inputs.reference }}
-          token: ${{ github.token }}
+          token: ${{ secrets.REPOSITORY_PAT }}
 
   test:
     name: Test
     needs: [startup]
     uses: ./.github/workflows/test-job.yaml
+    secrets: inherit
 
   publish:
     name: Publish
@@ -40,8 +41,8 @@ jobs:
     steps:
       - uses: NoorDigitalAgency/release-lookup@main
         with:
-          token: ${{ github.token }}
+          token: ${{ secrets.REPOSITORY_PAT }}
       - uses: NoorDigitalAgency/release-publish@main
         with:
           stage: alpha
-          token: ${{ github.token }}
+          token: ${{ secrets.REPOSITORY_PAT }}
